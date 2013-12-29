@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: cc.pinel.mangue.Main
+Implementation-Title: Mangue - Online Manga Reader
+Implementation-Version: 1
+Implementation-Vendor: Roque Pinel
