@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project name="Mangue" basedir="." default="azw2" >
 
-	<!-- Properties -->
+	<!-- ===================================================================== -->
+	<!-- | PROPERTIES                                                        | -->
+	<!-- ===================================================================== -->
+
+	<!-- Load properties specific to this Kindlet. -->
+	<property file="kindlet.properties" />
 
 	<property environment="env" />
-	<property name="debuglevel" value="source,lines,vars" />
-	<property name="target" value="1.5" />
-	<property name="source" value="1.5" />
+	<property name="debuglevel"     value="source,lines,vars" />
+	<property name="target"         value="1.5" />
+	<property name="source"         value="1.5" />
 
-	<property name="JAR_FILE" value="${ant.project.name}.jar" />
-	<property name="AZW2_FILE" value="${ant.project.name}.azw2" />
+	<property name="JAR_FILE"       value="${ant.project.name}.jar" />
+	<property name="AZW2_FILE"      value="${ant.project.name}.azw2" />
 
-	<property name="KEYSTORE" value="${user.home}/.kindle/kindle.keystore" />
-	<property name="STOREPASS" value="" />
+	<property name="KEYSTORE"       value="${user.home}/.kindle/kindle.keystore" />
+	<property name="STOREPASS"      value="" />
 
-	<!-- Paths -->
+	<!-- ===================================================================== -->
+	<!-- | PATHS                                                             | -->
+	<!-- ===================================================================== -->
 
 	<path id="app.classpath">
 		<pathelement location="bin" />
 		<pathelement location="${user.home}/.kindle/Kindlet-1.3.jar" />
 	</path>
 
-	<!-- Essecial Tasks -->
+	<!-- ===================================================================== -->
+	<!-- | ESSENCIAL TASKS                                                   | -->
+	<!-- ===================================================================== -->
 
 	<taskdef name="retroweaver" classname="net.sourceforge.retroweaver.ant.RetroWeaverTask">
 		<classpath>
@@ -29,7 +38,9 @@
 		</classpath>
 	</taskdef>
 
-	<!-- Essecial Targets -->
+	<!-- ===================================================================== -->
+	<!-- | ESSENCIAL TARGETS                                                 | -->
+	<!-- ===================================================================== -->
 
 	<target name="init">
 		<mkdir dir="bin" />
@@ -61,13 +72,22 @@
 		<retroweaver srcdir="bin" />
 	</target>
 
-	<!-- Useful Targets -->
+	<!-- ===================================================================== -->
+	<!-- | USEFUL TARGETS                                                    | -->
+	<!-- ===================================================================== -->
 
 	<target name="jar" depends="weave">
-		<jar destfile="${JAR_FILE}"
-			manifest="${ant.project.name}.manifest">
+		<jar destfile="${JAR_FILE}">
 			<fileset dir="bin"/>
 			<fileset dir="." includes="res/**"/>
+			<manifest>
+				<attribute name="Main-Class"             value="${kindlet.mainClass}" />
+				<attribute name="Implementation-Vendor"  value="${kindlet.vendor}" />
+				<attribute name="Implementation-Title"   value="${kindlet.title}" />
+				<attribute name="Implementation-Version" value="${kindlet.version}" />
+				<attribute name="Implementation-URL"     value="${kindlet.url}" />
+				<attribute name="Amazon-Cover-Image"     value="${kindlet.image}" />
+			</manifest>
 		</jar>
 	</target>
 
