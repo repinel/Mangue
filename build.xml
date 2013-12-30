@@ -17,7 +17,9 @@
     <property name="file.keystore"            location="${user.home}/.kindle/kindle.keystore" />
 
     <property name="dir.src"                  location="${basedir}/src" />
-	<property name="dir.lib"                  location="${basedir}/lib" />
+    <property name="dir.lib"                  location="${basedir}/lib" />
+    <property name="dir.res"                  location="${basedir}/res" />
+    <property name="dir.bin"                  location="${basedir}/bin" />
     <property name="dir.build"                location="${basedir}/build" />
     <property name="dir.build.classes"        location="${dir.build}/classes" />
     <property name="file.output"              location="${dir.build}/${ant.project.name}.azw2" />
@@ -79,11 +81,18 @@
             <classpath refid="app.classpath" />
         </javac>
 
+        <copy todir="${dir.build.classes}/res">
+            <fileset dir="${dir.res}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+
         <retroweaver srcdir="${dir.build.classes}" />
     </target>
 
     <target name="clean">
-        <delete dir="${dir.build}" />
+        <delete dir="${dir.bin}" />
+    	<delete dir="${dir.build}" />
     </target>
 
     <!-- ===================================================================== -->

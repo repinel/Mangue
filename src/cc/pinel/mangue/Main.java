@@ -1,16 +1,54 @@
 package cc.pinel.mangue;
 
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import cc.pinel.mangue.ui.MainPanel;
+
 import com.amazon.kindle.kindlet.KindletContext;
-import com.amazon.kindle.kindlet.ui.KTextArea;
 import com.cowlark.kindlet.KindletWrapper;
 
-public class Main extends KindletWrapper
-{
+public class Main extends KindletWrapper {
+	private static final String RES_DIR = "/res/";
+
+	private MainPanel mainPanel;
+
+	private List<Manga> mangas;
+
 	@Override
-	public void onKindletStart()
-	{
+	public void onKindletCreate() {
+		try {
+			loadMangaList(getClass().getResourceAsStream(RES_DIR + "mangas.json"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		mainPanel = new MainPanel(getContext(), mangas);
+	}
+
+	@Override
+	public void onKindletStart() {
 		KindletContext context = getContext();
-		KTextArea kta = new KTextArea("Hello, world!");
-		context.getRootContainer().add(kta);
+		context.getRootContainer().add(mainPanel);
+	}
+
+	private void loadMangaList(InputStream is) throws IOException {
+		this.mangas = new ArrayList<Manga>();
+
+		JSONObject json = new JSONObject(IOUtils.toString(is));
+
+		JSONArray mangas = (JSONArray) json.get("mangas");
+
+		for (int i = 0; i < mangas.length(); i++) {
+			JSONObject manga = (JSONObject) mangas.get(i);
+			this.mangas.add(new Manga(manga.get("name").toString(), manga.get("first_chapter_url").toString()));
+		}
 	}
 }
