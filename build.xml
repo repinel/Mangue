@@ -56,7 +56,17 @@
         </copy>
     </target>
 
-    <target name="build" depends="init">
+    <target name="weave" depends="init">
+        <basename property="retroweaver.basename" file="${file.retroweaver}"/>
+        <unzip dest="${dir.build.classes}">
+            <fileset dir="${dir.lib}">
+                <include name="**/*.jar" />
+                <exclude name="**/${retroweaver.basename}" />
+            </fileset>
+        </unzip>
+    </target>
+
+    <target name="build" depends="weave">
         <echo message="${ant.project.name}: ${ant.file}" />
         <javac debug="true"
                debuglevel="${compiler.debuglevel}"
@@ -68,29 +78,19 @@
             <src path="${dir.src}" />
             <classpath refid="app.classpath" />
         </javac>
+
+        <retroweaver srcdir="${dir.build.classes}" />
     </target>
 
     <target name="clean">
         <delete dir="${dir.build}" />
     </target>
 
-    <target name="weave" depends="build">
-        <basename property="retroweaver.basename" file="${file.retroweaver}"/>
-        <unzip dest="${dir.build.classes}">
-            <fileset dir="${dir.lib}">
-                <include name="**/*.jar" />
-                <exclude name="**/${retroweaver.basename}" />
-            </fileset>
-        </unzip>
-
-        <retroweaver srcdir="${dir.build.classes}" />
-    </target>
-
     <!-- ===================================================================== -->
     <!-- | USEFUL TARGETS                                                    | -->
     <!-- ===================================================================== -->
 
-    <target name="jar" depends="weave">
+    <target name="jar" depends="build">
         <jar basedir="${dir.build.classes}" destfile="${file.output}">
             <manifest>
                 <attribute name="Main-Class"             value="${kindlet.mainClass}" />
