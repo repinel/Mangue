@@ -1,10 +1,12 @@
 {
     "mangas": [
         {
+            "id": 93,
             "name": "Naruto",
             "first_chapter_url": "http://www.mangapanda.com/93-1-1/naruto/chapter-1.html"
         },
         {
+            "id": 103,
             "name": "One Piece",
             "first_chapter_url": "http://www.mangapanda.com/103-2039-1/one-piece/chapter-1.html"
         }

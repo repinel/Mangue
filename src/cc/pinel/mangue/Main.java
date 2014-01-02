@@ -61,7 +61,7 @@ public class Main extends KindletWrapper {
 
 		for (int i = 0; i < mangas.length(); i++) {
 			JSONObject manga = (JSONObject) mangas.get(i);
-			this.mangas.add(new Manga(manga.get("name").toString(), manga.get("first_chapter_url").toString()));
+			this.mangas.add(new Manga(manga.get("id").toString(), manga.get("name").toString(), manga.get("first_chapter_url").toString()));
 		}
 	}
 }
