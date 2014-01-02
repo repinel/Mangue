@@ -57,7 +57,7 @@ public class Manga {
 
 			try {
 				InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which").openStream();
-				
+
 				JSONArray chapters = new JSONArray(IOUtils.toString(is));
 
 				for (int i = chapters.length() - 1; i >= 0; i--) {

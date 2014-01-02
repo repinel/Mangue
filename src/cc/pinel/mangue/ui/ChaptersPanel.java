@@ -66,7 +66,8 @@ public class ChaptersPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			// TODO: set the view panel
+			ViewPanel viewPanel = new ViewPanel(main, chapter);
+			main.setActivePanel(viewPanel);
 		}
 	}
 }
