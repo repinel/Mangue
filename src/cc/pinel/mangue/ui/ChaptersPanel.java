@@ -42,7 +42,9 @@ public class ChaptersPanel extends KPanel {
 			chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
 			chaptersPages.addItem(chapterLabel);
 		}
-		chaptersPages.getComponent(0).requestFocus();
+
+		if (chaptersPages.getComponents().length > 0)
+			chaptersPages.getComponent(0).requestFocus();
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
