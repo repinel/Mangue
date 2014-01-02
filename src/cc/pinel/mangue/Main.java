@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import cc.pinel.mangue.ui.MainPanel;
 
 import com.amazon.kindle.kindlet.KindletContext;
+import com.amazon.kindle.kindlet.ui.KPanel;
 import com.cowlark.kindlet.KindletWrapper;
 
 public class Main extends KindletWrapper {
@@ -30,13 +31,25 @@ public class Main extends KindletWrapper {
 			e.printStackTrace();
 		}
 
-		mainPanel = new MainPanel(getContext(), mangas);
+		mainPanel = new MainPanel(this, mangas);
 	}
 
 	@Override
 	public void onKindletStart() {
 		KindletContext context = getContext();
 		context.getRootContainer().add(mainPanel);
+	}
+
+	public void setActivePanel(KPanel panel) {
+		KindletContext context = getContext();
+
+		context.getRootContainer().remove(0);
+		context.getRootContainer().add(panel);
+
+		panel.requestFocus();
+
+		context.getRootContainer().invalidate();
+		context.getRootContainer().repaint();
 	}
 
 	private void loadMangaList(InputStream is) throws IOException {

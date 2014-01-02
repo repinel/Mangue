@@ -1,13 +1,18 @@
 package cc.pinel.mangue;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class Manga {
 
 	private final String name;
-	private final String firstChapterURL;
+	private final String firstChapterLink;
 
-	public Manga(String name, String firstChapterURL) {
+	private Collection<Chapter> chapters;
+
+	public Manga(String name, String firstChapterLink) {
 		this.name = name;
-		this.firstChapterURL = firstChapterURL;
+		this.firstChapterLink = firstChapterLink;
 	}
 
 	/**
@@ -18,9 +23,21 @@ public class Manga {
 	}
 
 	/**
-	 * @return the firstChapterURL
+	 * @return the firstChapterLink
 	 */
-	public String getFirstChapterURL() {
-		return firstChapterURL;
+	public String getFirstChapterLink() {
+		return firstChapterLink;
+	}
+
+	/**
+	 * @return the chapters
+	 */
+	public Collection<Chapter> getChapters() {
+		if (chapters == null) {
+			// TODO: load chapters
+			chapters = new ArrayList<Chapter>();
+		}
+
+		return chapters;
 	}
 }
