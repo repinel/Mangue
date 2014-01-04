@@ -52,7 +52,7 @@ public class Manga {
 	 * @throws MalformedURLException 
 	 */
 	public Collection<Chapter> getChapters() {
-		if (chapters == null) {
+		if (this.chapters == null) {
 			this.chapters = new ArrayList<Chapter>();
 
 			try {
@@ -62,7 +62,7 @@ public class Manga {
 
 				for (int i = chapters.length() - 1; i >= 0; i--) {
 					JSONObject chapter = (JSONObject) chapters.get(i);
-					this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), chapter.get("chapterlink").toString()));
+					this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), "http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
 				}
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block

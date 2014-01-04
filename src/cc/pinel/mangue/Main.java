@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,12 +21,17 @@ import com.cowlark.kindlet.KindletWrapper;
 public class Main extends KindletWrapper {
 	private static final String RES_DIR = "/res/";
 
+	private static final Logger logger = Logger.getLogger(Main.class);
+
 	private MainPanel mainPanel;
 
 	private List<Manga> mangas;
 
 	@Override
 	public void onKindletCreate() {
+		PropertyConfigurator.configure(getClass().getResource(RES_DIR + "log4j.properties"));
+
+		logger.info("About to load the manga list.");
 		try {
 			loadMangaList(getClass().getResourceAsStream(RES_DIR + "mangas.json"));
 		} catch (IOException e) {
@@ -43,7 +50,7 @@ public class Main extends KindletWrapper {
 	public void setActivePanel(KPanel panel) {
 		KindletContext context = getContext();
 
-		context.getRootContainer().remove(0);
+		context.getRootContainer().removeAll();
 		context.getRootContainer().add(panel);
 
 		panel.requestFocus();

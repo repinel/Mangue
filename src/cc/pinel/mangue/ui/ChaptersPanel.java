@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Chapter;
@@ -43,9 +44,6 @@ public class ChaptersPanel extends KPanel {
 			chaptersPages.addItem(chapterLabel);
 		}
 
-		if (chaptersPages.getComponents().length > 0)
-			chaptersPages.getComponent(0).requestFocus();
-
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -55,7 +53,9 @@ public class ChaptersPanel extends KPanel {
 		gc.weighty = 1.0;
 		gc.fill = GridBagConstraints.BOTH;
 		add(chaptersPages, gc);
+
 		chaptersPages.first();
+		chaptersPages.requestFocus();
 	}
 
 	private class ChapterLabelActionListener implements ActionListener {
