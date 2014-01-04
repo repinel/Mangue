@@ -10,7 +10,7 @@ import java.util.List;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
-import cc.pinel.mangue.Manga;
+import cc.pinel.mangue.model.Manga;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;

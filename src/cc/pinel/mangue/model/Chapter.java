@@ -1,4 +1,4 @@
-package cc.pinel.mangue;
+package cc.pinel.mangue.model;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.ui.MainPanel;
 
 import com.amazon.kindle.kindlet.KindletContext;

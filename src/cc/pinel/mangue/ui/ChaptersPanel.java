@@ -9,9 +9,9 @@ import java.awt.event.ActionListener;
 import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
 
-import cc.pinel.mangue.Chapter;
 import cc.pinel.mangue.Main;
-import cc.pinel.mangue.Manga;
+import cc.pinel.mangue.model.Chapter;
+import cc.pinel.mangue.model.Manga;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;

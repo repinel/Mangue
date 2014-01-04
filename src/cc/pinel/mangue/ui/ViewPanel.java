@@ -10,9 +10,9 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 
-import cc.pinel.mangue.Chapter;
 import cc.pinel.mangue.Main;
-import cc.pinel.mangue.Page;
+import cc.pinel.mangue.model.Chapter;
+import cc.pinel.mangue.model.Page;
 
 import com.amazon.kindle.kindlet.ui.KImage;
 import com.amazon.kindle.kindlet.ui.KPages;
