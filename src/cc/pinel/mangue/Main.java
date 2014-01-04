@@ -9,8 +9,10 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import cc.pinel.mangue.ui.MainPanel;
 
@@ -35,7 +37,9 @@ public class Main extends KindletWrapper {
 		try {
 			loadMangaList(getClass().getResourceAsStream(RES_DIR + "mangas.json"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e);
+		} catch (ParseException e) {
+			logger.error(e);
 		}
 
 		mainPanel = new MainPanel(this, mangas);
@@ -59,14 +63,14 @@ public class Main extends KindletWrapper {
 		context.getRootContainer().repaint();
 	}
 
-	private void loadMangaList(InputStream is) throws IOException {
+	private void loadMangaList(InputStream is) throws IOException, ParseException {
 		this.mangas = new ArrayList<Manga>();
 
-		JSONObject json = new JSONObject(IOUtils.toString(is));
-
+		JSONParser parser = new JSONParser();
+		JSONObject json = (JSONObject) parser.parse(IOUtils.toString(is));
 		JSONArray mangas = (JSONArray) json.get("mangas");
 
-		for (int i = 0; i < mangas.length(); i++) {
+		for (int i = 0; i < mangas.size(); i++) {
 			JSONObject manga = (JSONObject) mangas.get(i);
 			this.mangas.add(new Manga(manga.get("id").toString(), manga.get("name").toString(), manga.get("first_chapter_url").toString()));
 		}

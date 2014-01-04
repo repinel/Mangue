@@ -9,8 +9,10 @@ import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Manga {
 	private static final Logger logger = Logger.getLogger(Manga.class);
@@ -62,15 +64,18 @@ public class Manga {
 			try {
 				InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which").openStream();
 
-				JSONArray chapters = new JSONArray(IOUtils.toString(is));
+				JSONParser parser = new JSONParser();
+				JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(is));
 
-				for (int i = chapters.length() - 1; i >= 0; i--) {
+				for (int i = chapters.size() - 1; i >= 0; i--) {
 					JSONObject chapter = (JSONObject) chapters.get(i);
 					this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), "http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
 				}
 			} catch (MalformedURLException e) {
 				logger.error(e);
 			} catch (IOException e) {
+				logger.error(e);
+			} catch (ParseException e) {
 				logger.error(e);
 			}
 
