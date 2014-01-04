@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Manga {
+	private static final Logger logger = Logger.getLogger(Manga.class);
 
 	private final String id;
 	private final String name;
@@ -55,6 +57,8 @@ public class Manga {
 		if (this.chapters == null) {
 			this.chapters = new ArrayList<Chapter>();
 
+			logger.info("Fetching chapters for " + this.name);
+
 			try {
 				InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which").openStream();
 
@@ -65,12 +69,12 @@ public class Manga {
 					this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), "http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
 				}
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 			}
+
+			logger.debug("chapters size: " + this.chapters.size());
 		}
 
 		return this.chapters;

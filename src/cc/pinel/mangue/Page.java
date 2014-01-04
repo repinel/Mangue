@@ -5,8 +5,6 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
-
 import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Document;
