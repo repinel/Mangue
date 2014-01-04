@@ -33,7 +33,6 @@ public class ViewPanel extends KPanel {
 		for (Page page : chapter.getPages()) {
 			final KImage image = new KImage(page.getImage());
 			pages.addItem(image);
-			break;
 		}
 
 		GridBagConstraints gc = new GridBagConstraints();
