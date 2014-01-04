@@ -29,6 +29,11 @@ public class ViewPanel extends KPanel {
 
 	private final KPages pages;
 
+	private MangaImage mangaImage;
+
+	// help caching the last image fetched
+	private URL mangaImageURL;
+
 	public ViewPanel(Main main, Chapter chapter) {
 		super(new GridBagLayout());
 
@@ -67,11 +72,25 @@ public class ViewPanel extends KPanel {
 		public Component getComponent(Object object) {
 			Page page = (Page) object;
 
-			logger.info("Fetching image content " + page.getImageURL());
+			if (mangaImageURL == null || !mangaImageURL.equals(page.getImageURL())) {
+				logger.info("Fetching image content " + page.getImageURL());
+				mangaImage = new MangaImage(Toolkit.getDefaultToolkit().getImage(page.getImageURL()));
+				mangaImageURL = page.getImageURL();
+			}
 
-			Image img = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
+			return mangaImage;
+		}
+	}
 
-			return new KImage(img);
+	private class MangaImage extends KImage {
+		private static final long serialVersionUID = 8718370721568448120L;
+
+		public MangaImage(Image image) {
+			super(image, KImage.SCALE_TO_FIT, KImage.FROM_IMAGE);
+		}
+
+		protected void onImageReady() {
+			super.onImageReady();
 		}
 	}
 }
