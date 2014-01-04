@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Chapter;
@@ -19,6 +20,8 @@ import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
 public class ChaptersPanel extends KPanel {
 	private static final long serialVersionUID = 7836204925749827794L;
+
+	private static final Logger logger = Logger.getLogger(ChaptersPanel.class);
 
 	private final Main main;
 
@@ -54,7 +57,13 @@ public class ChaptersPanel extends KPanel {
 		add(chaptersPages, gc);
 
 		chaptersPages.first();
-		chaptersPages.requestFocus();
+	}
+
+	public void requestFocus() {
+		if (chaptersPages.getComponents().length > 0)
+			chaptersPages.getComponent(0).requestFocus();
+		else
+			super.requestFocus();
 	}
 
 	private class ChapterLabelActionListener implements ActionListener {

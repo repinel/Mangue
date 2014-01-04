@@ -39,10 +39,8 @@ public class ViewPanel extends KPanel {
 		pages.setEnabled(true);
 		pages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
-		for (Page page : chapter.getPages()) {
+		for (Page page : chapter.getPages())
 			pages.addItem(page);
-		}
-		logger.debug("pages size: " + this.pages.getSize());
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
@@ -55,7 +53,13 @@ public class ViewPanel extends KPanel {
 		add(pages, gc);
 
 		pages.first();
-		pages.requestFocus();
+	}
+
+	public void requestFocus() {
+		if (pages.getComponents().length > 0)
+			pages.getComponent(0).requestFocus();
+		else
+			super.requestFocus();
 	}
 
 	private class ImageProvider implements ComponentProvider {

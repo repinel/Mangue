@@ -52,13 +52,13 @@ public class KindletWrapper implements Kindlet, KindletCreateEventHandler,
 	
 	public void onKindletDestroy()
 	{
-	};
+	}
 	
 	public void start()
 	{
 		KindletStartEvent event = new KindletStartEvent();
 		_handler.fireEvent(event);
-	};
+	}
 	
 	public void onKindletStart()
 	{

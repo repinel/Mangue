@@ -54,7 +54,13 @@ public class MainPanel extends KPanel {
 		add(mangaListPages, gc);
 
 		mangaListPages.first();
-		mangaListPages.requestFocus();
+	}
+
+	public void requestFocus() {
+		if (mangaListPages.getComponents().length > 0)
+			mangaListPages.getComponent(0).requestFocus();
+		else
+			super.requestFocus();
 	}
 
 	private class MangaLabelActionListener implements ActionListener {
