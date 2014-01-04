@@ -43,13 +43,6 @@ public class Chapter {
 	}
 
 	/**
-	 * @return the link
-	 */
-	public String getLink() {
-		return link;
-	}
-
-	/**
 	 * @return the pages
 	 */
 	public Collection<Page> getPages() {

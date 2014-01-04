@@ -62,7 +62,7 @@ public class Manga {
 			logger.info("Fetching chapters for " + this.name);
 
 			try {
-				InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which").openStream();
+				InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0").openStream();
 
 				JSONParser parser = new JSONParser();
 				JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(is));

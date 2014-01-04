@@ -35,7 +35,7 @@ public class ChaptersPanel extends KPanel {
 		chaptersPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
 		for (Chapter chapter : manga.getChapters()) {
-			final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getNumber());
+			final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getNumber() + " - " + chapter.getName());
 			chapterLabel.setFocusable(true);
 			chapterLabel.setEnabled(true);
 			chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);

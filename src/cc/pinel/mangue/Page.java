@@ -18,7 +18,7 @@ public class Page {
 	private final String number;
 	private final String link;
 
-	private Image image;
+	private URL imageURL;
 
 	public Page(String number, String link) {
 		this.number = number;
@@ -33,18 +33,11 @@ public class Page {
 	}
 
 	/**
-	 * @return the link
+	 * @return the imageURL
 	 */
-	public String getLink() {
-		return link;
-	}
-
-	/**
-	 * @return the image
-	 */
-	public Image getImage() {
-		if (this.image == null) {
-			logger.info("Fetching pages for chapter " + this.link);
+	public URL getImageURL() {
+		if (this.imageURL == null) {
+			logger.info("Fetching image URL for page" + this.link);
 
 			DOMParser parser = new DOMParser();
 			InputSource url = new InputSource(this.link);
@@ -53,15 +46,16 @@ public class Page {
 				parser.parse(url);
 				Document document = parser.getDocument();
 				Element img = document.getElementById("img");
-				this.image = Toolkit.getDefaultToolkit().getImage(new URL(img.getAttribute("src")));
-				logger.debug("image src: " + img.getAttribute("src"));
+				this.imageURL = new URL(img.getAttribute("src"));
 			} catch (SAXException e) {
 				logger.error(e);
 			} catch (IOException e) {
 				logger.error(e);
 			}
+
+			logger.debug("image src: " + this.imageURL);
 		}
 
-		return this.image;
+		return this.imageURL;
 	}
 }
