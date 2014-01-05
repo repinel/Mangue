@@ -22,6 +22,7 @@ import com.amazon.kindle.kindlet.net.ConnectivityHandler;
 import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KImage;
 import com.amazon.kindle.kindlet.ui.KPanel;
+import com.amazon.kindle.kindlet.ui.KProgress;
 
 public class ViewPanel extends KPanel implements KeyListener {
 	private static final long serialVersionUID = -2485604965935171736L;
@@ -67,6 +68,10 @@ public class ViewPanel extends KPanel implements KeyListener {
 	private void loadPages(final Chapter chapter) {
 		final ConnectivityHandler handler = new ConnectivityHandler() {
 			public void connected() {
+				KProgress progress = main.getContext().getProgressIndicator();
+				progress.setString("Loading pages...");
+				progress.setIndeterminate(true);
+
 				try {
 					pages = chapter.getPages();
 
@@ -76,6 +81,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 					logger.error(e);
 				} catch (IOException e) {
 					logger.error(e);
+				} finally {
+					progress.setIndeterminate(false);
 				}
 			}
 
@@ -90,6 +97,10 @@ public class ViewPanel extends KPanel implements KeyListener {
 	private void loadImage(final Page page) {
 		final ConnectivityHandler handler = new ConnectivityHandler() {
 			public void connected() {
+				KProgress progress = main.getContext().getProgressIndicator();
+				progress.setString("Loading image...");
+				progress.setIndeterminate(true);
+
 				try {
 					logger.info("Fetching image content " + page.getImageURL());
 
@@ -102,6 +113,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 					logger.error(e);
 				} catch (IOException e) {
 					logger.error(e);
+				} finally {
+					progress.setIndeterminate(false);
 				}
 			}
 

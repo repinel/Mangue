@@ -21,6 +21,7 @@ import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
+import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
 public class ChaptersPanel extends KPanel {
@@ -71,6 +72,10 @@ public class ChaptersPanel extends KPanel {
 	private void loadChapters() {
 		final ConnectivityHandler handler = new ConnectivityHandler() {
 			public void connected() {
+				KProgress progress = main.getContext().getProgressIndicator();
+				progress.setString("Loading chapters...");
+				progress.setIndeterminate(true);
+
 				try {
 					for (Chapter chapter : manga.getChapters()) {
 						final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(
@@ -91,6 +96,8 @@ public class ChaptersPanel extends KPanel {
 					logger.error(e);
 				} catch (ParseException e) {
 					logger.error(e);
+				} finally {
+					progress.setIndeterminate(false);
 				}
 			}
 
