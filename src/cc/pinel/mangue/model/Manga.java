@@ -56,7 +56,7 @@ public class Manga {
 	 * @throws MalformedURLException 
 	 */
 	public Collection<Chapter> getChapters() {
-		if (this.chapters == null) {
+		if (this.chapters == null || this.chapters.isEmpty()) {
 			this.chapters = new ArrayList<Chapter>();
 
 			logger.info("Fetching chapters for " + this.name);

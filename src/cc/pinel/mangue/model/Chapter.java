@@ -46,7 +46,7 @@ public class Chapter {
 	 * @return the pages
 	 */
 	public Collection<Page> getPages() {
-		if (this.pages == null) {
+		if (this.pages == null || this.pages.isEmpty()) {
 			this.pages = new ArrayList<Page>();
 
 			logger.info("Fetching pages for chapter " + this.link);
