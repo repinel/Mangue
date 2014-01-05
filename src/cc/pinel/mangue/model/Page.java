@@ -1,7 +1,5 @@
 package cc.pinel.mangue.model;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
 

@@ -1,6 +1,8 @@
 package cc.pinel.mangue;
 
-
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.ui.MainPanel;
 
 import com.amazon.kindle.kindlet.KindletContext;
+import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.cowlark.kindlet.KindletWrapper;
 
@@ -44,6 +47,8 @@ public class Main extends KindletWrapper {
 		}
 
 		mainPanel = new MainPanel(this, mangas);
+
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
 	}
 
 	@Override
@@ -74,6 +79,16 @@ public class Main extends KindletWrapper {
 		for (int i = 0; i < mangas.size(); i++) {
 			JSONObject manga = (JSONObject) mangas.get(i);
 			this.mangas.add(new Manga(manga.get("id").toString(), manga.get("name").toString(), manga.get("first_chapter_url").toString()));
+		}
+	}
+
+	private class MainKeyEventDispatcher implements KeyEventDispatcher {
+		public boolean dispatchKeyEvent(KeyEvent e) {
+			if (e.getKeyCode() == KindleKeyCodes.VK_BACK) {
+				return false; // for now, back just does not exit the app
+			}
+
+			return false;
 		}
 	}
 }
