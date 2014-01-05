@@ -69,15 +69,11 @@ public class ChaptersPanel extends KPanel {
 			@Override
 			public void handleConnected() throws Exception {
 				for (Chapter chapter : manga.getChapters()) {
-					final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(
-							chapter.getNumber() + " - " + chapter.getName());
+					final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
 					chapterLabel.setFocusable(true);
 					chapterLabel.setEnabled(true);
-					chapterLabel
-							.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-					chapterLabel
-							.addActionListener(new ChapterLabelActionListener(
-									chapter));
+					chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+					chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
 					chaptersPages.addItem(chapterLabel);
 				}
 				chaptersPages.first();
@@ -85,7 +81,6 @@ public class ChaptersPanel extends KPanel {
 				requestFocus();
 				repaint();	
 			}
-			
 		};
 
 		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);

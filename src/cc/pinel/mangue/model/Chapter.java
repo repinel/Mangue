@@ -13,6 +13,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import cc.pinel.mangue.util.StringUtils;
+
 public class Chapter {
 	private static final Logger logger = Logger.getLogger(Chapter.class);
 
@@ -28,18 +30,8 @@ public class Chapter {
 		this.link = link;
 	}
 
-	/**
-	 * @return the number
-	 */
-	public String getNumber() {
-		return number;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return this.number + " - " + this.name;
 	}
 
 	/**

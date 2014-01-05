@@ -49,7 +49,6 @@ public class Page {
 
 			logger.debug("image src: " + this.imageURL);
 		}
-
 		return this.imageURL;
 	}
 }

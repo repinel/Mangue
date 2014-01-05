@@ -14,6 +14,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import cc.pinel.mangue.util.StringUtils;
+
 public class Manga {
 	private static final Logger logger = Logger.getLogger(Manga.class);
 
@@ -69,12 +71,13 @@ public class Manga {
 
 			for (int i = chapters.size() - 1; i >= 0; i--) {
 				JSONObject chapter = (JSONObject) chapters.get(i);
-				this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), "http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
+				this.chapters.add(new Chapter(chapter.get("chapter").toString(),
+						StringUtils.unescapeHtml(chapter.get("chapter_name").toString()),
+						"http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
 			}
 
 			logger.debug("chapters size: " + this.chapters.size());
 		}
-
 		return this.chapters;
 	}
 }
