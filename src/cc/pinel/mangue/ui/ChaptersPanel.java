@@ -110,7 +110,7 @@ public class ChaptersPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			ViewPanel viewPanel = new ViewPanel(chapter);
+			ViewPanel viewPanel = new ViewPanel(main, chapter);
 			main.setActivePanel(viewPanel);
 		}
 	}

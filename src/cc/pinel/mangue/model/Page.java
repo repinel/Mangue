@@ -32,24 +32,20 @@ public class Page {
 
 	/**
 	 * @return the imageURL
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public URL getImageURL() {
+	public URL getImageURL() throws SAXException, IOException {
 		if (this.imageURL == null) {
 			logger.info("Fetching image URL for page" + this.link);
 
 			DOMParser parser = new DOMParser();
 			InputSource url = new InputSource(this.link);
 
-			try {
-				parser.parse(url);
-				Document document = parser.getDocument();
-				Element img = document.getElementById("img");
-				this.imageURL = new URL(img.getAttribute("src"));
-			} catch (SAXException e) {
-				logger.error(e);
-			} catch (IOException e) {
-				logger.error(e);
-			}
+			parser.parse(url);
+			Document document = parser.getDocument();
+			Element img = document.getElementById("img");
+			this.imageURL = new URL(img.getAttribute("src"));
 
 			logger.debug("image src: " + this.imageURL);
 		}

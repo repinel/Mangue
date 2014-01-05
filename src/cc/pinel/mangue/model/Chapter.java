@@ -2,7 +2,7 @@ package cc.pinel.mangue.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMParser;
@@ -20,7 +20,7 @@ public class Chapter {
 	private final String name;
 	private final String link;
 
-	private Collection<Page> pages;
+	private List<Page> pages;
 
 	public Chapter(String number, String name, String link) {
 		this.number = number;
@@ -44,8 +44,10 @@ public class Chapter {
 
 	/**
 	 * @return the pages
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public Collection<Page> getPages() {
+	public List<Page> getPages() throws SAXException, IOException {
 		if (this.pages == null || this.pages.isEmpty()) {
 			this.pages = new ArrayList<Page>();
 
@@ -54,23 +56,17 @@ public class Chapter {
 			DOMParser parser = new DOMParser();
 			InputSource url = new InputSource(this.link);
 
-			try {
-				parser.parse(url);
-				Document document = parser.getDocument();
-				Element pageMenu = document.getElementById("pageMenu");
-				NodeList options = pageMenu.getElementsByTagName("OPTION");
+			parser.parse(url);
+			Document document = parser.getDocument();
+			Element pageMenu = document.getElementById("pageMenu");
+			NodeList options = pageMenu.getElementsByTagName("OPTION");
 
-				for (int i = 0; i < options.getLength(); i++) {
-					Node node = options.item(i);
-					if(node.getNodeType() == Node.ELEMENT_NODE) {
-						Element option = (Element) node;
-						this.pages.add(new Page(option.getTextContent(), "http://www.mangapanda.com" + option.getAttribute("value")));
-					}
+			for (int i = 0; i < options.getLength(); i++) {
+				Node node = options.item(i);
+				if(node.getNodeType() == Node.ELEMENT_NODE) {
+					Element option = (Element) node;
+					this.pages.add(new Page(option.getTextContent(), "http://www.mangapanda.com" + option.getAttribute("value")));
 				}
-			} catch (SAXException e) {
-				logger.error(e);
-			} catch (IOException e) {
-				logger.error(e);
 			}
 
 			logger.debug("pages size: " + this.pages.size());
