@@ -54,29 +54,22 @@ public class Manga {
 	 * @return the chapters
 	 * @throws IOException 
 	 * @throws MalformedURLException 
+	 * @throws ParseException 
 	 */
-	public Collection<Chapter> getChapters() {
+	public Collection<Chapter> getChapters() throws MalformedURLException, IOException, ParseException {
 		if (this.chapters == null || this.chapters.isEmpty()) {
 			this.chapters = new ArrayList<Chapter>();
 
 			logger.info("Fetching chapters for " + this.name);
 
-			try {
-				InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0").openStream();
+			InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0").openStream();
 
-				JSONParser parser = new JSONParser();
-				JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(is));
+			JSONParser parser = new JSONParser();
+			JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(is));
 
-				for (int i = chapters.size() - 1; i >= 0; i--) {
-					JSONObject chapter = (JSONObject) chapters.get(i);
-					this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), "http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
-				}
-			} catch (MalformedURLException e) {
-				logger.error(e);
-			} catch (IOException e) {
-				logger.error(e);
-			} catch (ParseException e) {
-				logger.error(e);
+			for (int i = chapters.size() - 1; i >= 0; i--) {
+				JSONObject chapter = (JSONObject) chapters.get(i);
+				this.chapters.add(new Chapter(chapter.get("chapter").toString(), chapter.get("chapter_name").toString(), "http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
 			}
 
 			logger.debug("chapters size: " + this.chapters.size());
