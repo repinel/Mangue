@@ -1,5 +1,6 @@
 package cc.pinel.mangue;
 
+import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -84,8 +85,14 @@ public class Main extends KindletWrapper {
 
 	private class MainKeyEventDispatcher implements KeyEventDispatcher {
 		public boolean dispatchKeyEvent(KeyEvent e) {
+			if (e.isConsumed())
+				return false;
+
+//			Component displayed = getContext().getRootContainer().getComponent(0);
+
 			if (e.getKeyCode() == KindleKeyCodes.VK_BACK) {
-				return false; // for now, back just does not exit the app
+				e.consume();
+				return true; // for now, back just does not exit the app
 			}
 
 			return false;
