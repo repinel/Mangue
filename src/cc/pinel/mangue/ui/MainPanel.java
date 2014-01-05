@@ -57,6 +57,9 @@ public class MainPanel extends KPanel {
 		mangaListPages.first();
 	}
 
+	/**
+	 * @see java.awt.Component#requestFocus()
+	 */
 	public void requestFocus() {
 		if (mangaListPages.getComponents().length > 0)
 			mangaListPages.getComponent(0).requestFocus();

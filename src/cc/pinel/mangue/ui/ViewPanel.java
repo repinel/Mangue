@@ -7,22 +7,18 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
 import cc.pinel.mangue.Main;
+import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Page;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
-import com.amazon.kindle.kindlet.net.ConnectivityHandler;
-import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KImage;
 import com.amazon.kindle.kindlet.ui.KPanel;
-import com.amazon.kindle.kindlet.ui.KProgress;
 
 public class ViewPanel extends KPanel implements KeyListener {
 	private static final long serialVersionUID = -2485604965935171736L;
@@ -61,33 +57,21 @@ public class ViewPanel extends KPanel implements KeyListener {
 		add(mangaImage, gc);
 	}
 
+	/**
+	 * @see java.awt.Component#requestFocus()
+	 */
 	public void requestFocus() {
 		mangaImage.requestFocus();
 	}
 
 	private void loadPages(final Chapter chapter) {
-		final ConnectivityHandler handler = new ConnectivityHandler() {
-			public void connected() {
-				KProgress progress = main.getContext().getProgressIndicator();
-				progress.setString("Loading pages...");
-				progress.setIndeterminate(true);
+		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading pages...") {
+			@Override
+			public void handleConnected() throws Exception {
+				pages = chapter.getPages();
 
-				try {
-					pages = chapter.getPages();
-
-					if (!pages.isEmpty())
-						loadImage(pages.get(pagesIndex));
-				} catch (SAXException e) {
-					logger.error(e);
-				} catch (IOException e) {
-					logger.error(e);
-				} finally {
-					progress.setIndeterminate(false);
-				}
-			}
-
-			public void disabled(NetworkDisabledDetails details) {
-				logger.error("Connection disabled: " + details.getLocalizedMessage());
+				if (!pages.isEmpty())
+					loadImage(pages.get(pagesIndex));
 			}
 		};
 
@@ -95,37 +79,25 @@ public class ViewPanel extends KPanel implements KeyListener {
 	}
 
 	private void loadImage(final Page page) {
-		final ConnectivityHandler handler = new ConnectivityHandler() {
-			public void connected() {
-				KProgress progress = main.getContext().getProgressIndicator();
-				progress.setString("Loading image...");
-				progress.setIndeterminate(true);
+		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
+			@Override
+			public void handleConnected() throws Exception {
+				logger.info("Fetching image content " + page.getImageURL());
 
-				try {
-					logger.info("Fetching image content " + page.getImageURL());
+				Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
+				mangaImage.setImage(image, true);
 
-					Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
-					mangaImage.setImage(image, true);
-
-					requestFocus();
-					repaint();
-				} catch (SAXException e) {
-					logger.error(e);
-				} catch (IOException e) {
-					logger.error(e);
-				} finally {
-					progress.setIndeterminate(false);
-				}
-			}
-
-			public void disabled(NetworkDisabledDetails details) {
-				logger.error("Connection disabled: " + details.getLocalizedMessage());
+				requestFocus();
+				repaint();
 			}
 		};
 
 		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);
 	}
 
+	/**
+	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+	 */
 	public void keyReleased(KeyEvent e) {
 		if (pages == null || pages.isEmpty())
 			return;
@@ -133,29 +105,27 @@ public class ViewPanel extends KPanel implements KeyListener {
 		switch (e.getKeyCode()) {
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE:
-				logger.debug("Key Released: turn page. " + pagesIndex);
-
-				if (pagesIndex + 1 < pages.size()) {
-					logger.debug("loading image");
+				if (pagesIndex + 1 < pages.size())
 					loadImage(pages.get(++pagesIndex));
-				}
 				break;
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE_BACK:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE_BACK:
-				logger.debug("Key Released: turn page back. " + pagesIndex);
-
-				if (pagesIndex - 1 >= 0) {
-					logger.debug("loading image");
+				if (pagesIndex - 1 >= 0)
 					loadImage(pages.get(--pagesIndex));
-				}
 				break;
 			default:
 				break;
 		}
 	}
 
+	/**
+	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+	 */
 	public void keyPressed(KeyEvent e) { }
 
+	/**
+	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+	 */
 	public void keyTyped(KeyEvent e) { }
 	
 }

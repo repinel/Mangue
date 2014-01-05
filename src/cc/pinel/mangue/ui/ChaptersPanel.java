@@ -5,29 +5,21 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
-import org.apache.log4j.Logger;
-import org.json.simple.parser.ParseException;
-import org.kwt.InvalidStyleException;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
+import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Manga;
 
-import com.amazon.kindle.kindlet.net.ConnectivityHandler;
-import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
-import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
 public class ChaptersPanel extends KPanel {
 	private static final long serialVersionUID = 7836204925749827794L;
-
-	private static final Logger logger = Logger.getLogger(ChaptersPanel.class);
 
 	private final Main main;
 
@@ -62,6 +54,9 @@ public class ChaptersPanel extends KPanel {
 		chaptersPages.first();
 	}
 
+	/**
+	 * @see java.awt.Component#requestFocus()
+	 */
 	public void requestFocus() {
 		if (chaptersPages.getComponents().length > 0)
 			chaptersPages.getComponent(0).requestFocus();
@@ -70,40 +65,27 @@ public class ChaptersPanel extends KPanel {
 	}
 
 	private void loadChapters() {
-		final ConnectivityHandler handler = new ConnectivityHandler() {
-			public void connected() {
-				KProgress progress = main.getContext().getProgressIndicator();
-				progress.setString("Loading chapters...");
-				progress.setIndeterminate(true);
-
-				try {
-					for (Chapter chapter : manga.getChapters()) {
-						final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(
-								chapter.getNumber() + " - " + chapter.getName());
-						chapterLabel.setFocusable(true);
-						chapterLabel.setEnabled(true);
-						chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-						chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
-						chaptersPages.addItem(chapterLabel);
-					}
-					chaptersPages.first();
-
-					requestFocus();
-					repaint();
-				} catch (IOException e) {
-					logger.error(e);
-				} catch (InvalidStyleException e) {
-					logger.error(e);
-				} catch (ParseException e) {
-					logger.error(e);
-				} finally {
-					progress.setIndeterminate(false);
+		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
+			@Override
+			public void handleConnected() throws Exception {
+				for (Chapter chapter : manga.getChapters()) {
+					final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(
+							chapter.getNumber() + " - " + chapter.getName());
+					chapterLabel.setFocusable(true);
+					chapterLabel.setEnabled(true);
+					chapterLabel
+							.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+					chapterLabel
+							.addActionListener(new ChapterLabelActionListener(
+									chapter));
+					chaptersPages.addItem(chapterLabel);
 				}
-			}
+				chaptersPages.first();
 
-			public void disabled(NetworkDisabledDetails details) {
-				logger.error("Connection disabled: " + details.getLocalizedMessage());
+				requestFocus();
+				repaint();	
 			}
+			
 		};
 
 		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);

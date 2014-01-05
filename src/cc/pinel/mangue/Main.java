@@ -38,6 +38,9 @@ public class Main extends KindletWrapper {
 
 	private List<Manga> mangas;
 
+	/**
+	 * @see com.cowlark.kindlet.KindletWrapper#onKindletCreate()
+	 */
 	@Override
 	public void onKindletCreate() {
 		PropertyConfigurator.configure(getClass().getResource(RES_DIR + "log4j.properties"));
@@ -56,6 +59,9 @@ public class Main extends KindletWrapper {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
 	}
 
+	/**
+	 * @see com.cowlark.kindlet.KindletWrapper#onKindletStart()
+	 */
 	@Override
 	public void onKindletStart() {
 		KindletContext context = getContext();
