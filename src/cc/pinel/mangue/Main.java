@@ -18,7 +18,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
+import cc.pinel.mangue.ui.ViewPanel;
 
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
@@ -31,6 +33,8 @@ public class Main extends KindletWrapper {
 	private static final Logger logger = Logger.getLogger(Main.class);
 
 	private MainPanel mainPanel;
+	private ChaptersPanel chaptersPanel;
+	private ViewPanel viewPanel;
 
 	private List<Manga> mangas;
 
@@ -58,7 +62,24 @@ public class Main extends KindletWrapper {
 		context.getRootContainer().add(mainPanel);
 	}
 
-	public void setActivePanel(KPanel panel) {
+	public void setActivePanel(MainPanel panel) {
+		this.chaptersPanel = null;
+		this.viewPanel = null;
+		setPanel(panel);
+	}
+
+	public void setActivePanel(ChaptersPanel panel) {
+		this.chaptersPanel = panel;
+		this.viewPanel = null;
+		setPanel(panel);
+	}
+
+	public void setActivePanel(ViewPanel panel) {
+		this.viewPanel = panel;
+		setPanel(panel);
+	}
+
+	private void setPanel(KPanel panel) {
 		KindletContext context = getContext();
 
 		context.getRootContainer().removeAll();
@@ -88,11 +109,16 @@ public class Main extends KindletWrapper {
 			if (e.isConsumed())
 				return false;
 
-//			Component displayed = getContext().getRootContainer().getComponent(0);
-
 			if (e.getKeyCode() == KindleKeyCodes.VK_BACK) {
-				e.consume();
-				return true; // for now, back just does not exit the app
+				Component displayed = getContext().getRootContainer().getComponent(0);
+
+				if (displayed == chaptersPanel) {
+					setActivePanel(mainPanel);
+				} else if (displayed == viewPanel) {
+					setActivePanel(chaptersPanel);
+				}
+
+				return true; // for now, back just does not exit
 			}
 
 			return false;
