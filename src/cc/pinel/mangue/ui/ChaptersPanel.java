@@ -55,6 +55,7 @@ public class ChaptersPanel extends KPanel {
 		gc.weightx = 1.0;
 		gc.weighty = 1.0;
 		gc.fill = GridBagConstraints.BOTH;
+
 		add(chaptersPages, gc);
 
 		chaptersPages.first();
@@ -64,7 +65,7 @@ public class ChaptersPanel extends KPanel {
 		if (chaptersPages.getComponents().length > 0)
 			chaptersPages.getComponent(0).requestFocus();
 		else
-			super.requestFocus();
+			chaptersPages.requestFocus();
 	}
 
 	private void loadChapters() {
@@ -80,6 +81,7 @@ public class ChaptersPanel extends KPanel {
 						chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
 						chaptersPages.addItem(chapterLabel);
 					}
+					chaptersPages.first();
 
 					requestFocus();
 					repaint();
@@ -96,6 +98,7 @@ public class ChaptersPanel extends KPanel {
 				logger.error("Connection disabled: " + details.getLocalizedMessage());
 			}
 		};
+
 		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);
 	}
 

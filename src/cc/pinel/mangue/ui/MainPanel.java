@@ -51,6 +51,7 @@ public class MainPanel extends KPanel {
 		gc.weightx = 1.0;
 		gc.weighty = 1.0;
 		gc.fill = GridBagConstraints.BOTH;
+
 		add(mangaListPages, gc);
 
 		mangaListPages.first();
@@ -60,7 +61,7 @@ public class MainPanel extends KPanel {
 		if (mangaListPages.getComponents().length > 0)
 			mangaListPages.getComponent(0).requestFocus();
 		else
-			super.requestFocus();
+			mangaListPages.requestFocus();
 	}
 
 	private class MangaLabelActionListener implements ActionListener {

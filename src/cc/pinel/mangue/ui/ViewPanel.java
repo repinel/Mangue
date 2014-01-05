@@ -59,7 +59,7 @@ public class ViewPanel extends KPanel {
 		if (pages.getComponents().length > 0)
 			pages.getComponent(0).requestFocus();
 		else
-			super.requestFocus();
+			pages.requestFocus();
 	}
 
 	private class ImageProvider implements ComponentProvider {
