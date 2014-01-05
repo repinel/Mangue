@@ -10,7 +10,6 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 
-import cc.pinel.mangue.Main;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Page;
 
@@ -25,8 +24,6 @@ public class ViewPanel extends KPanel {
 
 	private static final Logger logger = Logger.getLogger(ViewPanel.class);
 
-	private final Main main;
-
 	private final KPages pages;
 
 	private KImage mangaImage;
@@ -34,10 +31,8 @@ public class ViewPanel extends KPanel {
 	// help caching the last image fetched
 	private URL mangaImageURL;
 
-	public ViewPanel(Main main, Chapter chapter) {
+	public ViewPanel(Chapter chapter) {
 		super(new GridBagLayout());
-
-		this.main = main;
 
 		pages = new KPages(PageProviders.createFullPageProvider(new ImageProvider()));
 		pages.setFocusable(false);
