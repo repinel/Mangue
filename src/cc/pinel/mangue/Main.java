@@ -20,6 +20,7 @@ import org.json.simple.parser.ParseException;
 import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
+import cc.pinel.mangue.ui.Menu;
 import cc.pinel.mangue.ui.ViewPanel;
 
 import com.amazon.kindle.kindlet.KindletContext;
@@ -55,6 +56,8 @@ public class Main extends KindletWrapper {
 		}
 
 		mainPanel = new MainPanel(this, mangas);
+
+		getContext().setMenu(new Menu(this));
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
 	}
