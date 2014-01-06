@@ -18,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.ui.AddMangaPanel;
 import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
 import cc.pinel.mangue.ui.Menu;
@@ -25,6 +26,7 @@ import cc.pinel.mangue.ui.ViewPanel;
 
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
+import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.cowlark.kindlet.KindletWrapper;
 
@@ -36,6 +38,7 @@ public class Main extends KindletWrapper {
 	private MainPanel mainPanel;
 	private ChaptersPanel chaptersPanel;
 	private ViewPanel viewPanel;
+	private AddMangaPanel addMangaPanel; 
 
 	private List<Manga> mangas;
 
@@ -74,17 +77,25 @@ public class Main extends KindletWrapper {
 	public void setActivePanel(MainPanel panel) {
 		this.chaptersPanel = null;
 		this.viewPanel = null;
+		this.addMangaPanel = null;
 		setPanel(panel);
 	}
 
 	public void setActivePanel(ChaptersPanel panel) {
 		this.chaptersPanel = panel;
 		this.viewPanel = null;
+		this.addMangaPanel = null;
 		setPanel(panel);
 	}
 
 	public void setActivePanel(ViewPanel panel) {
 		this.viewPanel = panel;
+		this.addMangaPanel = null;
+		setPanel(panel);
+	}
+
+	public void setActivePanel(AddMangaPanel panel) {
+		this.addMangaPanel = panel;
 		setPanel(panel);
 	}
 
@@ -109,8 +120,21 @@ public class Main extends KindletWrapper {
 
 		for (int i = 0; i < mangas.size(); i++) {
 			JSONObject manga = (JSONObject) mangas.get(i);
-			this.mangas.add(new Manga(manga.get("id").toString(), manga.get("name").toString(), manga.get("first_chapter_url").toString()));
+			this.mangas.add(new Manga(manga.get("id").toString(), manga.get("name").toString()));
 		}
+	}
+
+	public void searchManga() {
+		KindletContext context = getContext();
+
+		KOptionPane.showInputDialog(context.getRootContainer(), "Enter the Manga Title: ", "", new KOptionPane.InputDialogListener() {
+			public void onClose(String input) {
+				if (input != null) {
+					AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
+					setActivePanel(addMangaPanel);
+				}
+			}
+		});
 	}
 
 	private class MainKeyEventDispatcher implements KeyEventDispatcher {
@@ -121,10 +145,17 @@ public class Main extends KindletWrapper {
 			if (e.getKeyCode() == KindleKeyCodes.VK_BACK) {
 				Component displayed = getContext().getRootContainer().getComponent(0);
 
-				if (displayed == chaptersPanel) {
+				if (displayed == chaptersPanel)
 					setActivePanel(mainPanel);
-				} else if (displayed == viewPanel) {
+				else if (displayed == viewPanel)
 					setActivePanel(chaptersPanel);
+				else if (displayed == addMangaPanel) {
+					if (viewPanel != null)
+						setActivePanel(viewPanel);
+					else if (chaptersPanel != null)
+						setActivePanel(chaptersPanel);
+					else
+						setActivePanel(mainPanel);
 				}
 
 				return true; // for now, back just does not exit

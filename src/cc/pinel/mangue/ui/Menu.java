@@ -18,7 +18,7 @@ public class Menu extends KMenu {
 		KMenuItem addItem = new KMenuItem("Add Mangas");
 		addItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				Menu.this.main.searchManga();
 			}
 		});
 

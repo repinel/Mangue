@@ -21,14 +21,12 @@ public class Manga {
 
 	private final String id;
 	private final String name;
-	private final String firstChapterLink;
 
 	private Collection<Chapter> chapters;
 
-	public Manga(String id, String name, String firstChapterLink) {
+	public Manga(String id, String name) {
 		this.id = id;
 		this.name = name;
-		this.firstChapterLink = firstChapterLink;
 	}
 
 	/**
@@ -43,13 +41,6 @@ public class Manga {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * @return the firstChapterLink
-	 */
-	public String getFirstChapterLink() {
-		return firstChapterLink;
 	}
 
 	/**
