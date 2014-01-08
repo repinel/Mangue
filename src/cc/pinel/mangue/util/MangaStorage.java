@@ -17,9 +17,7 @@ import cc.pinel.mangue.model.Manga;
 import com.amazon.kindle.kindlet.KindletContext;
 
 public class MangaStorage {
-	private static final String RES_DIR = "/res/";
-
-	private static final String STORAGE_FILE = "mangas.json";
+	private static final String STORAGE_FILE = "/storage/mangas.json";
 
 	private static final Logger logger = Logger.getLogger(MangaStorage.class);
 
@@ -32,7 +30,7 @@ public class MangaStorage {
 	public Collection<Manga> loadMangaList() throws IOException, ParseException {
 		Collection<Manga> mangas = new ArrayList<Manga>();
 
-		InputStream is = getClass().getResourceAsStream(RES_DIR + STORAGE_FILE);
+		InputStream is = getClass().getResourceAsStream(getPath());
 
 		JSONParser parser = new JSONParser();
 		JSONObject json = (JSONObject) parser.parse(IOUtils.toString(is));
@@ -46,5 +44,9 @@ public class MangaStorage {
 		logger.debug("mangas size: " + mangas.size());
 
 		return mangas;
+	}
+
+	private String getPath() {
+		return context.getHomeDirectory().getAbsolutePath() + STORAGE_FILE;
 	}
 }
