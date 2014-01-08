@@ -12,8 +12,10 @@ import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
 import cc.pinel.mangue.handler.ConnectivityHandler;
+import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.util.MangaSearch;
+import cc.pinel.mangue.util.MangaStorage;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;
@@ -98,7 +100,18 @@ public class AddMangaPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			logger.debug("Selected Manga: " + manga.getName());
+			new StorageHandler(main.getContext(), "Loading mangas...") {
+				@Override
+				public void handleRun() throws Exception {
+					try {
+						new MangaStorage(main.getContext()).addManga(manga);
+
+						main.reloadMainPanel();
+					} catch (Exception e) {
+						logger.debug(e);
+					}
+				}
+			}.start();
 		}
 	}
 }

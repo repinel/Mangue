@@ -37,6 +37,8 @@ public class Main extends KindletWrapper {
 	public void onKindletCreate() {
 		PropertyConfigurator.configure(getClass().getResource(RES_DIR + "log4j.properties"));
 
+		logger.info("-- Kindle Create --");
+
 		mainPanel = new MainPanel(this);
 
 		getContext().setMenu(new Menu(this));
@@ -88,6 +90,11 @@ public class Main extends KindletWrapper {
 
 		context.getRootContainer().invalidate();
 		context.getRootContainer().repaint();
+	}
+
+	public void reloadMainPanel() {
+		setActivePanel(this.mainPanel);
+		this.mainPanel.loadMangas();
 	}
 
 	public void searchManga() {

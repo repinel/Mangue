@@ -15,7 +15,7 @@ public class Menu extends KMenu {
 	public Menu (Main main) {
 		this.main = main;
 
-		KMenuItem addItem = new KMenuItem("Add Mangas");
+		KMenuItem addItem = new KMenuItem("Add Manga");
 		addItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Menu.this.main.searchManga();

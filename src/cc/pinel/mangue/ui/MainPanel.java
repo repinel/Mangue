@@ -62,11 +62,13 @@ public class MainPanel extends KPanel {
 			mangaListPages.requestFocus();
 	}
 
-	private void loadMangas() {
-		final StorageHandler handler = new StorageHandler(main.getContext(), "Loading mangas...") {
+	public void loadMangas() {
+		new StorageHandler(main.getContext(), "Loading mangas...") {
 			@Override
 			public void handleRun() throws Exception {
 				Collection<Manga> mangas = new MangaStorage(main.getContext()).getMangas();
+
+				mangaListPages.removeAllItems();
 
 				for (Manga manga : mangas) {
 					final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
@@ -77,14 +79,14 @@ public class MainPanel extends KPanel {
 					mangaListPages.addItem(mangaLabel);
 				}
 
+				mangaListPages.firePageModelUpdates();
+
 				mangaListPages.first();
 
 				requestFocus();
 				repaint();
 			}
-		};
-
-		handler.start();
+		}.start();
 	}
 
 	private class MangaLabelActionListener implements ActionListener {
