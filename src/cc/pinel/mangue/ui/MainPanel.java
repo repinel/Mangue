@@ -5,7 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.Collection;
 
 import org.kwt.ui.KWTSelectableLabel;
 
@@ -24,7 +24,7 @@ public class MainPanel extends KPanel {
 
 	private final KPages mangaListPages;
 
-	public MainPanel(Main main, List<Manga> mangas) {
+	public MainPanel(Main main, Collection<Manga> mangas) {
 		super(new GridBagLayout());
 
 		this.main = main;

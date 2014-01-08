@@ -5,16 +5,10 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import cc.pinel.mangue.model.Manga;
@@ -23,6 +17,7 @@ import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
 import cc.pinel.mangue.ui.Menu;
 import cc.pinel.mangue.ui.ViewPanel;
+import cc.pinel.mangue.util.MangaStorage;
 
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
@@ -40,7 +35,7 @@ public class Main extends KindletWrapper {
 	private ViewPanel viewPanel;
 	private AddMangaPanel addMangaPanel; 
 
-	private List<Manga> mangas;
+	private Collection<Manga> mangas;
 
 	/**
 	 * @see com.cowlark.kindlet.KindletWrapper#onKindletCreate()
@@ -51,14 +46,14 @@ public class Main extends KindletWrapper {
 
 		logger.info("About to load the manga list.");
 		try {
-			loadMangaList(getClass().getResourceAsStream(RES_DIR + "mangas.json"));
+			this.mangas = new MangaStorage(getContext()).loadMangaList();
 		} catch (IOException e) {
 			logger.error(e);
 		} catch (ParseException e) {
 			logger.error(e);
 		}
 
-		mainPanel = new MainPanel(this, mangas);
+		mainPanel = new MainPanel(this, this.mangas);
 
 		getContext().setMenu(new Menu(this));
 
@@ -109,19 +104,6 @@ public class Main extends KindletWrapper {
 
 		context.getRootContainer().invalidate();
 		context.getRootContainer().repaint();
-	}
-
-	private void loadMangaList(InputStream is) throws IOException, ParseException {
-		this.mangas = new ArrayList<Manga>();
-
-		JSONParser parser = new JSONParser();
-		JSONObject json = (JSONObject) parser.parse(IOUtils.toString(is));
-		JSONArray mangas = (JSONArray) json.get("mangas");
-
-		for (int i = 0; i < mangas.size(); i++) {
-			JSONObject manga = (JSONObject) mangas.get(i);
-			this.mangas.add(new Manga(manga.get("id").toString(), manga.get("name").toString()));
-		}
 	}
 
 	public void searchManga() {
