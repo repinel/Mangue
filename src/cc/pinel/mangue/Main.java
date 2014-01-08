@@ -46,7 +46,7 @@ public class Main extends KindletWrapper {
 
 		logger.info("About to load the manga list.");
 		try {
-			this.mangas = new MangaStorage(getContext()).loadMangaList();
+			this.mangas = new MangaStorage(getContext()).getMangas();
 		} catch (IOException e) {
 			logger.error(e);
 		} catch (ParseException e) {

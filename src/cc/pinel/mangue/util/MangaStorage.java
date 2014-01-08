@@ -27,7 +27,7 @@ public class MangaStorage {
 		this.context = context;
 	}
 
-	public Collection<Manga> loadMangaList() throws IOException, ParseException {
+	public Collection<Manga> getMangas() throws IOException, ParseException {
 		Collection<Manga> mangas = new ArrayList<Manga>();
 
 		InputStream is = getClass().getResourceAsStream(getPath());
