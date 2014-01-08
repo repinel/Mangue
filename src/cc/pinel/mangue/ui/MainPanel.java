@@ -10,7 +10,9 @@ import java.util.Collection;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
+import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.util.MangaStorage;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;
@@ -24,7 +26,7 @@ public class MainPanel extends KPanel {
 
 	private final KPages mangaListPages;
 
-	public MainPanel(Main main, Collection<Manga> mangas) {
+	public MainPanel(Main main) {
 		super(new GridBagLayout());
 
 		this.main = main;
@@ -34,14 +36,7 @@ public class MainPanel extends KPanel {
 		mangaListPages.setEnabled(true);
 		mangaListPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
-		for (Manga manga : mangas) {
-			final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
-			mangaLabel.setFocusable(true);
-			mangaLabel.setEnabled(true);
-			mangaLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-			mangaLabel.addActionListener(new MangaLabelActionListener(manga));
-			mangaListPages.addItem(mangaLabel);
-		}
+		loadMangas();
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
@@ -65,6 +60,31 @@ public class MainPanel extends KPanel {
 			mangaListPages.getComponent(0).requestFocus();
 		else
 			mangaListPages.requestFocus();
+	}
+
+	private void loadMangas() {
+		final StorageHandler handler = new StorageHandler(main.getContext(), "Loading mangas...") {
+			@Override
+			public void handleRun() throws Exception {
+				Collection<Manga> mangas = new MangaStorage(main.getContext()).getMangas();
+
+				for (Manga manga : mangas) {
+					final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
+					mangaLabel.setFocusable(true);
+					mangaLabel.setEnabled(true);
+					mangaLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+					mangaLabel.addActionListener(new MangaLabelActionListener(manga));
+					mangaListPages.addItem(mangaLabel);
+				}
+
+				mangaListPages.first();
+
+				requestFocus();
+				repaint();
+			}
+		};
+
+		handler.start();
 	}
 
 	private class MangaLabelActionListener implements ActionListener {

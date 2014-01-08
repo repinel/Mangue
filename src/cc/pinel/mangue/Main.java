@@ -4,20 +4,15 @@ import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.json.simple.parser.ParseException;
 
-import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.ui.AddMangaPanel;
 import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
 import cc.pinel.mangue.ui.Menu;
 import cc.pinel.mangue.ui.ViewPanel;
-import cc.pinel.mangue.util.MangaStorage;
 
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
@@ -35,8 +30,6 @@ public class Main extends KindletWrapper {
 	private ViewPanel viewPanel;
 	private AddMangaPanel addMangaPanel; 
 
-	private Collection<Manga> mangas;
-
 	/**
 	 * @see com.cowlark.kindlet.KindletWrapper#onKindletCreate()
 	 */
@@ -44,16 +37,7 @@ public class Main extends KindletWrapper {
 	public void onKindletCreate() {
 		PropertyConfigurator.configure(getClass().getResource(RES_DIR + "log4j.properties"));
 
-		logger.info("About to load the manga list.");
-		try {
-			this.mangas = new MangaStorage(getContext()).getMangas();
-		} catch (IOException e) {
-			logger.error(e);
-		} catch (ParseException e) {
-			logger.error(e);
-		}
-
-		mainPanel = new MainPanel(this, this.mangas);
+		mainPanel = new MainPanel(this);
 
 		getContext().setMenu(new Menu(this));
 
