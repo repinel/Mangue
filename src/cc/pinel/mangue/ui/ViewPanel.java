@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.kwt.ui.KWTProgressBar;
 
 import cc.pinel.mangue.Main;
 import cc.pinel.mangue.handler.ConnectivityHandler;
@@ -29,6 +30,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 	private final KImage mangaImage;
 
+	private final KWTProgressBar progressBar;
+
 	private List<Page> pages;
 
 	private int pagesIndex = 0;
@@ -38,23 +41,32 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 		this.main = main;
 
+		progressBar = new KWTProgressBar();
+		progressBar.setLabelStyle(KWTProgressBar.STYLE_NONE);
+
 		GridBagConstraints gc = new GridBagConstraints();
-		gc.gridx = 0;
 		gc.gridy = 0;
-		gc.insets = new Insets(20, 20, 20, 20);
-		gc.anchor = GridBagConstraints.NORTH;
+		gc.anchor = GridBagConstraints.SOUTH;
 		gc.weightx = 1.0;
-		gc.weighty = 1.0;
-		gc.fill = GridBagConstraints.BOTH;
+		gc.weighty = 0.1;
+		gc.insets = new Insets(0, 10, 10, 10);
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		add(progressBar, gc);
 
 		mangaImage = new KImage(null, KImage.SCALE_TO_FIT, KImage.SCALE_TO_FIT);
 		mangaImage.setFocusable(true);
 		mangaImage.setEnabled(true);
 		mangaImage.addKeyListener(this);
 
-		loadPages(chapter);
-
+		gc.gridx = 0;
+		gc.gridy = 0;
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.weightx = 1.0;
+		gc.weighty = 1.0;
+		gc.fill = GridBagConstraints.BOTH;
 		add(mangaImage, gc);
+
+		loadPages(chapter);
 	}
 
 	/**
@@ -69,6 +81,9 @@ public class ViewPanel extends KPanel implements KeyListener {
 			@Override
 			public void handleConnected() throws Exception {
 				pages = chapter.getPages();
+
+				progressBar.setCurrentTick(0);
+				progressBar.setTotalTicks(pages.size());
 
 				if (!pages.isEmpty())
 					loadImage(pages.get(pagesIndex));
@@ -86,6 +101,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 				Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
 				mangaImage.setImage(image, true);
+
+				progressBar.setCurrentTick(pagesIndex);
 
 				requestFocus();
 				repaint();
