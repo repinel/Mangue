@@ -100,9 +100,9 @@ public class Main extends KindletWrapper {
 	public void searchManga() {
 		KindletContext context = getContext();
 
-		KOptionPane.showInputDialog(context.getRootContainer(), "Enter the Manga Title: ", "", new KOptionPane.InputDialogListener() {
+		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ", "", new KOptionPane.InputDialogListener() {
 			public void onClose(String input) {
-				if (input != null) {
+				if (input != null && input.length() >= 3) {
 					AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
 					setActivePanel(addMangaPanel);
 				}
