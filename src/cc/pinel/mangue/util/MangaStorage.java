@@ -31,7 +31,7 @@ public class MangaStorage {
 	}
 
 	private String getPath() {
-		return context.getHomeDirectory().getAbsolutePath() + STORAGE_FILE;
+		return context.getHomeDirectory().getAbsolutePath() + "/" + STORAGE_FILE;
 	}
 
 	private JSONObject readJSON() throws ParseException, IOException {
