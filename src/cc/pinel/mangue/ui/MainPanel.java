@@ -15,6 +15,7 @@ import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.util.MangaStorage;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
+import com.amazon.kindle.kindlet.ui.KLabelMultiline;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
@@ -35,6 +36,10 @@ public class MainPanel extends KPanel {
 		mangaListPages.setFocusable(true);
 		mangaListPages.setEnabled(true);
 		mangaListPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
+
+		mangaListPages.addItem(new KLabelMultiline("Welcome to Mangue - Online Manga Reader.\n\n"
+												 + "Use the menu option to search and add mangas to your list.\n\n"
+												 + "All mangas available here are loaded from the www.mangapanda.com website."));
 
 		loadMangas();
 
@@ -68,7 +73,8 @@ public class MainPanel extends KPanel {
 			public void handleRun() throws Exception {
 				Collection<Manga> mangas = new MangaStorage(main.getContext()).getMangas();
 
-				mangaListPages.removeAllItems();
+				if (mangas.size() > 0)
+					mangaListPages.removeAllItems();
 
 				for (Manga manga : mangas) {
 					final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
