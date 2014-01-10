@@ -14,8 +14,8 @@ import cc.pinel.mangue.Main;
 import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.storage.MangaStorage;
 import cc.pinel.mangue.util.MangaSearch;
-import cc.pinel.mangue.util.MangaStorage;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;

@@ -1,45 +1,27 @@
-package cc.pinel.mangue.util;
+package cc.pinel.mangue.storage;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import cc.pinel.mangue.model.Manga;
 
 import com.amazon.kindle.kindlet.KindletContext;
 
-public class MangaStorage {
+public class MangaStorage extends AbstractStorage {
 	private static final String STORAGE_FILE = "mangas.json";
 
 	private static final Logger logger = Logger.getLogger(MangaStorage.class);
 
-	private final KindletContext context;
-
 	public MangaStorage(KindletContext context) {
-		this.context = context;
-	}
-
-	private String getPath() {
-		return context.getHomeDirectory().getAbsolutePath() + "/" + STORAGE_FILE;
-	}
-
-	private JSONObject readJSON() throws ParseException, IOException {
-		InputStream is = getClass().getResourceAsStream(getPath());
-
-		JSONParser parser = new JSONParser();
-
-		return (JSONObject) parser.parse(IOUtils.toString(is));
+		super(context, STORAGE_FILE);
 	}
 
 	public Collection<Manga> getMangas() {
