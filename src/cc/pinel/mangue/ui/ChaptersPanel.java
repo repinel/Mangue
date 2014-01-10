@@ -1,5 +1,6 @@
 package cc.pinel.mangue.ui;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,8 +11,10 @@ import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
 import cc.pinel.mangue.handler.ConnectivityHandler;
+import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.storage.StateStorage;
 
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;
@@ -65,25 +68,39 @@ public class ChaptersPanel extends KPanel {
 	}
 
 	private void loadChapters() {
-		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
+		new StorageHandler(main.getContext(), "Loading mangas...") {
 			@Override
-			public void handleConnected() throws Exception {
-				for (Chapter chapter : manga.getChapters()) {
-					final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
-					chapterLabel.setFocusable(true);
-					chapterLabel.setEnabled(true);
-					chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-					chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
-					chaptersPages.addItem(chapterLabel);
-				}
-				chaptersPages.first();
+			public void handleRun() throws Exception {
+				final String chapterNumber = new StateStorage(main.getContext()).getChapter(manga.getId());
 
-				requestFocus();
-				repaint();	
+				final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
+					@Override
+					public void handleConnected() throws Exception {
+						for (Chapter chapter : manga.getChapters()) {
+							final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
+							chapterLabel.setFocusable(true);
+							chapterLabel.setEnabled(true);
+							chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+							chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
+
+							// last read chapter
+							if (chapterNumber != null && chapter.getNumber().equals(chapterNumber)) {
+								Font font = chapterLabel.getFont();
+								chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize() + 1));
+							}
+
+							chaptersPages.addItem(chapterLabel);
+						}
+						chaptersPages.first();
+
+						requestFocus();
+						repaint();
+					}
+				};
+
+				main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);
 			}
-		};
-
-		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);
+		}.start();
 	}
 
 	private class ChapterLabelActionListener implements ActionListener {
@@ -94,8 +111,18 @@ public class ChaptersPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
+			rememberChapter();
 			ViewPanel viewPanel = new ViewPanel(main, chapter);
 			main.setActivePanel(viewPanel);
+		}
+
+		private void rememberChapter() {
+			new StorageHandler(main.getContext(), "Loading mangas...") {
+				@Override
+				public void handleRun() throws Exception {
+					new StateStorage(main.getContext()).setChapter(manga.getId(), chapter.getNumber());
+				}
+			}.start();
 		}
 	}
 }

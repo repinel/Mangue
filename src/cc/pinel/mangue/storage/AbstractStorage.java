@@ -1,9 +1,11 @@
 package cc.pinel.mangue.storage;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -30,5 +32,27 @@ public abstract class AbstractStorage {
 		JSONParser parser = new JSONParser();
 
 		return (JSONObject) parser.parse(IOUtils.toString(is));
+	}
+
+	protected void writeJSON(JSONObject json) throws IOException {
+		FileWriter fw = null;
+
+		try {
+			fw = new FileWriter(getPath());
+
+			json.writeJSONString(fw);
+		} finally {
+			if (fw != null)
+				fw.close();
+		}
+	}
+
+	protected JSONObject findObject(JSONArray jsonMangas, String mangaId) {
+		for(int i = 0; i < jsonMangas.size(); i++) {
+			JSONObject jsonManga = (JSONObject) jsonMangas.get(i);
+			if (jsonManga.get("id").equals(mangaId))
+				return jsonManga;
+		}
+		return null;
 	}
 }

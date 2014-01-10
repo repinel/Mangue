@@ -1,6 +1,5 @@
 package cc.pinel.mangue.storage;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +74,6 @@ public class MangaStorage extends AbstractStorage {
 				JSONObject manga2 = (JSONObject) o2;
 				return manga1.get("name").toString().compareTo(manga2.get("name").toString());
 			}
-
 		});
 
 		JSONArray sortedJSONArray = new JSONArray();
@@ -84,15 +82,6 @@ public class MangaStorage extends AbstractStorage {
 		}
 		json.put("mangas", sortedJSONArray);
 
-		FileWriter fw = null;
-
-		try {
-			fw = new FileWriter(getPath());
-
-			json.writeJSONString(fw);
-		} finally {
-			if (fw != null)
-				fw.close();
-		}
+		writeJSON(json);
 	}
 }

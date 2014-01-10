@@ -28,6 +28,10 @@ public class Chapter {
 		this.link = link;
 	}
 
+	public String getNumber() {
+		return this.number;
+	}
+
 	public String getTitle() {
 		return this.number + " - " + this.name;
 	}
