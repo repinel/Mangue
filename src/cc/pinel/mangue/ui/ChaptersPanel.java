@@ -1,5 +1,6 @@
 package cc.pinel.mangue.ui;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -86,7 +87,8 @@ public class ChaptersPanel extends KPanel {
 							// last read chapter
 							if (chapterNumber != null && chapter.getNumber().equals(chapterNumber)) {
 								Font font = chapterLabel.getFont();
-								chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize() + 1));
+								chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+								chapterLabel.setForeground(new Color(255, 84, 84));
 							}
 
 							chaptersPages.addItem(chapterLabel);
