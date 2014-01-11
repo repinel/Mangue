@@ -61,27 +61,30 @@ public class MangaStorage extends AbstractStorage {
 			json.put("mangas", jsonMangas);
 		}
 
-		JSONObject jsonManga = new JSONObject();
-		jsonManga.put("id", manga.getId());
-		jsonManga.put("name", manga.getName());
-
-		jsonMangas.add(jsonManga);
-
-		Object[] sortedArray = jsonMangas.toArray();
-		Arrays.sort(sortedArray, new Comparator<Object>() {
-			public int compare(Object o1, Object o2) {
-				JSONObject manga1 = (JSONObject) o1;
-				JSONObject manga2 = (JSONObject) o2;
-				return manga1.get("name").toString().compareTo(manga2.get("name").toString());
+		JSONObject jsonManga = findObject(jsonMangas, manga.getId());
+		if (jsonManga == null) {
+			jsonManga = new JSONObject();
+			jsonManga.put("id", manga.getId());
+			jsonManga.put("name", manga.getName());
+	
+			jsonMangas.add(jsonManga);
+	
+			Object[] sortedArray = jsonMangas.toArray();
+			Arrays.sort(sortedArray, new Comparator<Object>() {
+				public int compare(Object o1, Object o2) {
+					JSONObject manga1 = (JSONObject) o1;
+					JSONObject manga2 = (JSONObject) o2;
+					return manga1.get("name").toString().compareTo(manga2.get("name").toString());
+				}
+			});
+	
+			JSONArray sortedJSONArray = new JSONArray();
+			for (Object obj : sortedArray) {
+				sortedJSONArray.add(obj);
 			}
-		});
-
-		JSONArray sortedJSONArray = new JSONArray();
-		for (Object obj : sortedArray) {
-			sortedJSONArray.add(obj);
+			json.put("mangas", sortedJSONArray);
+	
+			writeJSON(json);
 		}
-		json.put("mangas", sortedJSONArray);
-
-		writeJSON(json);
 	}
 }
