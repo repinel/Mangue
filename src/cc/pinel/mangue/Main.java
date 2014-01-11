@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import cc.pinel.mangue.storage.GeneralStorage;
 import cc.pinel.mangue.ui.AddMangaPanel;
 import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
@@ -98,11 +99,14 @@ public class Main extends KindletWrapper {
 	}
 
 	public void searchManga() {
-		KindletContext context = getContext();
+		final KindletContext context = getContext();
 
-		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ", "", new KOptionPane.InputDialogListener() {
+		String term = new GeneralStorage(context).getSearchTerm();
+
+		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ", term == null ? "" : term, new KOptionPane.InputDialogListener() {
 			public void onClose(String input) {
 				if (input != null && input.length() >= 3) {
+					new GeneralStorage(context).setSearchTerm(input);
 					AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
 					setActivePanel(addMangaPanel);
 				}
