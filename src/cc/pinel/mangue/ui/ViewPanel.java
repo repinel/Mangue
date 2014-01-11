@@ -102,7 +102,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 				Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
 				mangaImage.setImage(image, true);
 
-				progressBar.setCurrentTick(pagesIndex);
+				progressBar.setCurrentTick(pagesIndex + 1);
 
 				requestFocus();
 				repaint();
