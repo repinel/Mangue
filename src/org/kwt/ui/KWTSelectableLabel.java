@@ -7,12 +7,12 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.kwt.InvalidStyleException;
+
 
 import com.amazon.kindle.kindlet.ui.KLabel;
 
@@ -28,7 +28,7 @@ import com.amazon.kindle.kindlet.ui.KLabel;
  */
 public class KWTSelectableLabel extends KLabel {
     private static final long serialVersionUID = 8118660222383683366L;
-    
+
     private static final int BUTTON_DOWN_EVENT = 401;
     private static final int SELECT_BUTTON_KEY = 61451;
     private static final int DEFAULT_UNDERLINE_WIDTH = 5;
@@ -234,14 +234,14 @@ public class KWTSelectableLabel extends KLabel {
     /**
      * {@inheritDoc }
      */
-    protected void processEvent(AWTEvent e) {
+    public void processEvent(AWTEvent e) {
         switch(e.getID()) {
         case BUTTON_DOWN_EVENT:
-            if (((KeyEvent) e).getKeyCode() != SELECT_BUTTON_KEY) break;
+            KeyEvent keyEvent = (KeyEvent) e;
             Iterator it = actionListeners.iterator();
             while (it.hasNext()) {
                 ActionListener listener = (ActionListener) it.next();
-                listener.actionPerformed(new ActionEvent(this, BUTTON_DOWN_EVENT, null));
+                listener.actionPerformed(new ActionEvent(this, BUTTON_DOWN_EVENT, Integer.toString(keyEvent.getKeyCode())));
             }
             break;
         default:

@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.storage.GeneralStorage;
 import cc.pinel.mangue.ui.AddMangaPanel;
@@ -135,7 +136,11 @@ public class Main extends KindletWrapper {
 						setActivePanel(mainPanel);
 				}
 
-				return true; // for now, back just does not exit
+				e.consume();
+				return true;
+			} else if (e.getSource() instanceof KWTSelectableLabel) {
+				KWTSelectableLabel label = (KWTSelectableLabel) e.getSource();
+				label.processEvent(e);
 			}
 
 			return false;

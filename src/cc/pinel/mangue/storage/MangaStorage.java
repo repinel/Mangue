@@ -87,4 +87,29 @@ public class MangaStorage extends AbstractStorage {
 			writeJSON(json);
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public void removeManga(Manga manga) throws IOException {
+		JSONObject json;
+
+		try {
+			json = readJSON();
+		} catch (Exception e) {
+			logger.error(e);
+			json = new JSONObject();
+		}
+
+		JSONArray jsonMangas = (JSONArray) json.get("mangas");
+		if (jsonMangas == null) {
+			jsonMangas = new JSONArray();
+			json.put("mangas", jsonMangas);
+		}
+
+		JSONObject jsonManga = findObject(jsonMangas, manga.getId());
+		if (jsonManga != null) {
+			jsonMangas.remove(jsonManga);
+
+			writeJSON(json);
+		}
+	}
 }

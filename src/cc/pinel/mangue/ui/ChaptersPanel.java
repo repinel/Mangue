@@ -15,9 +15,12 @@ import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.storage.MangaStorage;
 import cc.pinel.mangue.storage.StateStorage;
 
+import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
+import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
@@ -113,9 +116,11 @@ public class ChaptersPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			rememberChapter();
-			ViewPanel viewPanel = new ViewPanel(main, chapter);
-			main.setActivePanel(viewPanel);
+			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
+				rememberChapter();
+				ViewPanel viewPanel = new ViewPanel(main, chapter);
+				main.setActivePanel(viewPanel);
+			}
 		}
 
 		private void rememberChapter() {

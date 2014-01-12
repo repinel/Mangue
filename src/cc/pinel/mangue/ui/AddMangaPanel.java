@@ -17,6 +17,7 @@ import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.storage.MangaStorage;
 import cc.pinel.mangue.util.MangaSearch;
 
+import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
@@ -100,18 +101,20 @@ public class AddMangaPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			new StorageHandler(main.getContext(), "Loading mangas...") {
-				@Override
-				public void handleRun() throws Exception {
-					try {
-						new MangaStorage(main.getContext()).addManga(manga);
+			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
+				new StorageHandler(main.getContext(), "Loading mangas...") {
+					@Override
+					public void handleRun() throws Exception {
+						try {
+							new MangaStorage(main.getContext()).addManga(manga);
 
-						main.reloadMainPanel();
-					} catch (Exception e) {
-						logger.debug(e);
+							main.reloadMainPanel();
+						} catch (Exception e) {
+							logger.debug(e);
+						}
 					}
-				}
-			}.start();
+				}.start();
+			}
 		}
 	}
 }

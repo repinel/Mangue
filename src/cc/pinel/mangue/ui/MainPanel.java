@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
@@ -14,14 +15,18 @@ import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.storage.MangaStorage;
 
+import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
 import com.amazon.kindle.kindlet.ui.KLabelMultiline;
+import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
 public class MainPanel extends KPanel {
 	private static final long serialVersionUID = -4692282056850151456L;
+
+	private static final Logger logger = Logger.getLogger(MainPanel.class);
 
 	private final Main main;
 
@@ -103,8 +108,29 @@ public class MainPanel extends KPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			ChaptersPanel chaptersPanel = new ChaptersPanel(main, manga);
-			main.setActivePanel(chaptersPanel);
+			switch (Integer.parseInt(event.getActionCommand())) {
+				case KindleKeyCodes.VK_FIVE_WAY_SELECT:
+					ChaptersPanel chaptersPanel = new ChaptersPanel(main, manga);
+					main.setActivePanel(chaptersPanel);
+					break;
+				case KindleKeyCodes.VK_FIVE_WAY_LEFT:
+					KOptionPane.showConfirmDialog(MainPanel.this, "Would you like to remove " + manga.getName() + "?", new KOptionPane.ConfirmDialogListener() {
+						public void onClose(int option) {
+							if (option == KOptionPane.OK_OPTION) {
+								new StorageHandler(main.getContext(), "Removing manga...") {
+									@Override
+									public void handleRun() throws Exception {
+										new MangaStorage(main.getContext()).removeManga(manga);
+										loadMangas();
+									}
+								}.start();
+							}
+						}
+					});
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }
