@@ -121,21 +121,22 @@ public class Main extends KindletWrapper {
 				return false;
 
 			if (e.getKeyCode() == KindleKeyCodes.VK_BACK) {
-				Component displayed = getContext().getRootContainer().getComponent(0);
+				if (e.getID() == KeyEvent.KEY_PRESSED) {
+					Component displayed = getContext().getRootContainer().getComponent(0);
 
-				if (displayed == chaptersPanel)
-					setActivePanel(mainPanel);
-				else if (displayed == viewPanel)
-					setActivePanel(chaptersPanel);
-				else if (displayed == addMangaPanel) {
-					if (viewPanel != null)
-						setActivePanel(viewPanel);
-					else if (chaptersPanel != null)
-						setActivePanel(chaptersPanel);
-					else
+					if (displayed == chaptersPanel)
 						setActivePanel(mainPanel);
+					else if (displayed == viewPanel)
+						setActivePanel(chaptersPanel);
+					else if (displayed == addMangaPanel) {
+						if (viewPanel != null)
+							setActivePanel(viewPanel);
+						else if (chaptersPanel != null)
+							setActivePanel(chaptersPanel);
+						else
+							setActivePanel(mainPanel);
+					}
 				}
-
 				e.consume();
 				return true;
 			} else if (e.getSource() instanceof KWTSelectableLabel) {
