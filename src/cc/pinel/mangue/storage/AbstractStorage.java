@@ -22,6 +22,10 @@ public abstract class AbstractStorage {
 		this.storageFile = storageFile;
 	}
 
+	public void clear() throws IOException {
+		writeJSON(new JSONObject());
+	}
+
 	protected String getPath() {
 		return this.context.getHomeDirectory().getAbsolutePath() + "/" + this.storageFile;
 	}

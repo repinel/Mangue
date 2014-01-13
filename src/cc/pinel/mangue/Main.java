@@ -9,7 +9,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.kwt.ui.KWTSelectableLabel;
 
+import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.storage.GeneralStorage;
+import cc.pinel.mangue.storage.MangaStorage;
+import cc.pinel.mangue.storage.StateStorage;
 import cc.pinel.mangue.ui.AddMangaPanel;
 import cc.pinel.mangue.ui.ChaptersPanel;
 import cc.pinel.mangue.ui.MainPanel;
@@ -110,6 +113,25 @@ public class Main extends KindletWrapper {
 					new GeneralStorage(context).setSearchTerm(input);
 					AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
 					setActivePanel(addMangaPanel);
+				}
+			}
+		});
+	}
+
+	public void clearMangas() {
+		final KindletContext context = getContext();
+
+		KOptionPane.showConfirmDialog(context.getRootContainer(), "Would you really like to clear your favorites?", new KOptionPane.ConfirmDialogListener() {
+			public void onClose(int option) {
+				if (option == KOptionPane.OK_OPTION) {
+					new StorageHandler(context, "Clearing Favorites...") {
+						@Override
+						public void handleRun() throws Exception {
+							new MangaStorage(context).clear();
+							new StateStorage(context).clear();
+							reloadMainPanel();
+						}
+					}.start();
 				}
 			}
 		});

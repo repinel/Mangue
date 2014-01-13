@@ -21,7 +21,16 @@ public class Menu extends KMenu {
 				Menu.this.main.searchManga();
 			}
 		});
-
 		add(addItem);
+
+		addSeparator();
+
+		KMenuItem clearFavoritesItem = new KMenuItem("Clear Favorites");
+		clearFavoritesItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Menu.this.main.clearMangas();
+			}
+		});
+		add(clearFavoritesItem);
 	}
 }
