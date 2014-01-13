@@ -20,14 +20,15 @@ public class StateStorage extends AbstractStorage {
 	public String getChapter(String mangaId) {
 		String chapterNumber = null;
 
-		JSONArray jsonMangas;
+		JSONArray jsonMangas = null;
 
 		try {
 			jsonMangas = (JSONArray) readJSON().get("mangas");
 		} catch (Exception e) {
-			logger.error(e);
-			jsonMangas = new JSONArray();
+			// ignored
 		}
+		if (jsonMangas == null)
+			jsonMangas = new JSONArray();
 
 		JSONObject jsonManga = findObject(jsonMangas, mangaId);
 		if (jsonManga != null)
@@ -40,14 +41,15 @@ public class StateStorage extends AbstractStorage {
 
 	@SuppressWarnings("unchecked")
 	public void setChapter(String mangaId, String chapterNumber) throws IOException {
-		JSONObject json;
+		JSONObject json = null;
 
 		try {
 			json = readJSON();
 		} catch (Exception e) {
-			logger.error(e);
-			json = new JSONObject();
+			// ignored
 		}
+		if (json == null)
+			json = new JSONObject();
 
 		JSONArray jsonMangas = (JSONArray) json.get("mangas");
 		if (jsonMangas == null) {

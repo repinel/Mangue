@@ -54,7 +54,8 @@ public abstract class AbstractStorage {
 	protected JSONObject findObject(JSONArray jsonMangas, String mangaId) {
 		for(int i = 0; i < jsonMangas.size(); i++) {
 			JSONObject jsonManga = (JSONObject) jsonMangas.get(i);
-			if (jsonManga.get("id").equals(mangaId))
+			Object id = jsonManga == null ? null : jsonManga.get("id");
+			if (id.equals(mangaId))
 				return jsonManga;
 		}
 		return null;

@@ -26,13 +26,14 @@ public class MangaStorage extends AbstractStorage {
 	public Collection<Manga> getMangas() {
 		Collection<Manga> mangas = new ArrayList<Manga>();
 
-		JSONArray jsonMangas;
+		JSONArray jsonMangas = null;
 		try {
 			jsonMangas = (JSONArray) readJSON().get("mangas");
 		} catch (Exception e) {
-			logger.error(e);
-			jsonMangas = new JSONArray();
+			// ignored
 		}
+		if (jsonMangas == null)
+			jsonMangas = new JSONArray();
 
 		for (int i = 0; i < jsonMangas.size(); i++) {
 			JSONObject jsonManga = (JSONObject) jsonMangas.get(i);
@@ -46,14 +47,15 @@ public class MangaStorage extends AbstractStorage {
 
 	@SuppressWarnings("unchecked")
 	public void addManga(Manga manga) throws IOException {
-		JSONObject json;
+		JSONObject json = null;
 
 		try {
 			json = readJSON();
 		} catch (Exception e) {
-			logger.error(e);
-			json = new JSONObject();
+			// ignored
 		}
+		if (json == null)
+			json = new JSONObject();
 
 		JSONArray jsonMangas = (JSONArray) json.get("mangas");
 		if (jsonMangas == null) {
@@ -88,28 +90,25 @@ public class MangaStorage extends AbstractStorage {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void removeManga(Manga manga) throws IOException {
-		JSONObject json;
+		JSONObject json = null;
 
 		try {
 			json = readJSON();
 		} catch (Exception e) {
-			logger.error(e);
-			json = new JSONObject();
+			// ignored
 		}
+		if (json == null)
+			json = new JSONObject();
 
 		JSONArray jsonMangas = (JSONArray) json.get("mangas");
-		if (jsonMangas == null) {
-			jsonMangas = new JSONArray();
-			json.put("mangas", jsonMangas);
-		}
+		if (jsonMangas != null) {
+			JSONObject jsonManga = findObject(jsonMangas, manga.getId());
+			if (jsonManga != null) {
+				jsonMangas.remove(jsonManga);
 
-		JSONObject jsonManga = findObject(jsonMangas, manga.getId());
-		if (jsonManga != null) {
-			jsonMangas.remove(jsonManga);
-
-			writeJSON(json);
+				writeJSON(json);
+			}
 		}
 	}
 }
