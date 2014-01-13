@@ -25,6 +25,14 @@ public class Menu extends KMenu {
 
 		addSeparator();
 
+		KMenuItem clearSearchItem = new KMenuItem("Clear Previous Search");
+		clearSearchItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Menu.this.main.clearSearch();
+			}
+		});
+		add(clearSearchItem);
+
 		KMenuItem clearFavoritesItem = new KMenuItem("Clear Favorites");
 		clearFavoritesItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

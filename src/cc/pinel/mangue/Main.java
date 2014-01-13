@@ -137,6 +137,17 @@ public class Main extends KindletWrapper {
 		});
 	}
 
+	public void clearSearch() {
+		final KindletContext context = getContext();
+
+		KOptionPane.showConfirmDialog(context.getRootContainer(), "Would you really like to clear your previous searched term?", new KOptionPane.ConfirmDialogListener() {
+			public void onClose(int option) {
+				if (option == KOptionPane.OK_OPTION)
+					new GeneralStorage(context).removeSearchTerm();
+			}
+		});
+	}
+
 	private class MainKeyEventDispatcher implements KeyEventDispatcher {
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			if (e.isConsumed())

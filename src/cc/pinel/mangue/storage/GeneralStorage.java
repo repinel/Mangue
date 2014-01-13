@@ -17,8 +17,12 @@ public class GeneralStorage {
 		return getValue(SEARCH_TERM_KEY);
 	}
 
-	public void setSearchTerm(String term) {
-		secureStorage.putChars(SEARCH_TERM_KEY, term.toCharArray());
+	public boolean setSearchTerm(String term) {
+		return secureStorage.putChars(SEARCH_TERM_KEY, term.toCharArray());
+	}
+
+	public boolean removeSearchTerm() {
+		return secureStorage.remove(SEARCH_TERM_KEY);
 	}
 
 
