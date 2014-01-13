@@ -42,14 +42,14 @@ public class ViewPanel extends KPanel implements KeyListener {
 		this.main = main;
 
 		progressBar = new KWTProgressBar();
-		progressBar.setLabelStyle(KWTProgressBar.STYLE_NONE);
+		progressBar.setLabelStyle(KWTProgressBar.STYLE_TOTAL);
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.SOUTH;
 		gc.weightx = 1.0;
 		gc.weighty = 0.1;
-		gc.insets = new Insets(0, 10, 10, 10);
+		gc.insets = new Insets(0, 10, 2, 10);
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		add(progressBar, gc);
 
