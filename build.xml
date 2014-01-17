@@ -20,6 +20,7 @@
     <property name="dir.src"                  location="${basedir}/src" />
     <property name="dir.lib"                  location="${basedir}/lib" />
     <property name="dir.res"                  location="${basedir}/res" />
+    <property name="dir.images"               location="${basedir}/images" />
     <property name="dir.bin"                  location="${basedir}/bin" />
     <property name="dir.build"                location="${basedir}/build" />
     <property name="dir.build.classes"        location="${dir.build}/classes" />
@@ -85,6 +86,12 @@
 
         <copy todir="${dir.build.classes}/res">
             <fileset dir="${dir.res}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+
+        <copy todir="${dir.build.classes}/images">
+            <fileset dir="${dir.images}">
                 <include name="**/*" />
             </fileset>
         </copy>
