@@ -57,8 +57,6 @@ public class AddMangaPanel extends KPanel {
 		results.setEnabled(true);
 		results.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
-		loadResults(input);
-
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -71,13 +69,15 @@ public class AddMangaPanel extends KPanel {
 		add(results, gc);
 
 		results.first();
+
+		loadResults(input);
 	}
 
 	/**
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (results.getComponents().length > 0)
+		if (results.getComponentCount() > 0)
 			results.getComponent(0).requestFocus();
 		else
 			results.requestFocus();

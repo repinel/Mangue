@@ -58,8 +58,6 @@ public class ChaptersPanel extends KPanel {
 		chaptersPages.setEnabled(true);
 		chaptersPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
-		loadChapters();
-
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -72,13 +70,15 @@ public class ChaptersPanel extends KPanel {
 		add(chaptersPages, gc);
 
 		chaptersPages.first();
+
+		loadChapters();
 	}
 
 	/**
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (chaptersPages.getComponents().length > 0)
+		if (chaptersPages.getComponentCount() > 0)
 			chaptersPages.getComponent(0).requestFocus();
 		else
 			chaptersPages.requestFocus();

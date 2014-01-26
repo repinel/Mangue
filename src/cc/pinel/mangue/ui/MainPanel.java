@@ -61,8 +61,6 @@ public class MainPanel extends KPanel {
 												 + "Use the menu option to search and add mangas to your list.\n\n"
 												 + "All mangas available here are loaded from the www.mangapanda.com website."));
 
-		loadMangas();
-
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -75,13 +73,15 @@ public class MainPanel extends KPanel {
 		add(mangaListPages, gc);
 
 		mangaListPages.first();
+
+		loadMangas();
 	}
 
 	/**
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (mangaListPages.getComponents().length > 0)
+		if (mangaListPages.getComponentCount() > 0)
 			mangaListPages.getComponent(0).requestFocus();
 		else
 			mangaListPages.requestFocus();
