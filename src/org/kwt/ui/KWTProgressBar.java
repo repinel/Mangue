@@ -45,6 +45,8 @@ public class KWTProgressBar extends KComponent {
     public static final int STYLE_PERCENTAGE = 1;
     /** A fractional description of progress */
     public static final int STYLE_TOTAL = 2;
+    /** A dot description of progress */
+    public static final int STYLE_DOTS = 3;
     
     private int width;
     private int labelStyle = STYLE_PERCENTAGE;
@@ -154,7 +156,7 @@ public class KWTProgressBar extends KComponent {
      * @throws InvalidStyleException if <code>style</code> is not one of the allowed values.
      */
     public void setLabelStyle(int style) throws InvalidStyleException {
-        if (style < STYLE_NONE || style > STYLE_TOTAL)
+        if (style < STYLE_NONE || style > STYLE_DOTS)
             throw new InvalidStyleException(this.getClass().getName() + 
                 " does not support the given style for highlighting.", style);
         labelStyle = style;
@@ -207,12 +209,20 @@ public class KWTProgressBar extends KComponent {
             g.drawString(progressString,
                     ((getWidth() - 1) / 2) - (getFontMetrics(getFont()).stringWidth(progressString) / 2),
                     getFontMetrics(getFont()).getHeight());
+        } else if (labelStyle == STYLE_DOTS) {
+            g.setXORMode(Color.WHITE);
+            for (int i = 0; i < totalTicks; i++) {
+                int x = (int) (((double) i / totalTicks) * getWidth()) - 1;
+                g.fillRect(x, 0, 2, getHeight() - 1);
+            }
         }
     }
     
     private int getMinimumHeight() {
         switch (labelStyle) {
-        case STYLE_NONE: return 0;
+        case STYLE_NONE:
+        case STYLE_DOTS:
+            return 0;
         case STYLE_PERCENTAGE:
         case STYLE_TOTAL:
         default:
@@ -222,7 +232,9 @@ public class KWTProgressBar extends KComponent {
     
     private int getMinimumWidth() {
         switch (labelStyle) {
-        case STYLE_NONE: return 0;
+        case STYLE_NONE:
+        case STYLE_DOTS:
+            return 0;
         case STYLE_PERCENTAGE:
             return getFontMetrics(getFont()).stringWidth("100%");
         case STYLE_TOTAL:

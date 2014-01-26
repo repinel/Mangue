@@ -56,8 +56,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 		this.main = main;
 
-		progressBar = new KWTProgressBar();
-		progressBar.setLabelStyle(KWTProgressBar.STYLE_TOTAL);
+		progressBar = new KWTProgressBar(0);
+		progressBar.setLabelStyle(KWTProgressBar.STYLE_DOTS);
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
