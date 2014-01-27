@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
@@ -83,10 +84,11 @@ public class MainPanel extends KPanel {
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (mangaListPages.getPageModel().getFirstLocation() != Integer.MIN_VALUE)
+		try {
 			((Component) mangaListPages.getPageModel().getElementAt(0)).requestFocus();
-		else
+		} catch (NoSuchElementException e) { 
 			mangaListPages.requestFocus();
+		}
 	}
 
 	public void loadMangas() {

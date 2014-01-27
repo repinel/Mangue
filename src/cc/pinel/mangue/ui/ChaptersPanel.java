@@ -25,6 +25,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import org.kwt.ui.KWTSelectableLabel;
 
@@ -81,10 +82,11 @@ public class ChaptersPanel extends KPanel {
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (chaptersPages.getPageModel().getFirstLocation() != Integer.MIN_VALUE)
+		try {
 			((Component) chaptersPages.getPageModel().getElementAt(0)).requestFocus();
-		else
+		} catch (NoSuchElementException e) { 
 			chaptersPages.requestFocus();
+		}
 	}
 
 	private void loadChapters() {
