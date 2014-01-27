@@ -16,12 +16,15 @@
 package cc.pinel.mangue.ui;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import org.kwt.ui.KWTSelectableLabel;
 
@@ -78,8 +81,8 @@ public class ChaptersPanel extends KPanel {
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (chaptersPages.getComponentCount() > 0)
-			chaptersPages.getComponent(0).requestFocus();
+		if (chaptersPages.getPageModel().getFirstLocation() != Integer.MIN_VALUE)
+			((Component) chaptersPages.getPageModel().getElementAt(0)).requestFocus();
 		else
 			chaptersPages.requestFocus();
 	}
@@ -93,26 +96,32 @@ public class ChaptersPanel extends KPanel {
 				final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
 					@Override
 					public void handleConnected() throws Exception {
-						for (Chapter chapter : manga.getChapters()) {
-							final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
-							chapterLabel.setFocusable(true);
-							chapterLabel.setEnabled(true);
-							chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-							chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
+						final Collection<Chapter> chapters = manga.getChapters();
 
-							// last read chapter
-							if (chapterNumber != null && chapter.getNumber().equals(chapterNumber)) {
-								Font font = chapterLabel.getFont();
-								chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
-								chapterLabel.setForeground(new Color(255, 84, 84));
+						EventQueue.invokeAndWait(new Runnable() {
+							public void run() {
+								for (Chapter chapter : chapters) {
+									final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
+									chapterLabel.setFocusable(true);
+									chapterLabel.setEnabled(true);
+									chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+									chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
+
+									// last read chapter
+									if (chapterNumber != null && chapter.getNumber().equals(chapterNumber)) {
+										Font font = chapterLabel.getFont();
+										chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+										chapterLabel.setForeground(new Color(255, 84, 84));
+									}
+
+									chaptersPages.addItem(chapterLabel);
+								}
+								chaptersPages.first();
+
+								requestFocus();
+								repaint();
 							}
-
-							chaptersPages.addItem(chapterLabel);
-						}
-						chaptersPages.first();
-
-						requestFocus();
-						repaint();
+						});
 					}
 				};
 

@@ -15,6 +15,8 @@
  */
 package cc.pinel.mangue.ui;
 
+import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -81,8 +83,8 @@ public class MainPanel extends KPanel {
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (mangaListPages.getComponentCount() > 0)
-			mangaListPages.getComponent(0).requestFocus();
+		if (mangaListPages.getPageModel().getFirstLocation() != Integer.MIN_VALUE)
+			((Component) mangaListPages.getPageModel().getElementAt(0)).requestFocus();
 		else
 			mangaListPages.requestFocus();
 	}
@@ -91,26 +93,30 @@ public class MainPanel extends KPanel {
 		new StorageHandler(main.getContext(), "Loading mangas...") {
 			@Override
 			public void handleRun() throws Exception {
-				Collection<Manga> mangas = new MangaStorage(main.getContext()).getMangas();
+				final Collection<Manga> mangas = new MangaStorage(main.getContext()).getMangas();
 
-				if (mangas.size() > 0)
-					mangaListPages.removeAllItems();
+				EventQueue.invokeAndWait(new Runnable() {
+					public void run() {
+						if (mangas.size() > 0)
+							mangaListPages.removeAllItems();
 
-				for (Manga manga : mangas) {
-					final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
-					mangaLabel.setFocusable(true);
-					mangaLabel.setEnabled(true);
-					mangaLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-					mangaLabel.addActionListener(new MangaLabelActionListener(manga));
-					mangaListPages.addItem(mangaLabel);
-				}
+						for (Manga manga : mangas) {
+							final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
+							mangaLabel.setFocusable(true);
+							mangaLabel.setEnabled(true);
+							mangaLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+							mangaLabel.addActionListener(new MangaLabelActionListener(manga));
+							mangaListPages.addItem(mangaLabel);
+						}
 
-				mangaListPages.firePageModelUpdates();
+						mangaListPages.firePageModelUpdates();
 
-				mangaListPages.first();
+						mangaListPages.first();
 
-				requestFocus();
-				repaint();
+						requestFocus();
+						repaint();
+					}
+				});
 			}
 		}.start();
 	}

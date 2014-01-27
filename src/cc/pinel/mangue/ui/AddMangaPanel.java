@@ -15,6 +15,8 @@
  */
 package cc.pinel.mangue.ui;
 
+import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -77,8 +79,8 @@ public class AddMangaPanel extends KPanel {
 	 * @see java.awt.Component#requestFocus()
 	 */
 	public void requestFocus() {
-		if (results.getComponentCount() > 0)
-			results.getComponent(0).requestFocus();
+		if (results.getPageModel().getFirstLocation() != Integer.MIN_VALUE)
+			((Component) results.getPageModel().getElementAt(0)).requestFocus();
 		else
 			results.requestFocus();
 	}
@@ -87,21 +89,25 @@ public class AddMangaPanel extends KPanel {
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading results...") {
 			@Override
 			public void handleConnected() throws Exception {
-				Collection<Manga> mangas = MangaSearch.search(input);
+				final Collection<Manga> mangas = MangaSearch.search(input);
 
-				for (Manga manga : mangas) {
-					final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga.getName());
-					resultLabel.setFocusable(true);
-					resultLabel.setEnabled(true);
-					resultLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-					resultLabel.addActionListener(new ResultLabelActionListener(manga));
-					results.addItem(resultLabel);
-				}
+				EventQueue.invokeAndWait(new Runnable() {
+					public void run() {
+						for (Manga manga : mangas) {
+							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga.getName());
+							resultLabel.setFocusable(true);
+							resultLabel.setEnabled(true);
+							resultLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+							resultLabel.addActionListener(new ResultLabelActionListener(manga));
+							results.addItem(resultLabel);
+						}
 
-				results.first();
+						results.first();
 
-				requestFocus();
-				repaint();	
+						requestFocus();
+						repaint();
+					}
+				});
 			}
 		};
 
