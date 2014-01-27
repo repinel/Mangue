@@ -17,7 +17,20 @@ package cc.pinel.mangue.util;
 
 public class StringUtils {
 
+	private static final String[][] BASIC_HTML_ESCAPE = {
+		{"\"", "&quot;" },
+		{ "&", "&amp;" },
+		{ "<", "&lt;" },
+		{ ">", "&gt;" },
+	};
+
 	public static String unescapeHtml(final String input) {
+		String unescapeHexHtmlOutput = unescapeHtmlByNumber(input);
+
+		return unescapeHtmlByName(unescapeHexHtmlOutput);
+	}
+
+	private static String unescapeHtmlByNumber(final String input) {
 		if (input.indexOf("&#") == -1)
 			return input;
 
@@ -41,8 +54,6 @@ public class StringUtils {
 				}
 				if (isValid && n != 0) {
 					char unescape = (char) n;
-					System.out.println("Found: &#" + n + "; = " + unescape);
-
 					sb.append(unescape);
 					i = j;
 				} else {
@@ -54,5 +65,15 @@ public class StringUtils {
 		}
 
 		return sb.toString();
+	}
+
+	private static String unescapeHtmlByName(final String input) {
+		String result = input;
+
+		for (int i = 0; i < BASIC_HTML_ESCAPE.length; i++) {
+			result = result.replace(BASIC_HTML_ESCAPE[i][1], BASIC_HTML_ESCAPE[i][0]);
+		}
+
+		return result;
 	}
 }
