@@ -31,6 +31,7 @@ import cc.pinel.mangue.Main;
 import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Page;
+import cc.pinel.mangue.storage.GeneralStorage;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KImage;
@@ -55,6 +56,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 		super(new GridBagLayout());
 
 		this.main = main;
+
+		new GeneralStorage(main.getContext()).setCurrentChapterNumber(chapter.getNumber());
 
 		progressBar = new KWTProgressBar(0);
 		progressBar.setLabelStyle(KWTProgressBar.STYLE_DOTS);
@@ -109,6 +112,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 	}
 
 	private void loadImage(final Page page) {
+		new GeneralStorage(main.getContext()).setCurrentPageNumber(page.getNumber());
+
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
 			@Override
 			public void handleConnected() throws Exception {
@@ -159,5 +164,5 @@ public class ViewPanel extends KPanel implements KeyListener {
 	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
 	 */
 	public void keyTyped(KeyEvent e) { }
-	
+
 }

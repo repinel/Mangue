@@ -22,7 +22,9 @@ public class GeneralStorage {
 
 	private final String SEARCH_TERM_KEY = "search_term";
 
-	private final String LAST_VIEWED_KEY = "last_viewed";
+	private final String CURRENT_MANGA_KEY = "current_manga";
+	private final String CURRENT_CHAPTER_KEY = "current_chapter";
+	private final String CURRENT_PAGE_KEY = "current_page";
 
 	private final SecureStorage secureStorage;
 
@@ -46,22 +48,46 @@ public class GeneralStorage {
 
 	// last viewed
 
-	public String getLastViewed() {
-		return getValue(LAST_VIEWED_KEY);
+	public String getCurrentMangaId() {
+		return getValue(CURRENT_MANGA_KEY);
 	}
 
-	public boolean setLastViewed(String value) {
-		return secureStorage.putChars(LAST_VIEWED_KEY, value.toCharArray());
+	public boolean setCurrentMangaId(String id) {
+		return secureStorage.putChars(CURRENT_MANGA_KEY, id.toCharArray());
 	}
 
-	public boolean removeLastViewed() {
-		return secureStorage.remove(LAST_VIEWED_KEY);
+	public boolean removeCurrentMangaId() {
+		return secureStorage.remove(CURRENT_MANGA_KEY);
+	}
+
+	public String getCurrentChapterNumber() {
+		return getValue(CURRENT_CHAPTER_KEY);
+	}
+
+	public boolean setCurrentChapterNumber(String number) {
+		return secureStorage.putChars(CURRENT_CHAPTER_KEY, number.toCharArray());
+	}
+
+	public boolean removeCurrentChapterNumber() {
+		return secureStorage.remove(CURRENT_CHAPTER_KEY);
+	}
+
+	public String getCurrentPageNumber() {
+		return getValue(CURRENT_PAGE_KEY);
+	}
+
+	public boolean setCurrentPageNumber(String number) {
+		return secureStorage.putChars(CURRENT_PAGE_KEY, number.toCharArray());
+	}
+
+	public boolean removeCurrentPageNumber() {
+		return secureStorage.remove(CURRENT_PAGE_KEY);
 	}
 
 	// private methods
 
 	private String getValue(String key) {
-		char[] value = secureStorage.getChars(SEARCH_TERM_KEY);
+		char[] value = secureStorage.getChars(key);
 		return value == null ? null : new String(value);
 	}
 }

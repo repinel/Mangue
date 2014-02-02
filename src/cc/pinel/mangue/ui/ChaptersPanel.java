@@ -34,6 +34,7 @@ import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.storage.GeneralStorage;
 import cc.pinel.mangue.storage.StateStorage;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
@@ -56,6 +57,8 @@ public class ChaptersPanel extends KPanel {
 
 		this.main = main;
 		this.manga = manga;
+
+		new GeneralStorage(main.getContext()).setCurrentMangaId(manga.getId());
 
 		chaptersPages = new KPages(PageProviders.createKBoxLayoutProvider(KBoxLayout.Y_AXIS));
 		chaptersPages.setFocusable(true);
