@@ -20,7 +20,7 @@ import com.amazon.kindle.kindlet.security.SecureStorage;
 
 public class GeneralStorage {
 
-	private final String SEARCH_TERM_KEY = "";
+	private final String SEARCH_TERM_KEY = "search_term";
 
 	private final SecureStorage secureStorage;
 
