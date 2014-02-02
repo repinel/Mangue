@@ -22,11 +22,15 @@ public class GeneralStorage {
 
 	private final String SEARCH_TERM_KEY = "search_term";
 
+	private final String LAST_VIEWED_KEY = "last_viewed";
+
 	private final SecureStorage secureStorage;
 
 	public GeneralStorage(KindletContext context) {
 		this.secureStorage = context.getSecureStorage();
 	}
+
+	// search term
 
 	public String getSearchTerm() {
 		return getValue(SEARCH_TERM_KEY);
@@ -40,6 +44,21 @@ public class GeneralStorage {
 		return secureStorage.remove(SEARCH_TERM_KEY);
 	}
 
+	// last viewed
+
+	public String getLastViewed() {
+		return getValue(LAST_VIEWED_KEY);
+	}
+
+	public boolean setLastViewed(String value) {
+		return secureStorage.putChars(LAST_VIEWED_KEY, value.toCharArray());
+	}
+
+	public boolean removeLastViewed() {
+		return secureStorage.remove(LAST_VIEWED_KEY);
+	}
+
+	// private methods
 
 	private String getValue(String key) {
 		char[] value = secureStorage.getChars(SEARCH_TERM_KEY);
