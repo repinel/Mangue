@@ -82,4 +82,16 @@ public class Chapter {
 		}
 		return this.pages;
 	}
+
+	public Page getPage(String pageNumber) {
+		try {
+			for (Page p : this.getPages()) {
+				if (p.getNumber().equals(pageNumber))
+					return p;
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
+	}
 }

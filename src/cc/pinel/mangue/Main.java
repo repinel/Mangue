@@ -25,6 +25,9 @@ import org.apache.log4j.PropertyConfigurator;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.handler.StorageHandler;
+import cc.pinel.mangue.model.Chapter;
+import cc.pinel.mangue.model.Manga;
+import cc.pinel.mangue.model.Page;
 import cc.pinel.mangue.storage.GeneralStorage;
 import cc.pinel.mangue.storage.MangaStorage;
 import cc.pinel.mangue.storage.StateStorage;
@@ -72,7 +75,22 @@ public class Main extends KindletWrapper {
 	@Override
 	public void onKindletStart() {
 		KindletContext context = getContext();
-		context.getRootContainer().add(mainPanel);
+
+		KPanel currentPanel = this.mainPanel;
+
+		GeneralStorage generalStorage = new GeneralStorage(context);
+		String pageNumber = generalStorage.getCurrentPageNumber();
+		if (pageNumber != null) {
+			String mangaId = generalStorage.getCurrentMangaId();
+			String chapterNumber = generalStorage.getCurrentChapterNumber();
+			if (mangaId != null && chapterNumber != null) {
+				logger.info("Last viewed - manga: " + mangaId + " - chapter: " + chapterNumber + " - page: " + pageNumber);
+				if (loadLastViewed(mangaId, chapterNumber, pageNumber))
+					currentPanel = this.viewPanel;
+			}
+		}
+
+		context.getRootContainer().add(currentPanel);
 	}
 
 	public void setActivePanel(MainPanel panel) {
@@ -172,10 +190,14 @@ public class Main extends KindletWrapper {
 				if (e.getID() == KeyEvent.KEY_PRESSED) {
 					Component displayed = getContext().getRootContainer().getComponent(0);
 
-					if (displayed == chaptersPanel)
+					if (displayed == chaptersPanel) {
+						new GeneralStorage(getContext()).removeCurrentChapterNumber();
 						setActivePanel(mainPanel);
-					else if (displayed == viewPanel)
+					}
+					else if (displayed == viewPanel) {
+						new GeneralStorage(getContext()).removeCurrentPageNumber();
 						setActivePanel(chaptersPanel);
+					}
 					else if (displayed == addMangaPanel) {
 						if (viewPanel != null)
 							setActivePanel(viewPanel);
@@ -194,5 +216,25 @@ public class Main extends KindletWrapper {
 
 			return false;
 		}
+	}
+
+	private boolean loadLastViewed(String mangaId, String chapterNumber, String pageNumber) {
+		final Manga manga = new MangaStorage(getContext()).getManga(mangaId);
+
+		if (manga != null) {
+			Chapter chapter = manga.getChapter(chapterNumber);
+
+			if (chapter != null) {
+				Page page = chapter.getPage(pageNumber);
+
+				if (page != null) {
+					this.chaptersPanel = new ChaptersPanel(this, manga);
+					this.viewPanel = new ViewPanel(this, chapter, page);
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

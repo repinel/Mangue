@@ -86,4 +86,17 @@ public class Manga {
 		}
 		return this.chapters;
 	}
+
+	public Chapter getChapter(String chapterNumber) {
+		try {
+			for (Chapter chapter : this.getChapters()) {
+				if (chapter.getNumber().equals(chapterNumber)) {
+					return chapter;
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
+	}
 }

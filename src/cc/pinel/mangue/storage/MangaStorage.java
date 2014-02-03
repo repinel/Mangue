@@ -60,6 +60,28 @@ public class MangaStorage extends AbstractStorage {
 		return mangas;
 	}
 
+	public Manga getManga(String id) {
+		JSONObject json = null;
+
+		try {
+			json = readJSON();
+		} catch (Exception e) {
+			// ignored
+		}
+		if (json == null)
+			return null;
+
+		JSONArray jsonMangas = (JSONArray) json.get("mangas");
+		if (jsonMangas == null)
+			return null;
+
+		JSONObject jsonManga = findObject(jsonMangas, id);
+		if (jsonManga == null)
+			return null;
+
+		return new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString());
+	}
+
 	@SuppressWarnings("unchecked")
 	public void addManga(Manga manga) throws IOException {
 		JSONObject json = null;

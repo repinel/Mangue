@@ -53,6 +53,10 @@ public class ViewPanel extends KPanel implements KeyListener {
 	private int pagesIndex = 0;
 
 	public ViewPanel(Main main, Chapter chapter) {
+		this(main, chapter, null);
+	}
+
+	public ViewPanel(Main main, Chapter chapter, Page lastViewedPage) {
 		super(new GridBagLayout());
 
 		this.main = main;
@@ -84,7 +88,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		gc.fill = GridBagConstraints.BOTH;
 		add(mangaImage, gc);
 
-		loadPages(chapter);
+		loadPages(chapter, lastViewedPage);
 	}
 
 	/**
@@ -94,7 +98,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		mangaImage.requestFocus();
 	}
 
-	private void loadPages(final Chapter chapter) {
+	private void loadPages(final Chapter chapter, final Page lastViewedPage) {
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading pages...") {
 			@Override
 			public void handleConnected() throws Exception {
@@ -103,8 +107,12 @@ public class ViewPanel extends KPanel implements KeyListener {
 				progressBar.setCurrentTick(0);
 				progressBar.setTotalTicks(pages.size());
 
-				if (!pages.isEmpty())
+				if (lastViewedPage != null) {
+					pagesIndex = pages.indexOf(lastViewedPage);
+					loadImage(lastViewedPage);
+				} else  if (!pages.isEmpty()) {
 					loadImage(pages.get(pagesIndex));
+				}
 			}
 		};
 
