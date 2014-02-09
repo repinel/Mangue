@@ -36,6 +36,8 @@ import cc.pinel.mangue.storage.GeneralStorage;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KImage;
 import com.amazon.kindle.kindlet.ui.KPanel;
+import com.amazon.kindle.kindlet.ui.KProgress;
+import com.amazon.kindle.kindlet.ui.image.ImageUtil;
 
 public class ViewPanel extends KPanel implements KeyListener {
 	private static final long serialVersionUID = -2485604965935171736L;
@@ -51,6 +53,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 	private List<Page> pages;
 
 	private int pagesIndex = 0;
+
+	private boolean isPortrait = true;
 
 	public ViewPanel(Main main, Chapter chapter) {
 		this(main, chapter, null);
@@ -129,6 +133,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 				Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
 				mangaImage.setImage(image, true);
+				isPortrait = true;
 
 				progressBar.setCurrentTick(pagesIndex + 1);
 
@@ -157,6 +162,21 @@ public class ViewPanel extends KPanel implements KeyListener {
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE_BACK:
 				if (pagesIndex - 1 >= 0)
 					loadImage(pages.get(--pagesIndex));
+				break;
+			case KindleKeyCodes.VK_FIVE_WAY_SELECT:
+				if (isPortrait) {
+					KProgress progress = main.getContext().getProgressIndicator();
+					progress.setString("Rotating image...");
+					try {
+						Image rotatedImage = ImageUtil.getRotatedImage(mangaImage.getImage(), ImageUtil.ROTATE_RIGHT);
+						mangaImage.setImage(rotatedImage, true);
+						isPortrait = false;
+						requestFocus();
+						repaint();
+					} finally {
+						progress.setIndeterminate(false);
+					}
+				}
 				break;
 			default:
 				break;
