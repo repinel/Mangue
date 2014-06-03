@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
@@ -43,8 +42,6 @@ import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
 public class AddMangaPanel extends KPanel {
 	private static final long serialVersionUID = -2469140435669501883L;
-
-	private static final Logger logger = Logger.getLogger(AddMangaPanel.class);
 
 	private final Main main;
 
@@ -133,7 +130,7 @@ public class AddMangaPanel extends KPanel {
 
 							main.reloadMainPanel();
 						} catch (Exception e) {
-							logger.debug(e);
+							Main.logger.debug(e);
 						}
 					}
 				}.start();

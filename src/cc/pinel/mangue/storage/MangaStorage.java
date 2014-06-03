@@ -21,21 +21,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import cc.pinel.mangue.Main;
 import cc.pinel.mangue.model.Manga;
 
 import com.amazon.kindle.kindlet.KindletContext;
 
 public class MangaStorage extends AbstractStorage {
-	private static final String STORAGE_FILE = "mangas.json";
-
-	private static final Logger logger = Logger.getLogger(MangaStorage.class);
-
 	public MangaStorage(KindletContext context) {
-		super(context, STORAGE_FILE);
+		super(context, "mangas.json");
 	}
 
 	public Collection<Manga> getMangas() {
@@ -55,7 +51,7 @@ public class MangaStorage extends AbstractStorage {
 			mangas.add(new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString()));
 		}
 
-		logger.debug("mangas size: " + mangas.size());
+		Main.logger.debug("mangas size: " + mangas.size());
 
 		return mangas;
 	}

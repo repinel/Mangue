@@ -44,8 +44,6 @@ import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 public class MainPanel extends KPanel {
 	private static final long serialVersionUID = -4692282056850151456L;
 
-	private static final Logger logger = Logger.getLogger(MainPanel.class);
-
 	private final Main main;
 
 	private final KPages mangaListPages;

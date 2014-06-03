@@ -17,19 +17,16 @@ package cc.pinel.mangue.storage;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import cc.pinel.mangue.Main;
 
 import com.amazon.kindle.kindlet.KindletContext;
 
 public class StateStorage extends AbstractStorage {
-	private static final String STORAGE_FILE = "state.json";
-
-	private static final Logger logger = Logger.getLogger(StateStorage.class);
-
 	public StateStorage(KindletContext context) {
-		super(context, STORAGE_FILE);
+		super(context, "state.json");
 	}
 
 	public String getChapter(String mangaId) {
@@ -49,7 +46,7 @@ public class StateStorage extends AbstractStorage {
 		if (jsonManga != null)
 			chapterNumber = jsonManga.get("chapterNumber").toString();
 
-		logger.debug("manga id: " + mangaId + " - chapter number: " + chapterNumber);
+		Main.logger.debug("manga id: " + mangaId + " - chapter number: " + chapterNumber);
 
 		return chapterNumber;
 	}

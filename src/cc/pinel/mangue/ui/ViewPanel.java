@@ -24,7 +24,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.kwt.ui.KWTProgressBar;
 
 import cc.pinel.mangue.Main;
@@ -41,8 +40,6 @@ import com.amazon.kindle.kindlet.ui.image.ImageUtil;
 
 public class ViewPanel extends KPanel implements KeyListener {
 	private static final long serialVersionUID = -2485604965935171736L;
-
-	private static final Logger logger = Logger.getLogger(ViewPanel.class);
 
 	private final Main main;
 
@@ -129,7 +126,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
 			@Override
 			public void handleConnected() throws Exception {
-				logger.info("Fetching image content " + page.getImageURL());
+				Main.logger.info("Fetching image content " + page.getImageURL());
 
 				Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
 				mangaImage.setImage(image, true);

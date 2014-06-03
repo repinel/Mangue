@@ -18,16 +18,15 @@ package cc.pinel.mangue.model;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class Page {
-	private static final Logger logger = Logger.getLogger(Page.class);
+import cc.pinel.mangue.Main;
 
+public class Page {
 	private final String number;
 	private final String link;
 
@@ -52,7 +51,7 @@ public class Page {
 	 */
 	public URL getImageURL() throws SAXException, IOException {
 		if (this.imageURL == null) {
-			logger.info("Fetching image URL for page" + this.link);
+			Main.logger.info("Fetching image URL for page" + this.link);
 
 			DOMParser parser = new DOMParser();
 			InputSource url = new InputSource(this.link);
@@ -62,7 +61,7 @@ public class Page {
 			Element img = document.getElementById("img");
 			this.imageURL = new URL(img.getAttribute("src"));
 
-			logger.debug("image src: " + this.imageURL);
+			Main.logger.debug("image src: " + this.imageURL);
 		}
 		return this.imageURL;
 	}

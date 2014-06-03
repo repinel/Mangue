@@ -44,9 +44,7 @@ import com.amazon.kindle.kindlet.ui.KPanel;
 import com.cowlark.kindlet.KindletWrapper;
 
 public class Main extends KindletWrapper {
-	private static final String RES_DIR = "/res/";
-
-	private static final Logger logger = Logger.getLogger(Main.class);
+	public static final Logger logger = Logger.getLogger(Main.class);
 
 	private MainPanel mainPanel;
 	private ChaptersPanel chaptersPanel;
@@ -58,7 +56,7 @@ public class Main extends KindletWrapper {
 	 */
 	@Override
 	public void onKindletCreate() {
-		PropertyConfigurator.configure(getClass().getResource(RES_DIR + "log4j.properties"));
+		PropertyConfigurator.configure(getClass().getResource("/res/log4j.properties"));
 
 		logger.info("-- Kindle Create --");
 

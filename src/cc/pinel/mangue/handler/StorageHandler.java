@@ -15,14 +15,12 @@
  */
 package cc.pinel.mangue.handler;
 
-import org.apache.log4j.Logger;
+import cc.pinel.mangue.Main;
 
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.ui.KProgress;
 
 public abstract class StorageHandler extends Thread {
-	private static final Logger logger = Logger.getLogger(StorageHandler.class);
-
 	private final KindletContext context;
 
 	private final String busyText;
@@ -54,7 +52,7 @@ public abstract class StorageHandler extends Thread {
 		try {
 			handleRun();
 		} catch (Exception e) {
-			logger.error(e);
+			Main.logger.error(e);
 		} finally {
 			progress.setIndeterminate(false);
 		}

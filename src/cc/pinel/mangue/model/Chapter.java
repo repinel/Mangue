@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,9 +27,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class Chapter {
-	private static final Logger logger = Logger.getLogger(Chapter.class);
+import cc.pinel.mangue.Main;
 
+public class Chapter {
 	private final String number;
 	private final String name;
 	private final String link;
@@ -60,7 +59,7 @@ public class Chapter {
 		if (this.pages == null || this.pages.isEmpty()) {
 			this.pages = new ArrayList<Page>();
 
-			logger.info("Fetching pages for chapter " + this.link);
+			Main.logger.info("Fetching pages for chapter " + this.link);
 
 			DOMParser parser = new DOMParser();
 			InputSource url = new InputSource(this.link);
@@ -78,7 +77,7 @@ public class Chapter {
 				}
 			}
 
-			logger.debug("pages size: " + this.pages.size());
+			Main.logger.debug("pages size: " + this.pages.size());
 		}
 		return this.pages;
 	}
@@ -90,7 +89,7 @@ public class Chapter {
 					return p;
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			Main.logger.error(e);
 		}
 		return null;
 	}

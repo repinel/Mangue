@@ -24,13 +24,11 @@ import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
+import cc.pinel.mangue.Main;
 import cc.pinel.mangue.model.Manga;
 
 public class MangaSearch {
-	private static final Logger logger = Logger.getLogger(MangaSearch.class);
-
 	private static final int MIN_TOKEN_LENGHT = 6;
 
 	public static Collection<Manga> search(String query) throws MalformedURLException, IOException {
@@ -40,7 +38,7 @@ public class MangaSearch {
 
 		String lines[] = StringUtils.split(IOUtils.toString(is), '\n');
 
-		logger.debug("Search " + lines.length + " results: " + query);
+		Main.logger.debug("Search " + lines.length + " results: " + query);
 
 		for (int i = 0, length = lines.length; i < length; i++) {
 			String tokens[] = StringUtils.splitPreserveAllTokens(lines[i], '|');
@@ -49,7 +47,7 @@ public class MangaSearch {
 				mangas.add(new Manga(tokens[5], tokens[2]));
 		}
 
-		logger.debug("mangas size: " + mangas.size());
+		Main.logger.debug("mangas size: " + mangas.size());
 
 		return mangas;
 	}

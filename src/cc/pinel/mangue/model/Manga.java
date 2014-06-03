@@ -23,17 +23,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import cc.pinel.mangue.Main;
 import cc.pinel.mangue.util.StringUtils;
 
 public class Manga {
-	private static final Logger logger = Logger.getLogger(Manga.class);
-
 	private final String id;
 	private final String name;
 
@@ -68,7 +66,7 @@ public class Manga {
 		if (this.chapters == null || this.chapters.isEmpty()) {
 			this.chapters = new ArrayList<Chapter>();
 
-			logger.info("Fetching chapters for " + this.name);
+			Main.logger.info("Fetching chapters for " + this.name);
 
 			InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0").openStream();
 
@@ -82,7 +80,7 @@ public class Manga {
 						"http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
 			}
 
-			logger.debug("chapters size: " + this.chapters.size());
+			Main.logger.debug("chapters size: " + this.chapters.size());
 		}
 		return this.chapters;
 	}
@@ -95,7 +93,7 @@ public class Manga {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			Main.logger.error(e);
 		}
 		return null;
 	}
