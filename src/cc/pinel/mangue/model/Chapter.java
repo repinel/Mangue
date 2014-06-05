@@ -20,10 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.xml.sax.SAXException;
 
 import cc.pinel.mangue.Main;
 
@@ -45,7 +41,7 @@ public class Chapter {
 	}
 
 	public String getTitle() {
-		if (this.name == null || this.name == "")
+		if (this.name == null || this.name.length() == 0)
 			return this.number;
 		return this.number + " - " + this.name;
 	}
