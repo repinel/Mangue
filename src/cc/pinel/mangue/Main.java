@@ -190,10 +190,12 @@ public class Main extends KindletWrapper {
 					if (displayed == chaptersPanel) {
 						new GeneralStorage(getContext()).removeCurrentChapterNumber();
 						setActivePanel(mainPanel);
+						requestGC();
 					}
 					else if (displayed == viewPanel) {
 						new GeneralStorage(getContext()).removeCurrentPageNumber();
 						setActivePanel(chaptersPanel);
+						requestGC();
 					}
 					else if (displayed == addMangaPanel) {
 						if (viewPanel != null)
@@ -202,6 +204,7 @@ public class Main extends KindletWrapper {
 							setActivePanel(chaptersPanel);
 						else
 							setActivePanel(mainPanel);
+						requestGC();
 					}
 				}
 				e.consume();
@@ -229,5 +232,9 @@ public class Main extends KindletWrapper {
 		}
 
 		return false;
+	}
+
+	public void requestGC() {
+		System.gc();
 	}
 }
