@@ -15,6 +15,7 @@
  */
 package cc.pinel.mangue.ui;
 
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -111,20 +112,24 @@ public class ViewPanel extends KPanel implements KeyListener {
 			public void handleConnected() throws Exception {
 				progressBar.setTotalTicks(chapter.getPageTotal());
 
-				URL imageURL = chapter.getPageImageURL(pageNumber);
+				final URL imageURL = chapter.getPageImageURL(pageNumber);
 
 				Main.logger.info("Fetching image content " + imageURL);
 
-				if (imageURL != null) {
-					Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
-					mangaImage.setImage(image, true);
-					isPortrait = true;
-				}
+				EventQueue.invokeAndWait(new Runnable() {
+					public void run() {
+						if (imageURL != null) {
+							Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+							mangaImage.setImage(image, true);
+							isPortrait = true;
+						}
 
-				progressBar.setCurrentTick(pageNumber);
+						progressBar.setCurrentTick(pageNumber);
 
-				requestFocus();
-				repaint();
+						requestFocus();
+						repaint();
+					}
+				});
 			}
 		};
 
