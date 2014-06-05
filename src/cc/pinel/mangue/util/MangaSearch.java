@@ -21,8 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +40,7 @@ public class MangaSearch {
 
 		Main.logger.debug("Search " + lines.length + " results: " + query);
 
-		for (int i = 0, length = lines.length; i < length; i++) {
+		for (int i = 0, length = lines.length; i < length && i < 20; i++) {
 			String tokens[] = StringUtils.splitPreserveAllTokens(lines[i], '|');
 
 			if (tokens.length >= MIN_TOKEN_LENGHT)
@@ -55,9 +53,13 @@ public class MangaSearch {
 	}
 
 	private static String convertOldPath(String currentPath) {
-		Matcher matcher = Pattern.compile("/(\\d+)/([\\w\\-]+).html").matcher(currentPath);
-		if (matcher.matches())
-			return "/" + matcher.group(2);
+		int formatIndex = currentPath.indexOf(".html");
+		if (formatIndex != 1 && currentPath.charAt(0) == '/') {
+			int middleSlashIndex = currentPath.indexOf('/', 1);
+			if (middleSlashIndex != -1 && middleSlashIndex < formatIndex) {
+				return "/" + currentPath.substring(middleSlashIndex + 1, formatIndex);
+			}
+		}
 		return currentPath;
 	}
 }
