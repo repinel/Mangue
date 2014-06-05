@@ -75,17 +75,17 @@ public class Main extends KindletWrapper {
 
 		KPanel currentPanel = this.mainPanel;
 
-//		GeneralStorage generalStorage = new GeneralStorage(context);
-//		String pageNumber = generalStorage.getCurrentPageNumber();
-//		if (pageNumber != null) {
-//			String mangaId = generalStorage.getCurrentMangaId();
-//			String chapterNumber = generalStorage.getCurrentChapterNumber();
-//			if (mangaId != null && chapterNumber != null) {
-//				logger.info("Last viewed - manga: " + mangaId + " - chapter: " + chapterNumber + " - page: " + pageNumber);
-//				if (loadLastViewed(mangaId, chapterNumber, pageNumber))
-//					currentPanel = this.viewPanel;
-//			}
-//		}
+		GeneralStorage generalStorage = new GeneralStorage(context);
+		String pageNumber = generalStorage.getCurrentPageNumber();
+		if (pageNumber != null) {
+			String mangaId = generalStorage.getCurrentMangaId();
+			String chapterNumber = generalStorage.getCurrentChapterNumber();
+			if (mangaId != null && chapterNumber != null) {
+				logger.info("Last viewed - manga: " + mangaId + " - chapter: " + chapterNumber + " - page: " + pageNumber);
+				if (loadLastViewed(mangaId, chapterNumber, pageNumber))
+					currentPanel = this.viewPanel;
+			}
+		}
 
 		context.getRootContainer().add(currentPanel);
 	}

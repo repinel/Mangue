@@ -56,7 +56,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		this(main, chapter, null);
 	}
 
-	public ViewPanel(Main main, Chapter chapter, Integer lastViewedPage) {
+	public ViewPanel(Main main, Chapter chapter, Integer lastPageNumber) {
 		super(new GridBagLayout());
 
 		this.main = main;
@@ -90,8 +90,8 @@ public class ViewPanel extends KPanel implements KeyListener {
 		gc.fill = GridBagConstraints.BOTH;
 		add(mangaImage, gc);
 
-		if (lastViewedPage != null)
-			pageNumber = lastViewedPage;
+		if (lastPageNumber != null)
+			pageNumber = lastPageNumber;
 
 		loadImage(chapter, pageNumber);
 	}
@@ -115,9 +115,11 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 				Main.logger.info("Fetching image content " + imageURL);
 
-				Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
-				mangaImage.setImage(image, true);
-				isPortrait = true;
+				if (imageURL != null) {
+					Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+					mangaImage.setImage(image, true);
+					isPortrait = true;
+				}
 
 				progressBar.setCurrentTick(pageNumber);
 
