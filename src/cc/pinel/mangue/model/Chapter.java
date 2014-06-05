@@ -15,16 +15,14 @@
  */
 package cc.pinel.mangue.model;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.cyberneko.html.parsers.DOMParser;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import cc.pinel.mangue.Main;
@@ -34,7 +32,7 @@ public class Chapter {
 	private final String name;
 	private final String link;
 
-	private List<Page> pages;
+	private int pagesTotal = -1;
 
 	public Chapter(String number, String name, String link) {
 		this.number = number;
@@ -47,50 +45,87 @@ public class Chapter {
 	}
 
 	public String getTitle() {
+		if (this.name == null || this.name == "")
+			return this.number;
 		return this.number + " - " + this.name;
 	}
 
 	/**
-	 * @return the pages
+	 * @param pageNumber the page number
+	 * 
+	 * @return the imageURL
 	 * @throws IOException 
-	 * @throws SAXException 
 	 */
-	public List<Page> getPages() throws SAXException, IOException {
-		if (this.pages == null || this.pages.isEmpty()) {
-			this.pages = new ArrayList<Page>();
+	public URL getPageImageURL(int pageNumber) throws IOException {
+		URL imageURL = null;
 
-			Main.logger.info("Fetching pages for chapter " + this.link);
+		if (pageNumber > 0 && pageNumber <= getPageTotal()) {
 
-			DOMParser parser = new DOMParser();
-			InputSource url = new InputSource(this.link);
+			Main.logger.info("Fetching image URL for page" + this.link);
 
-			parser.parse(url);
-			Document document = parser.getDocument();
-			Element pageMenu = document.getElementById("pageMenu");
-			NodeList options = pageMenu.getElementsByTagName("OPTION");
+			URL u = new URL(this.link + "/" + pageNumber);
+			InputStream in = u.openStream();
 
-			for (int i = 0; i < options.getLength(); i++) {
-				Node node = options.item(i);
-				if(node.getNodeType() == Node.ELEMENT_NODE) {
-					Element option = (Element) node;
-					this.pages.add(new Page(option.getTextContent(), "http://www.mangapanda.com" + option.getAttribute("value")));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			String line;
+
+			while((line = reader.readLine()) != null) {
+				if (line.indexOf(" id=\"img\" ") != -1) {
+					int i = line.indexOf("src=\"");
+					if (i != -1) {
+						int j = line.indexOf("\"", i + 5);
+						if (j != -1 && (i += 5) < line.length()) {
+							imageURL = new URL(line.substring(i, j));
+							break;
+						}
+					}
 				}
 			}
 
-			Main.logger.debug("pages size: " + this.pages.size());
+			reader.close();
+			in.close();
+
+			Main.logger.debug("image src: " + imageURL);
 		}
-		return this.pages;
+
+		return imageURL;
 	}
 
-	public Page getPage(String pageNumber) {
-		try {
-			for (Page p : this.getPages()) {
-				if (p.getNumber().equals(pageNumber))
-					return p;
+	public int getPageTotal() {
+		if (this.pagesTotal < 0) {
+			Main.logger.info("Fetching the total of pages for chapter " + this.link);
+
+			try {
+				URL u = new URL(this.link);
+				InputStream in = u.openStream();
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+				String line;
+
+				while((line = reader.readLine()) != null) {
+					int i = line.indexOf("</select> of ");
+					if (i != -1) {
+						int j = line.indexOf("</div>", i + 1);
+						if (j != -1 && (i += 13) < line.length()) {
+							this.pagesTotal = Integer.parseInt(line.substring(i, j));
+							break;
+						}
+					}
+				}
+
+				reader.close();
+				in.close();
+			} catch (Exception e) {
+				this.pagesTotal = 0;
 			}
-		} catch (Exception e) {
-			Main.logger.error(e);
+
+			Main.logger.debug("Total of pages: " + this.pagesTotal);
 		}
-		return null;
+
+		return this.pagesTotal;
+	}
+
+	public boolean hasPages() {
+		return getPageTotal() > 0;
 	}
 }

@@ -27,7 +27,6 @@ import org.kwt.ui.KWTSelectableLabel;
 import cc.pinel.mangue.handler.StorageHandler;
 import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Manga;
-import cc.pinel.mangue.model.Page;
 import cc.pinel.mangue.storage.GeneralStorage;
 import cc.pinel.mangue.storage.MangaStorage;
 import cc.pinel.mangue.storage.StateStorage;
@@ -76,17 +75,17 @@ public class Main extends KindletWrapper {
 
 		KPanel currentPanel = this.mainPanel;
 
-		GeneralStorage generalStorage = new GeneralStorage(context);
-		String pageNumber = generalStorage.getCurrentPageNumber();
-		if (pageNumber != null) {
-			String mangaId = generalStorage.getCurrentMangaId();
-			String chapterNumber = generalStorage.getCurrentChapterNumber();
-			if (mangaId != null && chapterNumber != null) {
-				logger.info("Last viewed - manga: " + mangaId + " - chapter: " + chapterNumber + " - page: " + pageNumber);
-				if (loadLastViewed(mangaId, chapterNumber, pageNumber))
-					currentPanel = this.viewPanel;
-			}
-		}
+//		GeneralStorage generalStorage = new GeneralStorage(context);
+//		String pageNumber = generalStorage.getCurrentPageNumber();
+//		if (pageNumber != null) {
+//			String mangaId = generalStorage.getCurrentMangaId();
+//			String chapterNumber = generalStorage.getCurrentChapterNumber();
+//			if (mangaId != null && chapterNumber != null) {
+//				logger.info("Last viewed - manga: " + mangaId + " - chapter: " + chapterNumber + " - page: " + pageNumber);
+//				if (loadLastViewed(mangaId, chapterNumber, pageNumber))
+//					currentPanel = this.viewPanel;
+//			}
+//		}
 
 		context.getRootContainer().add(currentPanel);
 	}
@@ -223,13 +222,9 @@ public class Main extends KindletWrapper {
 			Chapter chapter = manga.getChapter(chapterNumber);
 
 			if (chapter != null) {
-				Page page = chapter.getPage(pageNumber);
-
-				if (page != null) {
-					this.chaptersPanel = new ChaptersPanel(this, manga);
-					this.viewPanel = new ViewPanel(this, chapter, page);
-					return true;
-				}
+				this.chaptersPanel = new ChaptersPanel(this, manga);
+				this.viewPanel = new ViewPanel(this, chapter, new Integer(pageNumber));
+				return true;
 			}
 		}
 

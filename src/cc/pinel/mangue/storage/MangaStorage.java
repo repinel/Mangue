@@ -48,7 +48,7 @@ public class MangaStorage extends AbstractStorage {
 
 		for (int i = 0; i < jsonMangas.size(); i++) {
 			JSONObject jsonManga = (JSONObject) jsonMangas.get(i);
-			mangas.add(new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString()));
+			mangas.add(new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(), jsonManga.get("path").toString()));
 		}
 
 		Main.logger.debug("mangas size: " + mangas.size());
@@ -75,7 +75,7 @@ public class MangaStorage extends AbstractStorage {
 		if (jsonManga == null)
 			return null;
 
-		return new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString());
+		return new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(), jsonManga.get("path").toString());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,6 +101,7 @@ public class MangaStorage extends AbstractStorage {
 			jsonManga = new JSONObject();
 			jsonManga.put("id", manga.getId());
 			jsonManga.put("name", manga.getName());
+			jsonManga.put("path", manga.getPath());
 	
 			jsonMangas.add(jsonManga);
 	

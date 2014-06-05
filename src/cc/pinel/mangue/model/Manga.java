@@ -34,12 +34,14 @@ import cc.pinel.mangue.util.StringUtils;
 public class Manga {
 	private final String id;
 	private final String name;
+	private final String path;
 
 	private Collection<Chapter> chapters;
 
-	public Manga(String id, String name) {
+	public Manga(String id, String name, String path) {
 		this.id = id;
 		this.name = name;
+		this.path = path;
 	}
 
 	/**
@@ -54,6 +56,13 @@ public class Manga {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
 	}
 
 	/**
@@ -77,7 +86,7 @@ public class Manga {
 				JSONObject chapter = (JSONObject) chapters.get(i);
 				this.chapters.add(new Chapter(chapter.get("chapter").toString(),
 						StringUtils.unescapeHtml(chapter.get("chapter_name").toString()),
-						"http://www.mangapanda.com" + chapter.get("chapterlink").toString()));
+						"http://www.mangapanda.com" + this.path + "/" + chapter.get("chapter").toString()));
 			}
 
 			Main.logger.debug("chapters size: " + this.chapters.size());

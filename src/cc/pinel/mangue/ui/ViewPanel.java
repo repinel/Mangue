@@ -22,14 +22,13 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
+import java.net.URL;
 
 import org.kwt.ui.KWTProgressBar;
 
 import cc.pinel.mangue.Main;
 import cc.pinel.mangue.handler.ConnectivityHandler;
 import cc.pinel.mangue.model.Chapter;
-import cc.pinel.mangue.model.Page;
 import cc.pinel.mangue.storage.GeneralStorage;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
@@ -47,25 +46,27 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 	private final KWTProgressBar progressBar;
 
-	private List<Page> pages;
-
-	private int pagesIndex = 0;
+	private int pageNumber = 1;
 
 	private boolean isPortrait = true;
+
+	private Chapter chapter;
 
 	public ViewPanel(Main main, Chapter chapter) {
 		this(main, chapter, null);
 	}
 
-	public ViewPanel(Main main, Chapter chapter, Page lastViewedPage) {
+	public ViewPanel(Main main, Chapter chapter, Integer lastViewedPage) {
 		super(new GridBagLayout());
 
 		this.main = main;
+		this.chapter = chapter;
 
 		new GeneralStorage(main.getContext()).setCurrentChapterNumber(chapter.getNumber());
 
 		progressBar = new KWTProgressBar(0);
 		progressBar.setLabelStyle(KWTProgressBar.STYLE_DOTS);
+		progressBar.setCurrentTick(0);
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridy = 0;
@@ -89,7 +90,10 @@ public class ViewPanel extends KPanel implements KeyListener {
 		gc.fill = GridBagConstraints.BOTH;
 		add(mangaImage, gc);
 
-		loadPages(chapter, lastViewedPage);
+		if (lastViewedPage != null)
+			pageNumber = lastViewedPage;
+
+		loadImage(chapter, pageNumber);
 	}
 
 	/**
@@ -99,40 +103,23 @@ public class ViewPanel extends KPanel implements KeyListener {
 		mangaImage.requestFocus();
 	}
 
-	private void loadPages(final Chapter chapter, final Page lastViewedPage) {
-		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading pages...") {
-			@Override
-			public void handleConnected() throws Exception {
-				pages = chapter.getPages();
-
-				progressBar.setCurrentTick(0);
-				progressBar.setTotalTicks(pages.size());
-
-				if (lastViewedPage != null) {
-					pagesIndex = pages.indexOf(lastViewedPage);
-					loadImage(lastViewedPage);
-				} else  if (!pages.isEmpty()) {
-					loadImage(pages.get(pagesIndex));
-				}
-			}
-		};
-
-		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);
-	}
-
-	private void loadImage(final Page page) {
-		new GeneralStorage(main.getContext()).setCurrentPageNumber(page.getNumber());
+	private void loadImage(final Chapter chapter, final int pageNumber) {
+		new GeneralStorage(main.getContext()).setCurrentPageNumber(Integer.toString(pageNumber));
 
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
 			@Override
 			public void handleConnected() throws Exception {
-				Main.logger.info("Fetching image content " + page.getImageURL());
+				progressBar.setTotalTicks(chapter.getPageTotal());
 
-				Image image = Toolkit.getDefaultToolkit().getImage(page.getImageURL());
+				URL imageURL = chapter.getPageImageURL(pageNumber);
+
+				Main.logger.info("Fetching image content " + imageURL);
+
+				Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
 				mangaImage.setImage(image, true);
 				isPortrait = true;
 
-				progressBar.setCurrentTick(pagesIndex + 1);
+				progressBar.setCurrentTick(pageNumber);
 
 				requestFocus();
 				repaint();
@@ -146,19 +133,19 @@ public class ViewPanel extends KPanel implements KeyListener {
 	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
 	 */
 	public void keyReleased(KeyEvent e) {
-		if (pages == null || pages.isEmpty())
+		if (!chapter.hasPages())
 			return;
 
 		switch (e.getKeyCode()) {
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE:
-				if (pagesIndex + 1 < pages.size())
-					loadImage(pages.get(++pagesIndex));
+				if (pageNumber < chapter.getPageTotal())
+					loadImage(chapter, ++pageNumber);
 				break;
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE_BACK:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE_BACK:
-				if (pagesIndex - 1 >= 0)
-					loadImage(pages.get(--pagesIndex));
+				if (pageNumber > 1)
+					loadImage(chapter, --pageNumber);
 				break;
 			case KindleKeyCodes.VK_FIVE_WAY_SELECT:
 				if (isPortrait) {

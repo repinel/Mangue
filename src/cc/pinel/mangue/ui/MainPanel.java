@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-import org.apache.log4j.Logger;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;

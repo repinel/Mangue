@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +46,7 @@ public class MangaSearch {
 			String tokens[] = StringUtils.splitPreserveAllTokens(lines[i], '|');
 
 			if (tokens.length >= MIN_TOKEN_LENGHT)
-				mangas.add(new Manga(tokens[5], tokens[2]));
+				mangas.add(new Manga(tokens[5], tokens[2], convertOldPath(tokens[4])));
 		}
 
 		Main.logger.debug("mangas size: " + mangas.size());
@@ -52,4 +54,10 @@ public class MangaSearch {
 		return mangas;
 	}
 
+	private static String convertOldPath(String currentPath) {
+		Matcher matcher = Pattern.compile("/(\\d+)/([\\w\\-]+).html").matcher(currentPath);
+		if (matcher.matches())
+			return "/" + matcher.group(2);
+		return currentPath;
+	}
 }
