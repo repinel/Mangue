@@ -119,7 +119,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 				EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
 						if (imageURL != null) {
-							Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
+							final Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
 							mangaImage.setImage(image, true);
 							isPortrait = true;
 						}
@@ -159,11 +159,13 @@ public class ViewPanel extends KPanel implements KeyListener {
 					KProgress progress = main.getContext().getProgressIndicator();
 					progress.setString("Rotating image...");
 					try {
-						Image rotatedImage = ImageUtil.getRotatedImage(mangaImage.getImage(), ImageUtil.ROTATE_RIGHT);
-						mangaImage.setImage(rotatedImage, true);
-						isPortrait = false;
-						requestFocus();
-						repaint();
+						final Image rotatedImage = ImageUtil.getRotatedImage(mangaImage.getImage(), ImageUtil.ROTATE_RIGHT);
+						if (rotatedImage != null) {
+							mangaImage.setImage(rotatedImage, true);
+							isPortrait = false;
+							requestFocus();
+							repaint();
+						}
 					} finally {
 						progress.setIndeterminate(false);
 					}
