@@ -94,7 +94,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		if (lastPageNumber != null)
 			pageNumber = lastPageNumber;
 
-		loadImage(chapter, pageNumber);
+		loadImage(pageNumber);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		mangaImage.requestFocus();
 	}
 
-	private void loadImage(final Chapter chapter, final int pageNumber) {
+	private void loadImage(final int pageNumber) {
 		new GeneralStorage(main.getContext()).setCurrentPageNumber(Integer.toString(pageNumber));
 
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
@@ -147,12 +147,12 @@ public class ViewPanel extends KPanel implements KeyListener {
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE:
 				if (pageNumber < chapter.getPageTotal())
-					loadImage(chapter, ++pageNumber);
+					loadImage(++pageNumber);
 				break;
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE_BACK:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE_BACK:
 				if (pageNumber > 1)
-					loadImage(chapter, --pageNumber);
+					loadImage(--pageNumber);
 				break;
 			case KindleKeyCodes.VK_FIVE_WAY_SELECT:
 				if (isPortrait) {

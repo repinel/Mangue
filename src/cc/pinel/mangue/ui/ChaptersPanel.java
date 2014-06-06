@@ -144,19 +144,20 @@ public class ChaptersPanel extends KPanel {
 		public void actionPerformed(ActionEvent event) {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
 				String chapterNumber = ((KWTSelectableLabel) event.getSource()).getName();
+
 				Main.logger.debug("Selected chapter: " + chapterNumber);
-				Chapter chapter = manga.getChapter(chapterNumber);
-				rememberChapter(chapter);
-				ViewPanel viewPanel = new ViewPanel(main, chapter);
+
+				rememberChapter(chapterNumber);
+				ViewPanel viewPanel = new ViewPanel(main, new Chapter(chapterNumber, manga.getChapterLink(chapterNumber)));
 				main.setActivePanel(viewPanel);
 			}
 		}
 
-		private void rememberChapter(final Chapter chapter) {
+		private void rememberChapter(final String chapterNumber) {
 			new StorageHandler(main.getContext(), "Loading mangas...") {
 				@Override
 				public void handleRun() throws Exception {
-					new StateStorage(main.getContext()).setChapter(manga.getId(), chapter.getNumber());
+					new StateStorage(main.getContext()).setChapter(manga.getId(), chapterNumber);
 				}
 			}.start();
 		}

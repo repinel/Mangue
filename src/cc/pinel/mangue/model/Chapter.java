@@ -30,6 +30,10 @@ public class Chapter {
 
 	private int pagesTotal = -1;
 
+	public Chapter(String number, String link) {
+		this(number, null, link);
+	}
+
 	public Chapter(String number, String name, String link) {
 		this.number = number;
 		this.name = name;
@@ -47,39 +51,44 @@ public class Chapter {
 	}
 
 	/**
-	 * @param pageNumber the page number
+	 * @param pageNumber
+	 *            the page number
 	 * 
 	 * @return the imageURL
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public URL getPageImageURL(int pageNumber) throws IOException {
+	public URL getPageImageURL(int pageNumber) {
 		URL imageURL = null;
 
 		if (pageNumber > 0 && pageNumber <= getPageTotal()) {
-
 			Main.logger.info("Fetching image URL for page" + this.link);
 
-			URL u = new URL(this.link + "/" + pageNumber);
-			InputStream in = u.openStream();
+			try {
+				URL u = new URL(this.link + "/" + pageNumber);
+				InputStream in = u.openStream();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			String line;
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(in));
+				String line;
 
-			while((line = reader.readLine()) != null) {
-				if (line.indexOf(" id=\"img\" ") != -1) {
-					int i = line.indexOf("src=\"");
-					if (i != -1) {
-						int j = line.indexOf("\"", i + 5);
-						if (j != -1 && (i += 5) < line.length()) {
-							imageURL = new URL(line.substring(i, j));
-							break;
+				while ((line = reader.readLine()) != null) {
+					if (line.indexOf(" id=\"img\" ") != -1) {
+						int i = line.indexOf("src=\"");
+						if (i != -1) {
+							int j = line.indexOf("\"", i + 5);
+							if (j != -1 && (i += 5) < line.length()) {
+								imageURL = new URL(line.substring(i, j));
+								break;
+							}
 						}
 					}
 				}
-			}
 
-			reader.close();
-			in.close();
+				reader.close();
+				in.close();
+			} catch (Exception e) {
+				Main.logger.error(e); // ignored
+			}
 
 			Main.logger.debug("image src: " + imageURL);
 		}
@@ -89,16 +98,18 @@ public class Chapter {
 
 	public int getPageTotal() {
 		if (this.pagesTotal < 0) {
-			Main.logger.info("Fetching the total of pages for chapter " + this.link);
+			Main.logger.info("Fetching the total of pages for chapter "
+					+ this.link);
 
 			try {
 				URL u = new URL(this.link);
 				InputStream in = u.openStream();
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(in));
 				String line;
 
-				while((line = reader.readLine()) != null) {
+				while ((line = reader.readLine()) != null) {
 					int i = line.indexOf("</select> of ");
 					if (i != -1) {
 						int j = line.indexOf("</div>", i + 1);
@@ -112,6 +123,7 @@ public class Chapter {
 				reader.close();
 				in.close();
 			} catch (Exception e) {
+				Main.logger.error(e);
 				this.pagesTotal = 0;
 			}
 
@@ -122,6 +134,6 @@ public class Chapter {
 	}
 
 	public boolean hasPages() {
-		return getPageTotal() > 0;
+		return this.pagesTotal > 0;
 	}
 }

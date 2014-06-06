@@ -86,7 +86,7 @@ public class Manga {
 				JSONObject chapter = (JSONObject) chapters.get(i);
 				this.chapters.add(new Chapter(chapter.get("chapter").toString(),
 						StringUtils.unescapeHtml(chapter.get("chapter_name").toString()),
-						chapterLink(chapter.get("chapter").toString())));
+						getChapterLink(chapter.get("chapter").toString())));
 			}
 
 			Main.logger.debug("chapters size: " + this.chapters.size());
@@ -107,7 +107,7 @@ public class Manga {
 		return null;
 	}
 
-	private String chapterLink(String chapterNumber) {
+	public String getChapterLink(String chapterNumber) {
 		return "http://www.mangapanda.com" + this.path + "/" + chapterNumber;
 	}
 }
