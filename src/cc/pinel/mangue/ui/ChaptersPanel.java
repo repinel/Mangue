@@ -52,6 +52,8 @@ public class ChaptersPanel extends KPanel {
 
 	private final KPages chaptersPages;
 
+	private final ChapterLabelActionListener chapterListener;
+
 	public ChaptersPanel(Main main, Manga manga) {
 		super(new GridBagLayout());
 
@@ -64,6 +66,8 @@ public class ChaptersPanel extends KPanel {
 		chaptersPages.setFocusable(true);
 		chaptersPages.setEnabled(true);
 		chaptersPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
+
+		chapterListener = new ChapterLabelActionListener();
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
@@ -107,10 +111,11 @@ public class ChaptersPanel extends KPanel {
 							public void run() {
 								for (Chapter chapter : chapters) {
 									final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
+									chapterLabel.setName(chapter.getNumber());
 									chapterLabel.setFocusable(true);
 									chapterLabel.setEnabled(true);
 									chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-									chapterLabel.addActionListener(new ChapterLabelActionListener(chapter));
+									chapterLabel.addActionListener(chapterListener);
 
 									// last read chapter
 									if (chapterNumber != null && chapter.getNumber().equals(chapterNumber)) {
@@ -136,21 +141,18 @@ public class ChaptersPanel extends KPanel {
 	}
 
 	private class ChapterLabelActionListener implements ActionListener {
-		private final Chapter chapter;
-
-		public ChapterLabelActionListener(Chapter chapter) {
-			this.chapter = chapter;
-		}
-
 		public void actionPerformed(ActionEvent event) {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
-				rememberChapter();
+				String chapterNumber = ((KWTSelectableLabel) event.getSource()).getName();
+				Main.logger.debug("Selected chapter: " + chapterNumber);
+				Chapter chapter = manga.getChapter(chapterNumber);
+				rememberChapter(chapter);
 				ViewPanel viewPanel = new ViewPanel(main, chapter);
 				main.setActivePanel(viewPanel);
 			}
 		}
 
-		private void rememberChapter() {
+		private void rememberChapter(final Chapter chapter) {
 			new StorageHandler(main.getContext(), "Loading mangas...") {
 				@Override
 				public void handleRun() throws Exception {
