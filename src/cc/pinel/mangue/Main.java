@@ -48,7 +48,7 @@ public class Main extends KindletWrapper {
 	private MainPanel mainPanel;
 	private ChaptersPanel chaptersPanel;
 	private ViewPanel viewPanel;
-	private AddMangaPanel addMangaPanel; 
+	private AddMangaPanel addMangaPanel;
 
 	/**
 	 * @see com.cowlark.kindlet.KindletWrapper#onKindletCreate()
@@ -63,7 +63,8 @@ public class Main extends KindletWrapper {
 
 		getContext().setMenu(new Menu(this));
 
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(
+				new MainKeyEventDispatcher());
 	}
 
 	/**
@@ -137,45 +138,50 @@ public class Main extends KindletWrapper {
 
 		String term = new GeneralStorage(context).getSearchTerm();
 
-		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ", term == null ? "" : term, new KOptionPane.InputDialogListener() {
-			public void onClose(String input) {
-				if (input != null && input.length() >= 3) {
-					new GeneralStorage(context).setSearchTerm(input);
-					AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
-					setActivePanel(addMangaPanel);
-				}
-			}
-		});
+		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ",
+				term == null ? "" : term, new KOptionPane.InputDialogListener() {
+					public void onClose(String input) {
+						if (input != null && input.length() >= 3) {
+							new GeneralStorage(context).setSearchTerm(input);
+							AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
+							setActivePanel(addMangaPanel);
+						}
+					}
+				});
 	}
 
 	public void clearMangas() {
 		final KindletContext context = getContext();
 
-		KOptionPane.showConfirmDialog(context.getRootContainer(), "Would you really like to clear your favorites?", new KOptionPane.ConfirmDialogListener() {
-			public void onClose(int option) {
-				if (option == KOptionPane.OK_OPTION) {
-					new StorageHandler(context, "Clearing Favorites...") {
-						@Override
-						public void handleRun() throws Exception {
-							new MangaStorage(context).clear();
-							new StateStorage(context).clear();
-							reloadMainPanel();
+		KOptionPane.showConfirmDialog(context.getRootContainer(),
+				"Would you really like to clear your favorites?",
+				new KOptionPane.ConfirmDialogListener() {
+					public void onClose(int option) {
+						if (option == KOptionPane.OK_OPTION) {
+							new StorageHandler(context, "Clearing Favorites...") {
+								@Override
+								public void handleRun() throws Exception {
+									new MangaStorage(context).clear();
+									new StateStorage(context).clear();
+									reloadMainPanel();
+								}
+							}.start();
 						}
-					}.start();
-				}
-			}
-		});
+					}
+				});
 	}
 
 	public void clearSearch() {
 		final KindletContext context = getContext();
 
-		KOptionPane.showConfirmDialog(context.getRootContainer(), "Would you really like to clear your previous searched term?", new KOptionPane.ConfirmDialogListener() {
-			public void onClose(int option) {
-				if (option == KOptionPane.OK_OPTION)
-					new GeneralStorage(context).removeSearchTerm();
-			}
-		});
+		KOptionPane.showConfirmDialog(context.getRootContainer(),
+				"Would you really like to clear your previous searched term?",
+				new KOptionPane.ConfirmDialogListener() {
+					public void onClose(int option) {
+						if (option == KOptionPane.OK_OPTION)
+							new GeneralStorage(context).removeSearchTerm();
+					}
+				});
 	}
 
 	private class MainKeyEventDispatcher implements KeyEventDispatcher {
@@ -191,13 +197,11 @@ public class Main extends KindletWrapper {
 						new GeneralStorage(getContext()).removeCurrentChapterNumber();
 						setActivePanel(mainPanel);
 						requestGC();
-					}
-					else if (displayed == viewPanel) {
+					} else if (displayed == viewPanel) {
 						new GeneralStorage(getContext()).removeCurrentPageNumber();
 						setActivePanel(chaptersPanel);
 						requestGC();
-					}
-					else if (displayed == addMangaPanel) {
+					} else if (displayed == addMangaPanel) {
 						if (viewPanel != null)
 							setActivePanel(viewPanel);
 						else if (chaptersPanel != null)
@@ -222,13 +226,10 @@ public class Main extends KindletWrapper {
 		final Manga manga = new MangaStorage(getContext()).getManga(mangaId);
 
 		if (manga != null) {
-			Chapter chapter = manga.getChapter(chapterNumber);
-
-			if (chapter != null) {
-				this.chaptersPanel = new ChaptersPanel(this, manga);
-				this.viewPanel = new ViewPanel(this, chapter, new Integer(pageNumber));
-				return true;
-			}
+			this.chaptersPanel = new ChaptersPanel(this, manga);
+			this.viewPanel = new ViewPanel(this, new Chapter(chapterNumber,
+					manga.getChapterLink(chapterNumber)), new Integer(pageNumber));
+			return true;
 		}
 
 		return false;

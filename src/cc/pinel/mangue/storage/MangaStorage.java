@@ -48,7 +48,8 @@ public class MangaStorage extends AbstractStorage {
 
 		for (int i = 0; i < jsonMangas.size(); i++) {
 			JSONObject jsonManga = (JSONObject) jsonMangas.get(i);
-			mangas.add(new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(), jsonManga.get("path").toString()));
+			mangas.add(new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(),
+					jsonManga.get("path").toString()));
 		}
 
 		Main.logger.debug("mangas size: " + mangas.size());
@@ -75,7 +76,8 @@ public class MangaStorage extends AbstractStorage {
 		if (jsonManga == null)
 			return null;
 
-		return new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(), jsonManga.get("path").toString());
+		return new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(),
+				jsonManga.get("path").toString());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -102,9 +104,9 @@ public class MangaStorage extends AbstractStorage {
 			jsonManga.put("id", manga.getId());
 			jsonManga.put("name", manga.getName());
 			jsonManga.put("path", manga.getPath());
-	
+
 			jsonMangas.add(jsonManga);
-	
+
 			Object[] sortedArray = jsonMangas.toArray();
 			Arrays.sort(sortedArray, new Comparator<Object>() {
 				public int compare(Object o1, Object o2) {
@@ -113,13 +115,13 @@ public class MangaStorage extends AbstractStorage {
 					return manga1.get("name").toString().compareTo(manga2.get("name").toString());
 				}
 			});
-	
+
 			JSONArray sortedJSONArray = new JSONArray();
 			for (Object obj : sortedArray) {
 				sortedJSONArray.add(obj);
 			}
 			json.put("mangas", sortedJSONArray);
-	
+
 			writeJSON(json);
 		}
 	}

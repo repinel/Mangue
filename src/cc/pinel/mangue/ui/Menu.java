@@ -27,7 +27,7 @@ public class Menu extends KMenu {
 
 	private final Main main;
 
-	public Menu (Main main) {
+	public Menu(Main main) {
 		this.main = main;
 
 		KMenuItem addItem = new KMenuItem("Add Manga");

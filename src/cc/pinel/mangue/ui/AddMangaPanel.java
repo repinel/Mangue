@@ -79,13 +79,14 @@ public class AddMangaPanel extends KPanel {
 	public void requestFocus() {
 		try {
 			((Component) results.getPageModel().getElementAt(0)).requestFocus();
-		} catch (NoSuchElementException e) { 
+		} catch (NoSuchElementException e) {
 			results.requestFocus();
 		}
 	}
 
 	private void loadResults(final String input) {
-		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading results...") {
+		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(),
+				"Loading results...") {
 			@Override
 			public void handleConnected() throws Exception {
 				final Collection<Manga> mangas = MangaSearch.search(input);
@@ -93,7 +94,8 @@ public class AddMangaPanel extends KPanel {
 				EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
 						for (Manga manga : mangas) {
-							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga.getName());
+							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga
+									.getName());
 							resultLabel.setFocusable(true);
 							resultLabel.setEnabled(true);
 							resultLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);

@@ -25,29 +25,17 @@ import cc.pinel.mangue.Main;
 
 public class Chapter {
 	private final String number;
-	private final String name;
 	private final String link;
 
 	private int pagesTotal = -1;
 
 	public Chapter(String number, String link) {
-		this(number, null, link);
-	}
-
-	public Chapter(String number, String name, String link) {
 		this.number = number;
-		this.name = name;
 		this.link = link;
 	}
 
 	public String getNumber() {
 		return this.number;
-	}
-
-	public String getTitle() {
-		if (this.name == null || this.name.length() == 0)
-			return this.number;
-		return this.number + " - " + this.name;
 	}
 
 	/**
@@ -67,8 +55,7 @@ public class Chapter {
 				URL u = new URL(this.link + "/" + pageNumber);
 				InputStream in = u.openStream();
 
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(in));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 				String line;
 
 				while ((line = reader.readLine()) != null) {
@@ -98,15 +85,13 @@ public class Chapter {
 
 	public int getPageTotal() {
 		if (this.pagesTotal < 0) {
-			Main.logger.info("Fetching the total of pages for chapter "
-					+ this.link);
+			Main.logger.info("Fetching the total of pages for chapter " + this.link);
 
 			try {
 				URL u = new URL(this.link);
 				InputStream in = u.openStream();
 
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(in));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 				String line;
 
 				while ((line = reader.readLine()) != null) {

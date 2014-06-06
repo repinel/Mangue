@@ -15,28 +15,10 @@
  */
 package cc.pinel.mangue.model;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import cc.pinel.mangue.Main;
-import cc.pinel.mangue.util.StringUtils;
-
 public class Manga {
 	private final String id;
 	private final String name;
 	private final String path;
-
-	private Collection<Chapter> chapters;
 
 	public Manga(String id, String name, String path) {
 		this.id = id;
@@ -65,49 +47,11 @@ public class Manga {
 		return path;
 	}
 
-	/**
-	 * @return the chapters
-	 * @throws IOException 
-	 * @throws MalformedURLException 
-	 * @throws ParseException 
-	 */
-	public Collection<Chapter> getChapters() throws MalformedURLException, IOException, ParseException {
-		if (this.chapters == null || this.chapters.isEmpty()) {
-			this.chapters = new ArrayList<Chapter>();
-
-			Main.logger.info("Fetching chapters for " + this.name);
-
-			InputStream is = new URL("http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0").openStream();
-
-			JSONParser parser = new JSONParser();
-			JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(is));
-
-			for (int i = chapters.size() - 1; i >= 0; i--) {
-				JSONObject chapter = (JSONObject) chapters.get(i);
-				this.chapters.add(new Chapter(chapter.get("chapter").toString(),
-						StringUtils.unescapeHtml(chapter.get("chapter_name").toString()),
-						getChapterLink(chapter.get("chapter").toString())));
-			}
-
-			Main.logger.debug("chapters size: " + this.chapters.size());
-		}
-		return this.chapters;
-	}
-
-	public Chapter getChapter(String chapterNumber) {
-		try {
-			for (Chapter chapter : this.getChapters()) {
-				if (chapter.getNumber().equals(chapterNumber)) {
-					return chapter;
-				}
-			}
-		} catch (Exception e) {
-			Main.logger.error(e);
-		}
-		return null;
-	}
-
 	public String getChapterLink(String chapterNumber) {
 		return "http://www.mangapanda.com" + this.path + "/" + chapterNumber;
+	}
+
+	public String getSearchChaptersLink() {
+		return "http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0";
 	}
 }

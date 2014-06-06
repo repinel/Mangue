@@ -22,7 +22,8 @@ import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KProgress;
 
-public abstract class ConnectivityHandler implements com.amazon.kindle.kindlet.net.ConnectivityHandler {
+public abstract class ConnectivityHandler implements
+		com.amazon.kindle.kindlet.net.ConnectivityHandler {
 	private final KindletContext context;
 
 	private final String busyText;
@@ -66,7 +67,8 @@ public abstract class ConnectivityHandler implements com.amazon.kindle.kindlet.n
 		Main.logger.info(details.getLocalizedMessage());
 
 		try {
-			KOptionPane.showMessageDialog(this.context.getRootContainer(), details.getLocalizedMessage());
+			KOptionPane.showMessageDialog(this.context.getRootContainer(),
+					details.getLocalizedMessage());
 		} catch (Exception e) {
 			Main.logger.error(e);
 		}

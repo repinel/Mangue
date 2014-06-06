@@ -177,11 +177,13 @@ public class ViewPanel extends KPanel implements KeyListener {
 	/**
 	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 	 */
-	public void keyPressed(KeyEvent e) { }
+	public void keyPressed(KeyEvent e) {
+	}
 
 	/**
 	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
 	 */
-	public void keyTyped(KeyEvent e) { }
+	public void keyTyped(KeyEvent e) {
+	}
 
 }

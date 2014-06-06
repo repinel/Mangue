@@ -83,7 +83,7 @@ public class MainPanel extends KPanel {
 	public void requestFocus() {
 		try {
 			((Component) mangaListPages.getPageModel().getElementAt(0)).requestFocus();
-		} catch (NoSuchElementException e) { 
+		} catch (NoSuchElementException e) {
 			mangaListPages.requestFocus();
 		}
 	}
@@ -134,7 +134,8 @@ public class MainPanel extends KPanel {
 					main.setActivePanel(chaptersPanel);
 					break;
 				case KindleKeyCodes.VK_FIVE_WAY_LEFT:
-					KOptionPane.showConfirmDialog(main.getContext().getRootContainer(), "Would you like to remove " + manga.getName() + "?", new KOptionPane.ConfirmDialogListener() {
+					KOptionPane.showConfirmDialog(main.getContext().getRootContainer(), "Would you like to remove "
+							+ manga.getName() + "?", new KOptionPane.ConfirmDialogListener() {
 						public void onClose(int option) {
 							if (option == KOptionPane.OK_OPTION) {
 								new StorageHandler(main.getContext(), "Removing manga...") {

@@ -24,9 +24,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
+import java.net.URL;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.kwt.ui.KWTSelectableLabel;
 
 import cc.pinel.mangue.Main;
@@ -36,6 +40,7 @@ import cc.pinel.mangue.model.Chapter;
 import cc.pinel.mangue.model.Manga;
 import cc.pinel.mangue.storage.GeneralStorage;
 import cc.pinel.mangue.storage.StateStorage;
+import cc.pinel.mangue.util.StringUtils;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
@@ -91,7 +96,7 @@ public class ChaptersPanel extends KPanel {
 	public void requestFocus() {
 		try {
 			((Component) chaptersPages.getPageModel().getElementAt(0)).requestFocus();
-		} catch (NoSuchElementException e) { 
+		} catch (NoSuchElementException e) {
 			chaptersPages.requestFocus();
 		}
 	}
@@ -100,32 +105,44 @@ public class ChaptersPanel extends KPanel {
 		new StorageHandler(main.getContext(), "Loading mangas...") {
 			@Override
 			public void handleRun() throws Exception {
-				final String chapterNumber = new StateStorage(main.getContext()).getChapter(manga.getId());
+				final String lastChapterNumber = new StateStorage(main.getContext()) .getChapter(manga.getId());
 
 				final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
 					@Override
 					public void handleConnected() throws Exception {
-						final Collection<Chapter> chapters = manga.getChapters();
+						Main.logger.info("Fetching chapters for " + manga.getName());
+
+						JSONParser parser = new JSONParser();
+						JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(new URL(
+								manga.getSearchChaptersLink()).openStream()));
+
+						for (int i = chapters.size() - 1; i >= 0; i--) {
+							JSONObject chapter = (JSONObject) chapters.get(i);
+							String chapterNumber = chapter.get("chapter").toString();
+							String chapterName = StringUtils.unescapeHtml(chapter.get("chapter_name").toString());
+							String chapterTitle = chapterNumber + (chapterName != null && chapterName.length() != 0 ? ": " + chapterName : "");
+
+							final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapterTitle);
+							chapterLabel.setName(chapterNumber);
+							chapterLabel.setFocusable(true);
+							chapterLabel.setEnabled(true);
+							chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
+							chapterLabel.addActionListener(chapterListener);
+
+							// last read chapter
+							if (lastChapterNumber != null && chapterNumber.equals(lastChapterNumber)) {
+								Font font = chapterLabel.getFont();
+								chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+								chapterLabel.setForeground(new Color(255, 84, 84));
+							}
+
+							chaptersPages.addItem(chapterLabel);
+						}
+
+						Main.logger.debug("chapters size: " + chapters.size());
 
 						EventQueue.invokeAndWait(new Runnable() {
 							public void run() {
-								for (Chapter chapter : chapters) {
-									final KWTSelectableLabel chapterLabel = new KWTSelectableLabel(chapter.getTitle());
-									chapterLabel.setName(chapter.getNumber());
-									chapterLabel.setFocusable(true);
-									chapterLabel.setEnabled(true);
-									chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
-									chapterLabel.addActionListener(chapterListener);
-
-									// last read chapter
-									if (chapterNumber != null && chapter.getNumber().equals(chapterNumber)) {
-										Font font = chapterLabel.getFont();
-										chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
-										chapterLabel.setForeground(new Color(255, 84, 84));
-									}
-
-									chaptersPages.addItem(chapterLabel);
-								}
 								chaptersPages.first();
 
 								requestFocus();
