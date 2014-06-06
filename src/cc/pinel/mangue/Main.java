@@ -63,8 +63,7 @@ public class Main extends KindletWrapper {
 
 		getContext().setMenu(new Menu(this));
 
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(
-				new MainKeyEventDispatcher());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
 	}
 
 	/**
