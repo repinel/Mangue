@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.kwt.ui.KWTSelectableLabel;
@@ -85,17 +86,15 @@ public class AddMangaPanel extends KPanel {
 	}
 
 	private void loadResults(final String input) {
-		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(),
-				"Loading results...") {
-			@Override
+		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading results...") {
 			public void handleConnected() throws Exception {
-				final Collection<Manga> mangas = MangaSearch.search(input);
+				final Collection mangas = MangaSearch.search(input);
 
 				EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
-						for (Manga manga : mangas) {
-							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga
-									.getName());
+						for (Iterator iter = mangas.iterator(); iter.hasNext(); ) {
+							Manga manga = (Manga) iter.next();
+							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga.getName());
 							resultLabel.setFocusable(true);
 							resultLabel.setEnabled(true);
 							resultLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
@@ -125,7 +124,6 @@ public class AddMangaPanel extends KPanel {
 		public void actionPerformed(ActionEvent event) {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
 				new StorageHandler(main.getContext(), "Loading mangas...") {
-					@Override
 					public void handleRun() throws Exception {
 						try {
 							new MangaStorage(main.getContext()).addManga(manga);

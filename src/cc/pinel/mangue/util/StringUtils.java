@@ -26,7 +26,6 @@ public class StringUtils {
 
 	public static String unescapeHtml(final String input) {
 		String unescapeHexHtmlOutput = unescapeHtmlByNumber(input);
-
 		return unescapeHtmlByName(unescapeHexHtmlOutput);
 	}
 
@@ -34,7 +33,7 @@ public class StringUtils {
 		if (input.indexOf("&#") == -1)
 			return input;
 
-		StringBuilder sb = new StringBuilder();
+		String out = "";
 
 		for (int i = 0, length = input.length(); i < length; i++) {
 			if (input.charAt(i) == '&' && i + 1 < length && input.charAt(i + 1) == '#') {
@@ -54,26 +53,63 @@ public class StringUtils {
 				}
 				if (isValid && n != 0) {
 					char unescape = (char) n;
-					sb.append(unescape);
+					out += unescape;
 					i = j;
 				} else {
-					sb.append(input.charAt(i));
+					out += input.charAt(i);
 				}
 			} else {
-				sb.append(input.charAt(i));
+				out += input.charAt(i);
 			}
 		}
 
-		return sb.toString();
+		return out;
 	}
 
 	private static String unescapeHtmlByName(final String input) {
 		String result = input;
 
 		for (int i = 0; i < BASIC_HTML_ESCAPE.length; i++) {
-			result = result.replace(BASIC_HTML_ESCAPE[i][1], BASIC_HTML_ESCAPE[i][0]);
+			result = replace(result, BASIC_HTML_ESCAPE[i][1], BASIC_HTML_ESCAPE[i][0]);
 		}
 
 		return result;
+	}
+
+	public static String replace(String input, String pattern, String replacement) {
+		String out = "";
+
+		int n = input.length();
+		int m = pattern.length();
+		int lastFound = -1;
+
+		for (int i = 0; i < n; ) {
+			if (i + m >= n) {
+				out += input.substring(lastFound == -1 ? 0 : i, n);
+				break;
+			}
+
+			boolean hasMatched = true;
+			for (int j = 0; j < m; j++) {
+				if (pattern.charAt(j) != input.charAt(i + j)) {
+					hasMatched = false;
+					break;
+				}
+			}
+
+			if (hasMatched) {
+				if (lastFound == -1 && i > 0)
+					out += input.substring(0, i);
+				else if (lastFound + m < i)
+					out += input.substring(lastFound + m, i);
+				out += replacement;
+				lastFound = i;
+				i += m;
+			} else {
+				i++;
+			}
+		}
+
+		return out;
 	}
 }

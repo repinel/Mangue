@@ -31,8 +31,8 @@ import cc.pinel.mangue.model.Manga;
 public class MangaSearch {
 	private static final int MIN_TOKEN_LENGHT = 6;
 
-	public static Collection<Manga> search(String query) throws MalformedURLException, IOException {
-		Collection<Manga> mangas = new ArrayList<Manga>();
+	public static Collection search(String query) throws MalformedURLException, IOException {
+		Collection mangas = new ArrayList();
 
 		InputStream is = new URL("http://www.mangapanda.com/actions/search/?q=" + query + "&limit=20").openStream();
 

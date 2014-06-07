@@ -103,18 +103,18 @@ public class ChaptersPanel extends KPanel {
 
 	private void loadChapters() {
 		new StorageHandler(main.getContext(), "Loading mangas...") {
-			@Override
 			public void handleRun() throws Exception {
 				final String lastChapterNumber = new StateStorage(main.getContext()) .getChapter(manga.getId());
 
 				final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
-					@Override
 					public void handleConnected() throws Exception {
 						Main.logger.info("Fetching chapters for " + manga.getName());
 
 						JSONParser parser = new JSONParser();
 						JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(new URL(
 								manga.getSearchChaptersLink()).openStream()));
+
+						Main.logger.debug("chapters size: " + chapters.size());
 
 						for (int i = chapters.size() - 1; i >= 0; i--) {
 							JSONObject chapter = (JSONObject) chapters.get(i);
@@ -138,8 +138,6 @@ public class ChaptersPanel extends KPanel {
 
 							chaptersPages.addItem(chapterLabel);
 						}
-
-						Main.logger.debug("chapters size: " + chapters.size());
 
 						EventQueue.invokeAndWait(new Runnable() {
 							public void run() {
@@ -172,7 +170,6 @@ public class ChaptersPanel extends KPanel {
 
 		private void rememberChapter(final String chapterNumber) {
 			new StorageHandler(main.getContext(), "Loading mangas...") {
-				@Override
 				public void handleRun() throws Exception {
 					new StateStorage(main.getContext()).setChapter(manga.getId(), chapterNumber);
 				}

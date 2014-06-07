@@ -36,25 +36,29 @@ import cc.pinel.mangue.ui.MainPanel;
 import cc.pinel.mangue.ui.Menu;
 import cc.pinel.mangue.ui.ViewPanel;
 
+import com.amazon.kindle.kindlet.Kindlet;
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KPanel;
-import com.cowlark.kindlet.KindletWrapper;
 
-public class Main extends KindletWrapper {
+public class Main implements Kindlet {
 	public static final Logger logger = Logger.getLogger(Main.class);
+
+	private KindletContext context;
 
 	private MainPanel mainPanel;
 	private ChaptersPanel chaptersPanel;
 	private ViewPanel viewPanel;
 	private AddMangaPanel addMangaPanel;
 
-	/**
-	 * @see com.cowlark.kindlet.KindletWrapper#onKindletCreate()
-	 */
-	@Override
-	public void onKindletCreate() {
+	public KindletContext getContext() {
+		return this.context;
+	}
+
+	public void create(KindletContext context) {
+		this.context = context;
+
 		PropertyConfigurator.configure(getClass().getResource("/res/log4j.properties"));
 
 		logger.info("-- Kindle Create --");
@@ -66,11 +70,7 @@ public class Main extends KindletWrapper {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
 	}
 
-	/**
-	 * @see com.cowlark.kindlet.KindletWrapper#onKindletStart()
-	 */
-	@Override
-	public void onKindletStart() {
+	public void start() {
 		KindletContext context = getContext();
 
 		KPanel currentPanel = this.mainPanel;
@@ -88,6 +88,15 @@ public class Main extends KindletWrapper {
 		}
 
 		context.getRootContainer().add(currentPanel);
+	}
+
+
+	public void stop() {
+		// ignored
+	}
+
+	public void destroy() {
+		// ignored
 	}
 
 	public void setActivePanel(MainPanel panel) {
@@ -158,7 +167,6 @@ public class Main extends KindletWrapper {
 					public void onClose(int option) {
 						if (option == KOptionPane.OK_OPTION) {
 							new StorageHandler(context, "Clearing Favorites...") {
-								@Override
 								public void handleRun() throws Exception {
 									new MangaStorage(context).clear();
 									new StateStorage(context).clear();

@@ -210,7 +210,7 @@ public class StringUtils {
 		if (len == 0) {
 			return new String[0];
 		}
-		final List<String> list = new ArrayList<String>();
+		final List list = new ArrayList();
 		int i = 0, start = 0;
 		boolean match = false;
 		boolean lastMatch = false;
@@ -231,7 +231,7 @@ public class StringUtils {
 		if (match || preserveAllTokens && lastMatch) {
 			list.add(str.substring(start, i));
 		}
-		return list.toArray(new String[list.size()]);
+		return (String[]) list.toArray(new String[list.size()]);
 	}
 
 }

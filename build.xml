@@ -26,8 +26,8 @@
 
     <property environment="env" />
     <property name="compiler.debuglevel"      value="source,lines,vars" />
-    <property name="compiler.target"          value="1.5" />
-    <property name="compiler.source"          value="1.5" />
+    <property name="compiler.target"          value="1.4" />
+    <property name="compiler.source"          value="1.4" />
 
     <property name="file.keystore"            location="${user.home}/.kindle/kindle.keystore" />
     <property name="dir.kdk"                  location="${user.home}/.kindle" />
@@ -40,7 +40,6 @@
     <property name="dir.build"                location="${basedir}/build" />
     <property name="dir.build.classes"        location="${dir.build}/classes" />
     <property name="file.output"              location="${dir.build}/${ant.project.name}.azw2" />
-    <property name="file.retroweaver"         location="${dir.lib}/retroweaver-all-2.0.7.jar" />
 
     <!-- ===================================================================== -->
     <!-- | PATHS                                                             | -->
@@ -52,16 +51,6 @@
             <include name="**/*.jar"/>
         </fileset>
     </path>
-
-    <!-- ===================================================================== -->
-    <!-- | ESSENCIAL TASKS                                                   | -->
-    <!-- ===================================================================== -->
-
-    <taskdef name="retroweaver" classname="net.sourceforge.retroweaver.ant.RetroWeaverTask">
-        <classpath>
-            <pathelement location="${file.retroweaver}" />
-        </classpath>
-    </taskdef>
 
     <!-- ===================================================================== -->
     <!-- | ESSENCIAL TARGETS                                                 | -->
@@ -76,17 +65,7 @@
         </copy>
     </target>
 
-    <target name="weave" depends="init">
-        <basename property="retroweaver.basename" file="${file.retroweaver}"/>
-        <unzip dest="${dir.build.classes}">
-            <fileset dir="${dir.lib}">
-                <include name="**/*.jar" />
-                <exclude name="**/${retroweaver.basename}" />
-            </fileset>
-        </unzip>
-    </target>
-
-    <target name="build" depends="weave">
+    <target name="build" depends="init">
         <echo message="${ant.project.name}: ${ant.file}" />
         <javac debug="true"
                debuglevel="${compiler.debuglevel}"
@@ -110,8 +89,6 @@
                 <include name="**/*" />
             </fileset>
         </copy>
-
-        <retroweaver srcdir="${dir.build.classes}" />
     </target>
 
     <target name="clean">
