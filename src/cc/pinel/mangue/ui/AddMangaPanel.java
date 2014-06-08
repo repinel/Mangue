@@ -130,7 +130,7 @@ public class AddMangaPanel extends KPanel {
 
 							main.reloadMainPanel();
 						} catch (Exception e) {
-							Main.logger.debug(e);
+							Main.logger.error(e);
 						}
 					}
 				}.start();
