@@ -5,6 +5,7 @@ The Mangue is a reader for online mangas avaliable at [Manga Panda](http://www.m
 
 ![Logo](https://raw.githubusercontent.com/repinel/Mangue/master/images/mangue_logo.jpg)
 
+Feedbacks is welcome. The project was mainly tested on Kindle 4.
 
 Mangue is not affiliated with Manga Panda.
 
