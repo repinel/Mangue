@@ -51,7 +51,6 @@ public class StateStorage extends AbstractStorage {
 		return chapterNumber;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setChapter(String mangaId, String chapterNumber) throws IOException {
 		JSONObject json = null;
 

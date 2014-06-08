@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.kwt.ui.KWTSelectableLabel;
@@ -57,9 +58,7 @@ public class MainPanel extends KPanel {
 		mangaListPages.setEnabled(true);
 		mangaListPages.setPageKeyPolicy(KPages.PAGE_KEYS_LOCAL);
 
-		mangaListPages.addItem(new KLabelMultiline("Welcome to Mangue - Online Manga Reader.\n\n"
-												 + "Use the menu option to search and add mangas to your list.\n\n"
-												 + "All mangas available here are loaded from the www.mangapanda.com website."));
+		mangaListPages.addItem(defaultItem());
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
@@ -90,16 +89,19 @@ public class MainPanel extends KPanel {
 
 	public void loadMangas() {
 		new StorageHandler(main.getContext(), "Loading mangas...") {
-			@Override
 			public void handleRun() throws Exception {
-				final Collection<Manga> mangas = new MangaStorage(main.getContext()).getMangas();
+				final Collection mangas = new MangaStorage(main.getContext()).getMangas();
 
 				EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
-						if (mangas.size() > 0)
-							mangaListPages.removeAllItems();
+						mangaListPages.removeAllItems();
 
-						for (Manga manga : mangas) {
+						if (mangas.size() == 0) {
+							mangaListPages.addItem(defaultItem());
+						}
+
+						for (Iterator iter = mangas.iterator(); iter.hasNext(); ) {
+							Manga manga = (Manga) iter.next();
 							final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
 							mangaLabel.setFocusable(true);
 							mangaLabel.setEnabled(true);
@@ -139,7 +141,6 @@ public class MainPanel extends KPanel {
 						public void onClose(int option) {
 							if (option == KOptionPane.OK_OPTION) {
 								new StorageHandler(main.getContext(), "Removing manga...") {
-									@Override
 									public void handleRun() throws Exception {
 										new MangaStorage(main.getContext()).removeManga(manga);
 										loadMangas();
@@ -153,5 +154,13 @@ public class MainPanel extends KPanel {
 					break;
 			}
 		}
+	}
+
+	private Object defaultItem() {
+		return new KLabelMultiline("Welcome to Mangue - Online Manga Reader.\n"
+								 + "Copyright \u00A92014 Roque Pinel.\n\n"
+								 + "Use the menu option to search and add mangas to your list.\n\n"
+								 + "All mangas available here are loaded from the www.mangapanda.com website.\n"
+								 + "Mangue is not affiliated with Manga Panda.\n");
 	}
 }

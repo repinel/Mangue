@@ -40,7 +40,6 @@ public abstract class StorageHandler extends Thread {
 	/**
 	 * @see java.lang.Thread#run()
 	 */
-	@Override
 	public void run() {
 		KProgress progress = this.context.getProgressIndicator();
 

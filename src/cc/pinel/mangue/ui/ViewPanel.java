@@ -92,7 +92,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		add(mangaImage, gc);
 
 		if (lastPageNumber != null)
-			pageNumber = lastPageNumber;
+			pageNumber = lastPageNumber.intValue();
 
 		loadImage(pageNumber);
 	}
@@ -108,7 +108,6 @@ public class ViewPanel extends KPanel implements KeyListener {
 		new GeneralStorage(main.getContext()).setCurrentPageNumber(Integer.toString(pageNumber));
 
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
-			@Override
 			public void handleConnected() throws Exception {
 				progressBar.setTotalTicks(chapter.getPageTotal());
 

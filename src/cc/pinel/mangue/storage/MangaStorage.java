@@ -34,8 +34,8 @@ public class MangaStorage extends AbstractStorage {
 		super(context, "mangas.json");
 	}
 
-	public Collection<Manga> getMangas() {
-		Collection<Manga> mangas = new ArrayList<Manga>();
+	public Collection getMangas() {
+		Collection mangas = new ArrayList();
 
 		JSONArray jsonMangas = null;
 		try {
@@ -80,7 +80,6 @@ public class MangaStorage extends AbstractStorage {
 				jsonManga.get("path").toString());
 	}
 
-	@SuppressWarnings("unchecked")
 	public void addManga(Manga manga) throws IOException {
 		JSONObject json = null;
 
@@ -108,7 +107,7 @@ public class MangaStorage extends AbstractStorage {
 			jsonMangas.add(jsonManga);
 
 			Object[] sortedArray = jsonMangas.toArray();
-			Arrays.sort(sortedArray, new Comparator<Object>() {
+			Arrays.sort(sortedArray, new Comparator() {
 				public int compare(Object o1, Object o2) {
 					JSONObject manga1 = (JSONObject) o1;
 					JSONObject manga2 = (JSONObject) o2;
@@ -117,9 +116,8 @@ public class MangaStorage extends AbstractStorage {
 			});
 
 			JSONArray sortedJSONArray = new JSONArray();
-			for (Object obj : sortedArray) {
-				sortedJSONArray.add(obj);
-			}
+			for (int i = 0; i < sortedArray.length; i++)
+				sortedJSONArray.add(sortedArray[i]);
 			json.put("mangas", sortedJSONArray);
 
 			writeJSON(json);

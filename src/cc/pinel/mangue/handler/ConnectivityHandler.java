@@ -67,8 +67,7 @@ public abstract class ConnectivityHandler implements
 		Main.logger.info(details.getLocalizedMessage());
 
 		try {
-			KOptionPane.showMessageDialog(this.context.getRootContainer(),
-					details.getLocalizedMessage());
+			KOptionPane.showMessageDialog(this.context.getRootContainer(), details.getLocalizedMessage());
 		} catch (Exception e) {
 			Main.logger.error(e);
 		}
