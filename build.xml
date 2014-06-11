@@ -119,9 +119,9 @@
         <available file="${file.keystore}" property="keystore.available"/>
         <fail message="Unable to locate keystore file '${file.keystore}'. Please also ensure that the 'keystore.storepass' is defined in your 'local.properties' file." unless="keystore.available"/>
 
-        <signjar jar="${file.output}" keystore="${file.keystore}" alias="dktest" storepass="${keystore.storepass}"/>
-        <signjar jar="${file.output}" keystore="${file.keystore}" alias="ditest" storepass="${keystore.storepass}"/>
-        <signjar jar="${file.output}" keystore="${file.keystore}" alias="dntest" storepass="${keystore.storepass}"/>
+        <signjar jar="${file.output}" keystore="${file.keystore}" alias="dk${keystore.alias.prefix}" storepass="${keystore.storepass}"/>
+        <signjar jar="${file.output}" keystore="${file.keystore}" alias="di${keystore.alias.prefix}" storepass="${keystore.storepass}"/>
+        <signjar jar="${file.output}" keystore="${file.keystore}" alias="dn${keystore.alias.prefix}" storepass="${keystore.storepass}"/>
     </target>
 
 </project>
