@@ -1,7 +1,7 @@
 Mangue - Online Manga Reader
 =====================
 
-The Mangue is a reader for online mangas avaliable at [Manga Panda](http://www.mangapanda.com).
+The Mangue is a reader for online mangas avaliable at [Manga Panda](http://www.mangapanda.com). It needs access to the internet to work.
 
 ![Logo](https://raw.githubusercontent.com/repinel/Mangue/master/images/mangue_logo.jpg)
 
