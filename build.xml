@@ -33,7 +33,6 @@
     <property name="dir.kdk"                  location="${user.home}/.kindle" />
 
     <property name="dir.src"                  location="${basedir}/src" />
-    <property name="dir.lib"                  location="${basedir}/lib" />
     <property name="dir.res"                  location="${basedir}/res" />
     <property name="dir.images"               location="${basedir}/images" />
     <property name="dir.bin"                  location="${basedir}/bin" />
