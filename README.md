@@ -33,7 +33,45 @@ Installation
 
 To install Mangue, copy the signed package `Mangue.azw2` into the your Kindle `documents` directory.
 
+Usage
+-------
+
+Mangue is very simple to be used. Once you start it, you should see the message bellow:
+
+```
+Welcome to Mangue - Online Manga Reader.
+Copyright ©2014 Roque Pinel
+
+Use the menu option to search and add mangas to your list.
+
+All mangas available here are loaded from the www.mangapanda.com website.
+Mangue is not affiliated with Manga Panda.
+```
+
+As stated, from the menu it is possible to search and add mangas to your favorites. The list of favorities mangas is normally the first screen displayed.
+
+You can select a manga using the 5-way controller. Once a manga is selected, its chapters are loaded and displayed.
+
+Chapters can also be selected using the 5-way controller. Once a chapter is selected, its first page is load.
+
+To navigate through pages, use the previous page and next page buttons.
+
+In order to rotate the page, if needed, press the selected key (from the 5-way controller) once.
+
+To return to the previous screen, always use the back button.
+
+If you exit while reading a page, Mangue will return to that same page once it is restarted.
+
+Enjoy!!
+
 License
 -------
 
 Mangue is under the Apache 2.0 License (see the [LICENSE](https://raw.github.com/repinel/Mangue/master/doc/Apache-2.0) file).
+
+Contributing
+-------
+
+Contribution and feedback are welcome. If you find an issue, feel free to report it. Pull requests are encouraged.
+
+
