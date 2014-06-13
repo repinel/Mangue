@@ -1,15 +1,12 @@
-Mangue - Online Manga Reader
-=====================
+![Mangue Logo](https://raw.githubusercontent.com/repinel/Mangue/master/images/mangue_logo.jpg)
+
+# Mangue - Online Manga Reader
 
 The Mangue is a reader for online mangas avaliable at [Manga Panda](http://www.mangapanda.com). It needs access to the internet to work.
 
-![Logo](https://raw.githubusercontent.com/repinel/Mangue/master/images/mangue_logo.jpg)
-
 Feedbacks are welcome. The project was mainly tested on Kindle 4.
 
-
-Build Instructions
--------
+## Build Instructions
 
 1. Install the requirements.
   * Java 1.4 or greater.
@@ -27,13 +24,11 @@ Build Instructions
 4. Run the command `ant`.
 5. The signed package `Mangue.azw2` should have been created in the `build` directory.
 
-Installation
--------
+## Installation
 
 To install Mangue, copy the signed package `Mangue.azw2` into the your Kindle `documents` directory.
 
-Usage
--------
+## Usage
 
 Mangue is very simple to be used. Once you start it, you should see the message bellow:
 
@@ -63,17 +58,15 @@ If you exit while reading a page, Mangue will return to that same page once it i
 
 Enjoy!!
 
-License
--------
+## License
 
 Mangue is under the Apache 2.0 License (see the [LICENSE](https://raw.github.com/repinel/Mangue/master/doc/Apache-2.0) file).
 
-Contributing
--------
+## Contributing
 
 Contribution and feedback are welcome. If you find an issue, feel free to report it. Pull requests are encouraged.
 
----
+------
 
 Mangue is not affiliated with Manga Panda.
 
