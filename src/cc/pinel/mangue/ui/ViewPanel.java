@@ -63,7 +63,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 		this.main = main;
 		this.chapter = chapter;
 
-		new GeneralStorage(main.getContext()).setCurrentChapterNumber(chapter.getNumber());
+		rememberChapter();
 
 		progressBar = new KWTProgressBar(0);
 		progressBar.setCurrentTick(0);
@@ -103,14 +103,14 @@ public class ViewPanel extends KPanel implements KeyListener {
 		mangaImage.requestFocus();
 	}
 
-	private void loadImage(final int pageNumber) {
-		new GeneralStorage(main.getContext()).setCurrentPageNumber(Integer.toString(pageNumber));
+	private void loadImage(final int number) {
+		rememberPage(number);
 
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
 			public void handleConnected() throws Exception {
 				progressBar.setTotalTicks(chapter.getPageTotal());
 
-				final URL imageURL = chapter.getPageImageURL(pageNumber);
+				final URL imageURL = chapter.getPageImageURL(number);
 
 				Main.logger.info("Fetching image content " + imageURL);
 
@@ -122,7 +122,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 							isPortrait = true;
 						}
 
-						progressBar.setCurrentTick(pageNumber);
+						progressBar.setCurrentTick(number);
 
 						requestFocus();
 						repaint();
@@ -186,4 +186,11 @@ public class ViewPanel extends KPanel implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 	}
 
+	private void rememberChapter() {
+		new GeneralStorage(main.getContext()).setCurrentChapterNumber(chapter.getNumber());
+	}
+
+	private void rememberPage(int number) {
+		new GeneralStorage(main.getContext()).setCurrentPageNumber(Integer.toString(number));
+	}
 }

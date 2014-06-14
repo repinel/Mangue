@@ -44,8 +44,10 @@ import cc.pinel.mangue.util.StringUtils;
 
 import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KBoxLayout;
+import com.amazon.kindle.kindlet.ui.KLabel;
 import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
+import com.amazon.kindle.kindlet.ui.pages.LocationIterator;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
 public class ChaptersPanel extends KPanel {
@@ -65,7 +67,7 @@ public class ChaptersPanel extends KPanel {
 		this.main = main;
 		this.manga = manga;
 
-		new GeneralStorage(main.getContext()).setCurrentMangaId(manga.getId());
+		rememberManga();
 
 		chaptersPages = new KPages(PageProviders.createKBoxLayoutProvider(KBoxLayout.Y_AXIS));
 		chaptersPages.setFocusable(true);
@@ -129,11 +131,8 @@ public class ChaptersPanel extends KPanel {
 							chapterLabel.addActionListener(chapterListener);
 
 							// last read chapter
-							if (lastChapterNumber != null && chapterNumber.equals(lastChapterNumber)) {
-								Font font = chapterLabel.getFont();
-								chapterLabel.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
-								chapterLabel.setForeground(new Color(255, 84, 84));
-							}
+							if (lastChapterNumber != null && chapterNumber.equals(lastChapterNumber))
+								highlightLabel(chapterLabel);
 
 							chaptersPages.addItem(chapterLabel);
 						}
@@ -154,6 +153,16 @@ public class ChaptersPanel extends KPanel {
 		}.start();
 	}
 
+	public void updateLastChapter(String lastChapterNumber) {
+		for (LocationIterator iter = chaptersPages.getPageModel().locationIterator(-1, true); iter.hasNext(); ) {
+			final KWTSelectableLabel chapterLabel = (KWTSelectableLabel) iter.next();
+			if (lastChapterNumber != null && chapterLabel.getName().equals(lastChapterNumber))
+				highlightLabel(chapterLabel);
+			else
+				unhighlightLabel(chapterLabel);
+		}
+	}
+
 	private class ChapterLabelActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
@@ -161,7 +170,9 @@ public class ChaptersPanel extends KPanel {
 
 				Main.logger.debug("Selected chapter: " + chapterNumber);
 
+				updateLastChapter(chapterNumber);
 				rememberChapter(chapterNumber);
+
 				ViewPanel viewPanel = new ViewPanel(main, new Chapter(chapterNumber, manga.getChapterLink(chapterNumber)));
 				main.setActivePanel(viewPanel);
 			}
@@ -174,5 +185,21 @@ public class ChaptersPanel extends KPanel {
 				}
 			}.start();
 		}
+	}
+
+	private void rememberManga() {
+		new GeneralStorage(main.getContext()).setCurrentMangaId(manga.getId());
+	}
+
+	private void highlightLabel(KLabel label) {
+		Font font = label.getFont();
+		label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
+		label.setForeground(new Color(255, 84, 84));
+	}
+
+	private void unhighlightLabel(KLabel label) {
+		Font font = label.getFont();
+		label.setFont(new Font(font.getFamily(), Font.PLAIN, font.getSize()));
+		label.setForeground(Color.BLACK);
 	}
 }
