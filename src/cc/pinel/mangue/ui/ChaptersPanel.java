@@ -126,7 +126,6 @@ public class ChaptersPanel extends KPanel {
 							chapterLabel.setName(chapterNumber);
 							chapterLabel.setFocusable(true);
 							chapterLabel.setEnabled(true);
-							chapterLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
 							chapterLabel.addActionListener(chapterListener);
 
 							// last read chapter

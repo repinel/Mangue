@@ -105,7 +105,6 @@ public class MainPanel extends KPanel {
 							final KWTSelectableLabel mangaLabel = new KWTSelectableLabel(manga.getName());
 							mangaLabel.setFocusable(true);
 							mangaLabel.setEnabled(true);
-							mangaLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
 							mangaLabel.addActionListener(new MangaLabelActionListener(manga));
 							mangaListPages.addItem(mangaLabel);
 						}

@@ -97,7 +97,6 @@ public class AddMangaPanel extends KPanel {
 							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga.getName());
 							resultLabel.setFocusable(true);
 							resultLabel.setEnabled(true);
-							resultLabel.setUnderlineStyle(KWTSelectableLabel.STYLE_DASHED);
 							resultLabel.addActionListener(new ResultLabelActionListener(manga));
 							results.addItem(resultLabel);
 						}
