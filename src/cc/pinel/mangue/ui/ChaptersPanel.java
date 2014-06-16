@@ -153,7 +153,7 @@ public class ChaptersPanel extends KPanel {
 		}.start();
 	}
 
-	public void updateLastChapter(String lastChapterNumber) {
+	private void updateLastChapter(String lastChapterNumber) {
 		for (LocationIterator iter = chaptersPages.getPageModel().locationIterator(-1, true); iter.hasNext(); ) {
 			final KWTSelectableLabel chapterLabel = (KWTSelectableLabel) iter.next();
 			if (lastChapterNumber != null && chapterLabel.getName().equals(lastChapterNumber))
