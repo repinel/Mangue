@@ -68,8 +68,8 @@ Contribution and feedback are welcome. If you find an issue, feel free to report
 
 ## Thanks
 
-Thanks to the guys from (Mobile Read)(http://www.mobileread.com/) for all the community support.
-Thanks to Adrian Petrescu for the KWT (Kindle Widget Toolkit).
+Thanks to the guys from [Mobile Read](http://www.mobileread.com/) for all the community support.
+Thanks to Adrian Petrescu for the [KWT (Kindle Widget Toolkit)](https://github.com/apetresc/Kindle-Widget-Toolkit).
 
 ------
 
