@@ -42,9 +42,11 @@ import com.amazon.kindle.kindlet.ui.KPanel;
 
 public class Main implements Kindlet {
 	private static final int INACTIVE_STATE = -1;
-	private static final int MAIN_STATE     = 0;
-	private static final int CHAPTERS_STATE = 1;
-	private static final int VIEW_STATE     = 2;
+	private static final int MAIN_STATE     =  0;
+	private static final int CHAPTERS_STATE =  1;
+	private static final int VIEW_STATE     =  2;
+
+	private static final int MIN_CHARS_SEARCH = 3;
 
 	private KindletContext context;
 
@@ -207,10 +209,10 @@ public class Main implements Kindlet {
 
 		String term = new GeneralStorage(context).getSearchTerm();
 
-		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ", term == null ? "" : term,
+		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min " + MIN_CHARS_SEARCH + " char):  ", term == null ? "" : term,
 				new KOptionPane.InputDialogListener() {
 					public void onClose(String input) {
-						if (input != null && input.length() >= 3) {
+						if (input != null && input.length() >= MIN_CHARS_SEARCH) {
 							new GeneralStorage(context).setSearchTerm(input);
 							AddMangaPanel addMangaPanel = getAddMangaPanel();
 							if (addMangaPanel == null)
