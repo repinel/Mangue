@@ -20,8 +20,6 @@ import java.io.IOException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import cc.pinel.mangue.Main;
-
 import com.amazon.kindle.kindlet.KindletContext;
 
 public class StateStorage extends AbstractStorage {
@@ -45,8 +43,6 @@ public class StateStorage extends AbstractStorage {
 		JSONObject jsonManga = findObject(jsonMangas, mangaId);
 		if (jsonManga != null)
 			chapterNumber = jsonManga.get("chapterNumber").toString();
-
-		Main.logger.debug("manga id: " + mangaId + " - chapter number: " + chapterNumber);
 
 		return chapterNumber;
 	}

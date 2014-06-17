@@ -72,8 +72,6 @@ public class MainPanel extends KPanel {
 		add(mangaListPages, gc);
 
 		mangaListPages.first();
-
-		loadMangas();
 	}
 
 	/**
@@ -131,8 +129,12 @@ public class MainPanel extends KPanel {
 		public void actionPerformed(ActionEvent event) {
 			switch (Integer.parseInt(event.getActionCommand())) {
 				case KindleKeyCodes.VK_FIVE_WAY_SELECT:
-					ChaptersPanel chaptersPanel = new ChaptersPanel(main, manga);
-					main.setActivePanel(chaptersPanel);
+					ChaptersPanel chaptersPanel = main.getChaptersPanel();
+					if (chaptersPanel == null)
+						main.setChaptersPanel(new ChaptersPanel(main, manga));
+					else
+						chaptersPanel.loadChapters(manga);
+					main.paintChaptersPanel();
 					break;
 				case KindleKeyCodes.VK_FIVE_WAY_LEFT:
 					KOptionPane.showConfirmDialog(main.getContext().getRootContainer(), "Would you like to remove "

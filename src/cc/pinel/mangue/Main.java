@@ -15,12 +15,10 @@
  */
 package cc.pinel.mangue;
 
-import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.kwt.ui.KWTSelectableLabel;
 
@@ -43,7 +41,10 @@ import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
 public class Main implements Kindlet {
-	public static final Logger logger = Logger.getLogger(Main.class);
+	private static final int INACTIVE_STATE = -1;
+	private static final int MAIN_STATE     = 0;
+	private static final int CHAPTERS_STATE = 1;
+	private static final int VIEW_STATE     = 2;
 
 	private KindletContext context;
 
@@ -52,80 +53,138 @@ public class Main implements Kindlet {
 	private ViewPanel viewPanel;
 	private AddMangaPanel addMangaPanel;
 
-	public KindletContext getContext() {
-		return this.context;
-	}
+	private int state = INACTIVE_STATE;
 
+	/**
+	 * @see com.amazon.kindle.kindlet.Kindlet#create(com.amazon.kindle.kindlet.KindletContext)
+	 */
 	public void create(KindletContext context) {
 		this.context = context;
 
 		PropertyConfigurator.configure(getClass().getResource("/res/log4j.properties"));
-
-		logger.info("-- Kindle Create --");
-
-		mainPanel = new MainPanel(this);
 
 		getContext().setMenu(new Menu(this));
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MainKeyEventDispatcher());
 	}
 
+	/**
+	 * @see com.amazon.kindle.kindlet.Kindlet#start()
+	 */
 	public void start() {
-		KindletContext context = getContext();
-
-		KPanel currentPanel = this.mainPanel;
-
-		GeneralStorage generalStorage = new GeneralStorage(context);
-		String pageNumber = generalStorage.getCurrentPageNumber();
-		if (pageNumber != null) {
-			String mangaId = generalStorage.getCurrentMangaId();
-			String chapterNumber = generalStorage.getCurrentChapterNumber();
-			if (mangaId != null && chapterNumber != null) {
-				logger.info("Last viewed - manga: " + mangaId + " - chapter: " + chapterNumber + " - page: " + pageNumber);
-				if (loadLastViewed(mangaId, chapterNumber, pageNumber))
-					currentPanel = this.viewPanel;
+		if (!isViewActive()) {
+			GeneralStorage generalStorage = new GeneralStorage(context);
+			String pageNumber = generalStorage.getCurrentPageNumber();
+			if (pageNumber != null) {
+				String mangaId = generalStorage.getCurrentMangaId();
+				String chapterNumber = generalStorage.getCurrentChapterNumber();
+				if (mangaId != null && chapterNumber != null)
+					loadLastViewed(mangaId, chapterNumber, pageNumber);
 			}
 		}
 
-		context.getRootContainer().add(currentPanel);
+		if (isInactive()) {
+			this.mainPanel = new MainPanel(this);
+			this.mainPanel.loadMangas();
+			this.state = MAIN_STATE;
+		}
+
+		paintActive();
 	}
 
-
+	/**
+	 * @see com.amazon.kindle.kindlet.Kindlet#stop()
+	 */
 	public void stop() {
 		// ignored
 	}
 
+	/**
+	 * @see com.amazon.kindle.kindlet.Kindlet#destroy()
+	 */
 	public void destroy() {
 		// ignored
 	}
 
-	public void setActivePanel(MainPanel panel) {
-		this.chaptersPanel = null;
-		this.viewPanel = null;
-		this.addMangaPanel = null;
-		setPanel(panel);
+	public KindletContext getContext() {
+		return this.context;
 	}
 
-	public void setActivePanel(ChaptersPanel panel) {
-		this.chaptersPanel = panel;
-		this.viewPanel = null;
-		this.addMangaPanel = null;
-		setPanel(panel);
+	public boolean isInactive() {
+		return this.state == INACTIVE_STATE;
 	}
 
-	public void setActivePanel(ViewPanel panel) {
-		this.viewPanel = panel;
-		this.addMangaPanel = null;
-		setPanel(panel);
+	public boolean isMainActive() {
+		return this.state == MAIN_STATE;
 	}
 
-	public void setActivePanel(AddMangaPanel panel) {
-		this.addMangaPanel = panel;
-		setPanel(panel);
+	public boolean isChaptersActive() {
+		return this.state == CHAPTERS_STATE;
 	}
 
-	private void setPanel(KPanel panel) {
-		KindletContext context = getContext();
+	public boolean isViewActive() {
+		return this.state == VIEW_STATE;
+	}
+
+	public boolean isAddActive() {
+		return this.state > VIEW_STATE;
+	}
+
+	public ChaptersPanel getChaptersPanel() {
+		return this.chaptersPanel;
+	}
+
+	public void setChaptersPanel(ChaptersPanel chaptersPanel) {
+		this.chaptersPanel = chaptersPanel;
+	}
+
+	public ViewPanel getViewPanel() {
+		return this.viewPanel;
+	}
+
+	public void setViewPanel(ViewPanel viewPanel) {
+		this.viewPanel = viewPanel;
+	}
+
+	public AddMangaPanel getAddMangaPanel() {
+		return this.addMangaPanel;
+	}
+
+	public void setAddMangaPanel(AddMangaPanel addMangaPanel) {
+		this.addMangaPanel = addMangaPanel;
+	}
+
+	public void paintMainPanel() {
+		this.state = MAIN_STATE;
+		paintActive();
+	}
+
+	public void paintChaptersPanel() {
+		this.state = CHAPTERS_STATE;
+		paintActive();
+	}
+
+	public void paintViewPanel() {
+		this.state = VIEW_STATE;
+		paintActive();
+	}
+
+	public void paintAddMangaPanel() {
+		if (!isAddActive())
+			this.state += VIEW_STATE + 1;
+		paintActive();
+	}
+
+	public void paintActive() {
+		KPanel panel;
+		if (isViewActive())
+			panel = this.viewPanel;
+		else if (isChaptersActive())
+			panel = this.chaptersPanel;
+		else if (isAddActive())
+			panel = this.addMangaPanel;
+		else
+			panel = this.mainPanel;
 
 		context.getRootContainer().removeAll();
 		context.getRootContainer().add(panel);
@@ -137,7 +196,9 @@ public class Main implements Kindlet {
 	}
 
 	public void reloadMainPanel() {
-		setActivePanel(this.mainPanel);
+		if (this.mainPanel == null)
+			this.mainPanel = new MainPanel(this);
+		paintMainPanel();
 		this.mainPanel.loadMangas();
 	}
 
@@ -146,13 +207,17 @@ public class Main implements Kindlet {
 
 		String term = new GeneralStorage(context).getSearchTerm();
 
-		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ",
-				term == null ? "" : term, new KOptionPane.InputDialogListener() {
+		KOptionPane.showInputDialog(context.getRootContainer(), "Title (min 3 chars):  ", term == null ? "" : term,
+				new KOptionPane.InputDialogListener() {
 					public void onClose(String input) {
 						if (input != null && input.length() >= 3) {
 							new GeneralStorage(context).setSearchTerm(input);
-							AddMangaPanel addMangaPanel = new AddMangaPanel(Main.this, input);
-							setActivePanel(addMangaPanel);
+							AddMangaPanel addMangaPanel = getAddMangaPanel();
+							if (addMangaPanel == null)
+								setAddMangaPanel(new AddMangaPanel(Main.this, input));
+							else
+								addMangaPanel.loadResults(input);
+							paintAddMangaPanel();
 						}
 					}
 				});
@@ -161,8 +226,7 @@ public class Main implements Kindlet {
 	public void clearMangas() {
 		final KindletContext context = getContext();
 
-		KOptionPane.showConfirmDialog(context.getRootContainer(),
-				"Would you really like to clear your favorites?",
+		KOptionPane.showConfirmDialog(context.getRootContainer(), "Would you really like to clear your favorites?",
 				new KOptionPane.ConfirmDialogListener() {
 					public void onClose(int option) {
 						if (option == KOptionPane.OK_OPTION) {
@@ -182,8 +246,7 @@ public class Main implements Kindlet {
 		final KindletContext context = getContext();
 
 		KOptionPane.showConfirmDialog(context.getRootContainer(),
-				"Would you really like to clear your previous searched term?",
-				new KOptionPane.ConfirmDialogListener() {
+				"Would you really like to clear your previous searched term?", new KOptionPane.ConfirmDialogListener() {
 					public void onClose(int option) {
 						if (option == KOptionPane.OK_OPTION)
 							new GeneralStorage(context).removeSearchTerm();
@@ -198,23 +261,30 @@ public class Main implements Kindlet {
 
 			if (e.getKeyCode() == KindleKeyCodes.VK_BACK) {
 				if (e.getID() == KeyEvent.KEY_PRESSED) {
-					Component displayed = getContext().getRootContainer().getComponent(0);
-
-					if (displayed == chaptersPanel) {
+					if (isChaptersActive()) {
 						new GeneralStorage(getContext()).removeCurrentChapterNumber();
-						setActivePanel(mainPanel);
+
+						if (Main.this.mainPanel == null)
+							Main.this.mainPanel = new MainPanel(Main.this);
+						paintMainPanel();
+						Main.this.mainPanel.loadMangas();
 						requestGC();
-					} else if (displayed == viewPanel) {
-						new GeneralStorage(getContext()).removeCurrentPageNumber();
-						setActivePanel(chaptersPanel);
+					} else if (isViewActive()) {
+						GeneralStorage generalStorage = new GeneralStorage(getContext());
+						generalStorage.removeCurrentPageNumber();
+
+						if (getChaptersPanel() == null) {
+							final String mangaId = generalStorage.getCurrentMangaId();
+
+							final Manga manga = new MangaStorage(getContext()).getManga(mangaId);
+							if (manga != null)
+								setChaptersPanel(new ChaptersPanel(Main.this, manga));
+						}
+						paintChaptersPanel();
 						requestGC();
-					} else if (displayed == addMangaPanel) {
-						if (viewPanel != null)
-							setActivePanel(viewPanel);
-						else if (chaptersPanel != null)
-							setActivePanel(chaptersPanel);
-						else
-							setActivePanel(mainPanel);
+					} else if (isAddActive()) {
+						Main.this.state -= Main.VIEW_STATE + 1;
+						paintActive();
 						requestGC();
 					}
 				}
@@ -229,17 +299,19 @@ public class Main implements Kindlet {
 		}
 	}
 
-	private boolean loadLastViewed(String mangaId, String chapterNumber, String pageNumber) {
+	private void loadLastViewed(String mangaId, String chapterNumber, String pageNumber) {
 		final Manga manga = new MangaStorage(getContext()).getManga(mangaId);
 
 		if (manga != null) {
-			this.chaptersPanel = new ChaptersPanel(this, manga);
-			this.viewPanel = new ViewPanel(this, new Chapter(chapterNumber,
-					manga.getChapterLink(chapterNumber)), new Integer(pageNumber));
-			return true;
-		}
+			Chapter chapter = new Chapter(chapterNumber, manga.getChapterLink(chapterNumber));
 
-		return false;
+			ViewPanel viewPanel = getViewPanel();
+			if (viewPanel == null)
+				setViewPanel(new ViewPanel(this, chapter, new Integer(pageNumber)));
+			else
+				viewPanel.loadImage(chapter);
+			this.state = VIEW_STATE;
+		}
 	}
 
 	public void requestGC() {

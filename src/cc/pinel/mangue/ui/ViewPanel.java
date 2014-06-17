@@ -61,9 +61,6 @@ public class ViewPanel extends KPanel implements KeyListener {
 		super(new GridBagLayout());
 
 		this.main = main;
-		this.chapter = chapter;
-
-		rememberChapter();
 
 		progressBar = new KWTProgressBar(0);
 		progressBar.setCurrentTick(0);
@@ -90,10 +87,10 @@ public class ViewPanel extends KPanel implements KeyListener {
 		gc.fill = GridBagConstraints.BOTH;
 		add(mangaImage, gc);
 
-		if (lastPageNumber != null)
-			pageNumber = lastPageNumber.intValue();
-
-		loadImage(pageNumber);
+		if (lastPageNumber == null)
+			loadImage(chapter);
+		else
+			loadImage(chapter, lastPageNumber.intValue());
 	}
 
 	/**
@@ -103,7 +100,15 @@ public class ViewPanel extends KPanel implements KeyListener {
 		mangaImage.requestFocus();
 	}
 
-	private void loadImage(final int number) {
+	public void loadImage(final Chapter chapter) {
+		loadImage(chapter, 1); // first page
+	}
+
+	public void loadImage(final Chapter chapter, final int number) {
+		this.chapter = chapter;
+		this.pageNumber = number;
+
+		rememberChapter();
 		rememberPage(number);
 
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
@@ -111,8 +116,6 @@ public class ViewPanel extends KPanel implements KeyListener {
 				progressBar.setTotalTicks(chapter.getPageTotal());
 
 				final URL imageURL = chapter.getPageImageURL(number);
-
-				Main.logger.info("Fetching image content " + imageURL);
 
 				EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
@@ -145,12 +148,12 @@ public class ViewPanel extends KPanel implements KeyListener {
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE:
 				if (pageNumber < chapter.getPageTotal())
-					loadImage(++pageNumber);
+					loadImage(chapter, ++pageNumber);
 				break;
 			case KindleKeyCodes.VK_LEFT_HAND_SIDE_TURN_PAGE_BACK:
 			case KindleKeyCodes.VK_RIGHT_HAND_SIDE_TURN_PAGE_BACK:
 				if (pageNumber > 1)
-					loadImage(--pageNumber);
+					loadImage(chapter, --pageNumber);
 				break;
 			case KindleKeyCodes.VK_FIVE_WAY_SELECT:
 				if (isPortrait) {

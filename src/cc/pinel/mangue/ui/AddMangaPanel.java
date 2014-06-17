@@ -85,13 +85,14 @@ public class AddMangaPanel extends KPanel {
 		}
 	}
 
-	private void loadResults(final String input) {
+	public void loadResults(final String input) {
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading results...") {
 			public void handleConnected() throws Exception {
 				final Collection mangas = MangaSearch.search(input);
 
 				EventQueue.invokeAndWait(new Runnable() {
 					public void run() {
+						results.removeAllItems();
 						for (Iterator iter = mangas.iterator(); iter.hasNext(); ) {
 							Manga manga = (Manga) iter.next();
 							final KWTSelectableLabel resultLabel = new KWTSelectableLabel(manga.getName());
@@ -124,13 +125,8 @@ public class AddMangaPanel extends KPanel {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
 				new StorageHandler(main.getContext(), "Loading mangas...") {
 					public void handleRun() throws Exception {
-						try {
-							new MangaStorage(main.getContext()).addManga(manga);
-
-							main.reloadMainPanel();
-						} catch (Exception e) {
-							Main.logger.error(e);
-						}
+						new MangaStorage(main.getContext()).addManga(manga);
+						main.reloadMainPanel();
 					}
 				}.start();
 			}

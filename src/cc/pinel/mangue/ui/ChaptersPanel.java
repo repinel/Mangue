@@ -55,19 +55,16 @@ public class ChaptersPanel extends KPanel {
 
 	private final Main main;
 
-	private final Manga manga;
-
 	private final KPages chaptersPages;
 
 	private final ChapterLabelActionListener chapterListener;
+
+	private Manga manga = null;
 
 	public ChaptersPanel(Main main, Manga manga) {
 		super(new GridBagLayout());
 
 		this.main = main;
-		this.manga = manga;
-
-		rememberManga();
 
 		chaptersPages = new KPages(PageProviders.createKBoxLayoutProvider(KBoxLayout.Y_AXIS));
 		chaptersPages.setFocusable(true);
@@ -89,7 +86,7 @@ public class ChaptersPanel extends KPanel {
 
 		chaptersPages.first();
 
-		loadChapters();
+		loadChapters(manga);
 	}
 
 	/**
@@ -103,21 +100,24 @@ public class ChaptersPanel extends KPanel {
 		}
 	}
 
-	private void loadChapters() {
+	public void loadChapters(final Manga manga) {
+		if (this.manga != null && this.manga.getId().equals(manga.getId()))
+			return;
+
+		this.manga = manga;
+		rememberManga();
+
 		new StorageHandler(main.getContext(), "Loading mangas...") {
 			public void handleRun() throws Exception {
 				final String lastChapterNumber = new StateStorage(main.getContext()) .getChapter(manga.getId());
 
 				final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
 					public void handleConnected() throws Exception {
-						Main.logger.info("Fetching chapters for " + manga.getName());
-
 						JSONParser parser = new JSONParser();
 						JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(new URL(
 								manga.getSearchChaptersLink()).openStream()));
 
-						Main.logger.debug("chapters size: " + chapters.size());
-
+						chaptersPages.removeAllItems();
 						for (int i = chapters.size() - 1; i >= 0; i--) {
 							JSONObject chapter = (JSONObject) chapters.get(i);
 							String chapterNumber = chapter.get("chapter").toString();
@@ -168,13 +168,16 @@ public class ChaptersPanel extends KPanel {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
 				String chapterNumber = ((KWTSelectableLabel) event.getSource()).getName();
 
-				Main.logger.debug("Selected chapter: " + chapterNumber);
-
 				updateLastChapter(chapterNumber);
 				rememberChapter(chapterNumber);
 
-				ViewPanel viewPanel = new ViewPanel(main, new Chapter(chapterNumber, manga.getChapterLink(chapterNumber)));
-				main.setActivePanel(viewPanel);
+				Chapter chapter = new Chapter(chapterNumber, manga.getChapterLink(chapterNumber));
+				ViewPanel viewPanel = main.getViewPanel();
+				if (viewPanel == null)
+					main.setViewPanel(new ViewPanel(main, chapter));
+				else
+					viewPanel.loadImage(chapter);
+				main.paintViewPanel();
 			}
 		}
 

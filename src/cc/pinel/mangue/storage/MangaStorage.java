@@ -24,7 +24,6 @@ import java.util.Comparator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import cc.pinel.mangue.Main;
 import cc.pinel.mangue.model.Manga;
 
 import com.amazon.kindle.kindlet.KindletContext;
@@ -51,8 +50,6 @@ public class MangaStorage extends AbstractStorage {
 			mangas.add(new Manga(jsonManga.get("id").toString(), jsonManga.get("name").toString(),
 					jsonManga.get("path").toString()));
 		}
-
-		Main.logger.debug("mangas size: " + mangas.size());
 
 		return mangas;
 	}

@@ -25,7 +25,6 @@ import java.util.Collection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import cc.pinel.mangue.Main;
 import cc.pinel.mangue.model.Manga;
 
 public class MangaSearch {
@@ -38,16 +37,12 @@ public class MangaSearch {
 
 		String lines[] = StringUtils.split(IOUtils.toString(is), '\n');
 
-		Main.logger.debug("Search " + lines.length + " results: " + query);
-
 		for (int i = 0, length = lines.length; i < length && i < 20; i++) {
 			String tokens[] = StringUtils.splitPreserveAllTokens(lines[i], '|');
 
 			if (tokens.length >= MIN_TOKEN_LENGHT)
 				mangas.add(new Manga(tokens[5], tokens[2], convertOldPath(tokens[4])));
 		}
-
-		Main.logger.debug("mangas size: " + mangas.size());
 
 		return mangas;
 	}
@@ -56,9 +51,8 @@ public class MangaSearch {
 		int formatIndex = currentPath.indexOf(".html");
 		if (formatIndex != 1 && currentPath.charAt(0) == '/') {
 			int middleSlashIndex = currentPath.indexOf('/', 1);
-			if (middleSlashIndex != -1 && middleSlashIndex < formatIndex) {
+			if (middleSlashIndex != -1 && middleSlashIndex < formatIndex)
 				return "/" + currentPath.substring(middleSlashIndex + 1, formatIndex);
-			}
 		}
 		return currentPath;
 	}

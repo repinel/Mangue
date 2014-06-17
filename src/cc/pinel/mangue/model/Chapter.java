@@ -21,9 +21,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import cc.pinel.mangue.Main;
+import org.apache.log4j.Logger;
 
 public class Chapter {
+	private static final Logger logger = Logger.getLogger(Chapter.class);
+
 	private final String number;
 	private final String link;
 
@@ -49,8 +51,6 @@ public class Chapter {
 		URL imageURL = null;
 
 		if (pageNumber > 0 && pageNumber <= getPageTotal()) {
-			Main.logger.info("Fetching image URL for page" + this.link);
-
 			try {
 				URL u = new URL(this.link + "/" + pageNumber);
 				InputStream in = u.openStream();
@@ -74,10 +74,8 @@ public class Chapter {
 				reader.close();
 				in.close();
 			} catch (Exception e) {
-				Main.logger.error(e); // ignored
+				logger.error(e); // ignored
 			}
-
-			Main.logger.debug("image src: " + imageURL);
 		}
 
 		return imageURL;
@@ -85,8 +83,6 @@ public class Chapter {
 
 	public int getPageTotal() {
 		if (this.pagesTotal < 0) {
-			Main.logger.info("Fetching the total of pages for chapter " + this.link);
-
 			try {
 				URL u = new URL(this.link);
 				InputStream in = u.openStream();
@@ -108,11 +104,9 @@ public class Chapter {
 				reader.close();
 				in.close();
 			} catch (Exception e) {
-				Main.logger.error(e);
+				logger.error(e);
 				this.pagesTotal = 0;
 			}
-
-			Main.logger.debug("Total of pages: " + this.pagesTotal);
 		}
 
 		return this.pagesTotal;
