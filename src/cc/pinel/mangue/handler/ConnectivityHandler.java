@@ -60,7 +60,7 @@ public abstract class ConnectivityHandler implements com.amazon.kindle.kindlet.n
 	public abstract void handleConnected() throws Exception;
 
 	/**
-	 * @see com.amazon.kindle.kindlet.net.ConnectivityHandler#connected()
+	 * {@inheritDoc}
 	 */
 	public void connected() throws InterruptedException {
 		KProgress progress = this.context.getProgressIndicator();
@@ -80,7 +80,7 @@ public abstract class ConnectivityHandler implements com.amazon.kindle.kindlet.n
 	}
 
 	/**
-	 * @see com.amazon.kindle.kindlet.net.ConnectivityHandler#disabled(com.amazon.kindle.kindlet.net.NetworkDisabledDetails)
+	 * {@inheritDoc}
 	 */
 	public void disabled(NetworkDisabledDetails details) {
 		logger.info(details.getLocalizedMessage());

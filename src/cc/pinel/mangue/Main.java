@@ -72,7 +72,7 @@ public class Main implements Kindlet {
 	// --- KDK Methods  ---
 
 	/**
-	 * @see com.amazon.kindle.kindlet.Kindlet#create(com.amazon.kindle.kindlet.KindletContext)
+	 * {@inheritDoc}
 	 */
 	public void create(KindletContext context) {
 		this.context = context;
@@ -85,7 +85,7 @@ public class Main implements Kindlet {
 	}
 
 	/**
-	 * @see com.amazon.kindle.kindlet.Kindlet#start()
+	 * {@inheritDoc}
 	 */
 	public void start() {
 		if (!isViewActive()) {
@@ -109,14 +109,14 @@ public class Main implements Kindlet {
 	}
 
 	/**
-	 * @see com.amazon.kindle.kindlet.Kindlet#stop()
+	 * {@inheritDoc}
 	 */
 	public void stop() {
 		// ignored
 	}
 
 	/**
-	 * @see com.amazon.kindle.kindlet.Kindlet#destroy()
+	 * {@inheritDoc}
 	 */
 	public void destroy() {
 		// ignored
@@ -348,15 +348,16 @@ public class Main implements Kindlet {
 	// --- Events ---
 
 	/**
-	 * Handles the main key events. Basically, the back button.
+	 * Handles the main key events.
+	 * 
+	 * Basically, the back button.
 	 * 
 	 * @author Roque Pinel
 	 *
 	 */
 	private class MainKeyEventDispatcher implements KeyEventDispatcher {
-
 		/**
-		 * @see java.awt.KeyEventDispatcher#dispatchKeyEvent(java.awt.event.KeyEvent)
+		 * {@inheritDoc}
 		 */
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			if (e.isConsumed())

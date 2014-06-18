@@ -23,10 +23,22 @@ import cc.pinel.mangue.Main;
 import com.amazon.kindle.kindlet.ui.KMenu;
 import com.amazon.kindle.kindlet.ui.KMenuItem;
 
+/**
+ * The main menu.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class Menu extends KMenu {
 
 	private final Main main;
 
+	/**
+	 * Builds the main menu and binds each event
+	 * to the main controller.
+	 * 
+	 * @param main the main controller
+	 */
 	public Menu(Main main) {
 		this.main = main;
 

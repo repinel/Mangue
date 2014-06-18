@@ -41,6 +41,12 @@ import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
+/**
+ * The panel to displays the manga favorites.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class MainPanel extends KPanel {
 	private static final long serialVersionUID = -4692282056850151456L;
 
@@ -48,6 +54,9 @@ public class MainPanel extends KPanel {
 
 	private final KPages mangaListPages;
 
+	/**
+	 * @param main the main controller
+	 */
 	public MainPanel(Main main) {
 		super(new GridBagLayout());
 
@@ -75,7 +84,7 @@ public class MainPanel extends KPanel {
 	}
 
 	/**
-	 * @see java.awt.Component#requestFocus()
+	 * {@inheritDoc}
 	 */
 	public void requestFocus() {
 		try {
@@ -85,12 +94,21 @@ public class MainPanel extends KPanel {
 		}
 	}
 
+	/**
+	 * Loads all favorites mangas.
+	 */
 	public void loadMangas() {
 		new StorageHandler(main.getContext(), "Loading mangas...") {
+			/**
+			 * {@inheritDoc}
+			 */
 			public void handleRun() throws Exception {
 				final Collection mangas = new MangaStorage(main.getContext()).getMangas();
 
 				EventQueue.invokeAndWait(new Runnable() {
+					/**
+					 * {@inheritDoc}
+					 */
 					public void run() {
 						mangaListPages.removeAllItems();
 
@@ -119,6 +137,14 @@ public class MainPanel extends KPanel {
 		}.start();
 	}
 
+	/**
+	 * Handles the panel actions. 
+	 * 
+	 * Basically, when a manga is selected.
+	 * 
+	 * @author Roque Pinel
+	 *
+	 */
 	private class MangaLabelActionListener implements ActionListener {
 		private final Manga manga;
 
@@ -126,6 +152,9 @@ public class MainPanel extends KPanel {
 			this.manga = manga;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void actionPerformed(ActionEvent event) {
 			switch (Integer.parseInt(event.getActionCommand())) {
 				case KindleKeyCodes.VK_FIVE_WAY_SELECT:
@@ -157,6 +186,12 @@ public class MainPanel extends KPanel {
 		}
 	}
 
+	/**
+	 * Returns the default item with a welcome message,
+	 * copyright and instructions.
+	 * 
+	 * @return the default item to be displayed.
+	 */
 	private Object defaultItem() {
 		return new KLabelMultiline("Welcome to Mangue - Online Manga Reader.\n"
 								 + "Copyright \u00A92014 Roque Pinel.\n\n"

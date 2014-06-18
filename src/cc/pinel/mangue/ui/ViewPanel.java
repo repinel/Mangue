@@ -38,6 +38,12 @@ import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.KProgress;
 import com.amazon.kindle.kindlet.ui.image.ImageUtil;
 
+/**
+ * The panel to displays a chapter page.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class ViewPanel extends KPanel implements KeyListener {
 	private static final long serialVersionUID = -2485604965935171736L;
 
@@ -53,10 +59,19 @@ public class ViewPanel extends KPanel implements KeyListener {
 
 	private Chapter chapter;
 
+	/**
+	 * @param main the main controller
+	 * @param chapter the chapter
+	 */
 	public ViewPanel(Main main, Chapter chapter) {
 		this(main, chapter, null);
 	}
 
+	/**
+	 * @param main the main controller
+	 * @param chapter the chapter
+	 * @param lastPageNumber the page number to be displayed
+	 */
 	public ViewPanel(Main main, Chapter chapter, Integer lastPageNumber) {
 		super(new GridBagLayout());
 
@@ -94,16 +109,27 @@ public class ViewPanel extends KPanel implements KeyListener {
 	}
 
 	/**
-	 * @see java.awt.Component#requestFocus()
+	 * {@inheritDoc}
 	 */
 	public void requestFocus() {
 		mangaImage.requestFocus();
 	}
 
+	/**
+	 * Loads the first page of the given chapter.
+	 * 
+	 * @param chapter the chapter
+	 */
 	public void loadImage(final Chapter chapter) {
 		loadImage(chapter, 1); // first page
 	}
 
+	/**
+	 * Loads the page number from the given chapter.
+	 * 
+	 * @param chapter the chapter
+	 * @param number the page number
+	 */
 	public void loadImage(final Chapter chapter, final int number) {
 		this.chapter = chapter;
 		this.pageNumber = number;
@@ -112,12 +138,18 @@ public class ViewPanel extends KPanel implements KeyListener {
 		rememberPage(number);
 
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading image...") {
+			/**
+			 * {@inheritDoc}
+			 */
 			public void handleConnected() throws Exception {
 				progressBar.setTotalTicks(chapter.getPageTotal());
 
 				final URL imageURL = chapter.getPageImageURL(number);
 
 				EventQueue.invokeAndWait(new Runnable() {
+					/**
+					 * {@inheritDoc}
+					 */
 					public void run() {
 						if (imageURL != null) {
 							final Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
@@ -138,7 +170,7 @@ public class ViewPanel extends KPanel implements KeyListener {
 	}
 
 	/**
-	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+	 * {@inheritDoc}
 	 */
 	public void keyReleased(KeyEvent e) {
 		if (!chapter.hasPages())
@@ -178,21 +210,31 @@ public class ViewPanel extends KPanel implements KeyListener {
 	}
 
 	/**
-	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+	 * {@inheritDoc}
 	 */
 	public void keyPressed(KeyEvent e) {
 	}
 
 	/**
-	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+	 * {@inheritDoc}
 	 */
 	public void keyTyped(KeyEvent e) {
 	}
 
+	/**
+	 * Remembers the current chapter to be able to
+	 * restore it in the future.
+	 */
 	private void rememberChapter() {
 		new GeneralStorage(main.getContext()).setCurrentChapterNumber(chapter.getNumber());
 	}
 
+	/**
+	 * Remembers the page number to be able to
+	 * restore it in the future.
+	 * 
+	 * @param number the page number
+	 */
 	private void rememberPage(int number) {
 		new GeneralStorage(main.getContext()).setCurrentPageNumber(Integer.toString(number));
 	}

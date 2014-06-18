@@ -28,8 +28,19 @@ import org.apache.commons.lang3.StringUtils;
 import cc.pinel.mangue.model.Manga;
 
 public class MangaSearch {
+	/**
+	 * The minimum token length so that the required information can be loaded.
+	 */
 	private static final int MIN_TOKEN_LENGHT = 6;
 
+	/**
+	 * Searches mangas remotely using the query.
+	 * 
+	 * @param query the query to be searched
+	 * @return the list of mangas filtered
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
 	public static Collection search(String query) throws MalformedURLException, IOException {
 		Collection mangas = new ArrayList();
 
@@ -47,6 +58,12 @@ public class MangaSearch {
 		return mangas;
 	}
 
+	/**
+	 * Converts old path format to new paths format.
+	 * 
+	 * @param currentPath the current path
+	 * @return the new path
+	 */
 	private static String convertOldPath(String currentPath) {
 		int formatIndex = currentPath.indexOf(".html");
 		if (formatIndex != 1 && currentPath.charAt(0) == '/') {

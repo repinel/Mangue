@@ -58,7 +58,7 @@ public abstract class StorageHandler extends Thread {
 	public abstract void handleRun() throws Exception;
 
 	/**
-	 * @see java.lang.Thread#run()
+	 * {@inheritDoc}
 	 */
 	public void run() {
 		KProgress progress = this.context.getProgressIndicator();

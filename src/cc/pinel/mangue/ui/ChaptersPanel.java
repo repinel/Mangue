@@ -50,6 +50,12 @@ import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.pages.LocationIterator;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
+/**
+ * The panel to displays a manga chapters.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class ChaptersPanel extends KPanel {
 	private static final long serialVersionUID = 7836204925749827794L;
 
@@ -61,6 +67,10 @@ public class ChaptersPanel extends KPanel {
 
 	private Manga manga = null;
 
+	/**
+	 * @param main the main controller
+	 * @param manga the manga
+	 */
 	public ChaptersPanel(Main main, Manga manga) {
 		super(new GridBagLayout());
 
@@ -90,7 +100,7 @@ public class ChaptersPanel extends KPanel {
 	}
 
 	/**
-	 * @see java.awt.Component#requestFocus()
+	 * {@inheritDoc}
 	 */
 	public void requestFocus() {
 		try {
@@ -100,6 +110,11 @@ public class ChaptersPanel extends KPanel {
 		}
 	}
 
+	/**
+	 * Loads all chapters from the given manga.
+	 * 
+	 * @param manga the manga
+	 */
 	public void loadChapters(final Manga manga) {
 		if (this.manga != null && this.manga.getId().equals(manga.getId()))
 			return;
@@ -108,10 +123,16 @@ public class ChaptersPanel extends KPanel {
 		rememberManga();
 
 		new StorageHandler(main.getContext(), "Loading mangas...") {
+			/**
+			 * {@inheritDoc}
+			 */
 			public void handleRun() throws Exception {
 				final String lastChapterNumber = new StateStorage(main.getContext()) .getChapter(manga.getId());
 
 				final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading chapters...") {
+					/**
+					 * {@inheritDoc}
+					 */
 					public void handleConnected() throws Exception {
 						JSONParser parser = new JSONParser();
 						JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(new URL(
@@ -153,6 +174,12 @@ public class ChaptersPanel extends KPanel {
 		}.start();
 	}
 
+	/**
+	 * Updates the last chapter highlight when
+	 * the user selects a new chapter to read.
+	 * 
+	 * @param lastChapterNumber the last chapter number
+	 */
 	private void updateLastChapter(String lastChapterNumber) {
 		for (LocationIterator iter = chaptersPages.getPageModel().locationIterator(-1, true); iter.hasNext(); ) {
 			final KWTSelectableLabel chapterLabel = (KWTSelectableLabel) iter.next();
@@ -163,7 +190,18 @@ public class ChaptersPanel extends KPanel {
 		}
 	}
 
+	/**
+	 * Handles the panel actions.
+	 * 
+	 * Basically, when a chapter is selected.
+	 * 
+	 * @author Roque Pinel
+	 *
+	 */
 	private class ChapterLabelActionListener implements ActionListener {
+		/**
+		 * {@inheritDoc}
+		 */
 		public void actionPerformed(ActionEvent event) {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
 				String chapterNumber = ((KWTSelectableLabel) event.getSource()).getName();
@@ -181,8 +219,17 @@ public class ChaptersPanel extends KPanel {
 			}
 		}
 
+		/**
+		 * Remembers the chapter to be able to
+		 * restore it in the future.
+		 * 
+		 * @param chapterNumber the chapter number
+		 */
 		private void rememberChapter(final String chapterNumber) {
 			new StorageHandler(main.getContext(), "Loading mangas...") {
+				/**
+				 * {@inheritDoc}
+				 */
 				public void handleRun() throws Exception {
 					new StateStorage(main.getContext()).setChapter(manga.getId(), chapterNumber);
 				}
@@ -190,16 +237,30 @@ public class ChaptersPanel extends KPanel {
 		}
 	}
 
+	/**
+	 * Remembers the current manga to be able to
+	 * restore it in the future.
+	 */
 	private void rememberManga() {
 		new GeneralStorage(main.getContext()).setCurrentMangaId(manga.getId());
 	}
 
+	/**
+	 * Highlights the label.
+	 * 
+	 * @param label the chapter label
+	 */
 	private void highlightLabel(KLabel label) {
 		Font font = label.getFont();
 		label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
 		label.setForeground(new Color(255, 84, 84));
 	}
 
+	/**
+	 * Unhighlights the label.
+	 * 
+	 * @param label the chapter label
+	 */
 	private void unhighlightLabel(KLabel label) {
 		Font font = label.getFont();
 		label.setFont(new Font(font.getFamily(), Font.PLAIN, font.getSize()));

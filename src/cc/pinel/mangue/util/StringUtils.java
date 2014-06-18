@@ -15,8 +15,17 @@
  */
 package cc.pinel.mangue.util;
 
+/**
+ * Utils methods for strings.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class StringUtils {
 
+	/**
+	 * The basic list of HTML escaped characters to be replaced.
+	 */
 	private static final String[][] BASIC_HTML_ESCAPE = {
 		{"\"", "&quot;" },
 		{ "&", "&amp;" },
@@ -24,11 +33,23 @@ public class StringUtils {
 		{ ">", "&gt;" },
 	};
 
+	/**
+	 * Unescapes HTML characters from the input.
+	 * 
+	 * @param input the input
+	 * @return the unescaped html string
+	 */
 	public static String unescapeHtml(final String input) {
 		String unescapeHexHtmlOutput = unescapeHtmlByNumber(input);
 		return unescapeHtmlByName(unescapeHexHtmlOutput);
 	}
 
+	/**
+	 * Unescapes HTML characters based on ASCII numbers.
+	 * 
+	 * @param input the input
+	 * @return
+	 */
 	private static String unescapeHtmlByNumber(final String input) {
 		if (input.indexOf("&#") == -1)
 			return input;
@@ -66,6 +87,12 @@ public class StringUtils {
 		return out;
 	}
 
+	/**
+	 * Unescapes HTML characters based on it name (value).
+	 * 
+	 * @param input the input
+	 * @return
+	 */
 	private static String unescapeHtmlByName(final String input) {
 		String result = input;
 
@@ -76,6 +103,14 @@ public class StringUtils {
 		return result;
 	}
 
+	/**
+	 * Replaces the pattern occurrences from the input with the replacement string.
+	 * 
+	 * @param input the input
+	 * @param pattern the pattern
+	 * @param replacement the replacement
+	 * @return
+	 */
 	public static String replace(String input, String pattern, String replacement) {
 		String out = "";
 

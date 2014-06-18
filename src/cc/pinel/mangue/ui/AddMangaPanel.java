@@ -54,6 +54,10 @@ public class AddMangaPanel extends KPanel {
 
 	private final KPages results;
 
+	/**
+	 * @param main the main controller
+	 * @param input the input to be searched
+	 */
 	public AddMangaPanel(Main main, String input) {
 		super(new GridBagLayout());
 
@@ -81,7 +85,7 @@ public class AddMangaPanel extends KPanel {
 	}
 
 	/**
-	 * @see java.awt.Component#requestFocus()
+	 * {@inheritDoc}
 	 */
 	public void requestFocus() {
 		try {
@@ -91,12 +95,23 @@ public class AddMangaPanel extends KPanel {
 		}
 	}
 
+	/**
+	 * Loads all search results based on the given input.
+	 * 
+	 * @param input the input to be searched
+	 */
 	public void loadResults(final String input) {
 		final ConnectivityHandler handler = new ConnectivityHandler(main.getContext(), "Loading results...") {
+			/**
+			 * {@inheritDoc}
+			 */
 			public void handleConnected() throws Exception {
 				final Collection mangas = MangaSearch.search(input);
 
 				EventQueue.invokeAndWait(new Runnable() {
+					/**
+					 * {@inheritDoc}
+					 */
 					public void run() {
 						results.removeAllItems();
 						for (Iterator iter = mangas.iterator(); iter.hasNext(); ) {
@@ -120,13 +135,29 @@ public class AddMangaPanel extends KPanel {
 		main.getContext().getConnectivity().submitSingleAttemptConnectivityRequest(handler, true);
 	}
 
+	// --- Events ---
+
+	/**
+	 * Handles the panel actions.
+	 * 
+	 * Basically, when a manga is selected.
+	 * 
+	 * @author Roque Pinel
+	 *
+	 */
 	private class ResultLabelActionListener implements ActionListener {
 		private final Manga manga;
 
+		/**
+		 * @param manga the manga
+		 */
 		public ResultLabelActionListener(Manga manga) {
 			this.manga = manga;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public void actionPerformed(ActionEvent event) {
 			if (Integer.parseInt(event.getActionCommand()) == KindleKeyCodes.VK_FIVE_WAY_SELECT) {
 				new StorageHandler(main.getContext(), "Loading mangas...") {
