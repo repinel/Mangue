@@ -27,24 +27,49 @@ import org.json.simple.parser.ParseException;
 
 import com.amazon.kindle.kindlet.KindletContext;
 
+/**
+ * The abstract classes for storages.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public abstract class AbstractStorage {
 	private final KindletContext context;
 
 	private final String storageFile;
 
+	/**
+	 * @param context the kindlet context
+	 * @param storageFile the storage file
+	 */
 	public AbstractStorage(KindletContext context, String storageFile) {
 		this.context = context;
 		this.storageFile = storageFile;
 	}
 
+	/**
+	 * Clears the storage.
+	 * 
+	 * @throws IOException
+	 */
 	public void clear() throws IOException {
 		writeJSON(new JSONObject());
 	}
 
+	/**
+	 * @return the storage path
+	 */
 	protected String getPath() {
 		return this.context.getHomeDirectory().getAbsolutePath() + "/" + this.storageFile;
 	}
 
+	/**
+	 * Reads the storage JSON.
+	 * 
+	 * @return the JSON object
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	protected JSONObject readJSON() throws ParseException, IOException {
 		InputStream is = getClass().getResourceAsStream(getPath());
 
@@ -53,6 +78,12 @@ public abstract class AbstractStorage {
 		return (JSONObject) parser.parse(IOUtils.toString(is));
 	}
 
+	/**
+	 * Writes the JSON object to the storage.
+	 * 
+	 * @param json the JSON object
+	 * @throws IOException
+	 */
 	protected void writeJSON(JSONObject json) throws IOException {
 		FileWriter fw = null;
 
@@ -66,7 +97,15 @@ public abstract class AbstractStorage {
 		}
 	}
 
-	protected JSONObject findObject(JSONArray jsonMangas, String mangaId) {
+	/**
+	 * Finds the manga JSON object from the array
+	 * based on the manga id provided.
+	 * 
+	 * @param jsonMangas the array
+	 * @param mangaId the manga id
+	 * @return the manga, if found
+	 */
+	protected static JSONObject findManga(JSONArray jsonMangas, String mangaId) {
 		for(int i = 0; i < jsonMangas.size(); i++) {
 			JSONObject jsonManga = (JSONObject) jsonMangas.get(i);
 			Object id = jsonManga == null ? null : jsonManga.get("id");

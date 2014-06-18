@@ -115,7 +115,7 @@ public class ChaptersPanel extends KPanel {
 					public void handleConnected() throws Exception {
 						JSONParser parser = new JSONParser();
 						JSONArray chapters = (JSONArray) parser.parse(IOUtils.toString(new URL(
-								manga.getSearchChaptersLink()).openStream()));
+								manga.getAllChaptersLink()).openStream()));
 
 						chaptersPages.removeAllItems();
 						for (int i = chapters.size() - 1; i >= 0; i--) {

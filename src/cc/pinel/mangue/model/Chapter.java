@@ -23,6 +23,12 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 
+/**
+ * The manga chapter.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class Chapter {
 	private static final Logger logger = Logger.getLogger(Chapter.class);
 
@@ -31,20 +37,26 @@ public class Chapter {
 
 	private int pagesTotal = -1;
 
+	/**
+	 * @param number the number
+	 * @param link the link
+	 */
 	public Chapter(String number, String link) {
 		this.number = number;
 		this.link = link;
 	}
 
+	/**
+	 * @return number
+	 */
 	public String getNumber() {
 		return this.number;
 	}
 
 	/**
-	 * @param pageNumber
-	 *            the page number
+	 * @param pageNumber the page number
 	 * 
-	 * @return the imageURL
+	 * @return the image URL
 	 * @throws IOException
 	 */
 	public URL getPageImageURL(int pageNumber) {
@@ -81,6 +93,9 @@ public class Chapter {
 		return imageURL;
 	}
 
+	/**
+	 * @return the total number of pages
+	 */
 	public int getPageTotal() {
 		if (this.pagesTotal < 0) {
 			try {
@@ -112,6 +127,9 @@ public class Chapter {
 		return this.pagesTotal;
 	}
 
+	/**
+	 * @return if chapter has pages
+	 */
 	public boolean hasPages() {
 		return this.pagesTotal > 0;
 	}

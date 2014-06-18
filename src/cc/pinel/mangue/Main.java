@@ -40,12 +40,24 @@ import com.amazon.kindle.kindlet.event.KindleKeyCodes;
 import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KPanel;
 
+/**
+ * The main controller.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class Main implements Kindlet {
+	/**
+	 * The possible values for the variable <code>state</code>.
+	 */
 	private static final int INACTIVE_STATE = -1;
 	private static final int MAIN_STATE     =  0;
 	private static final int CHAPTERS_STATE =  1;
 	private static final int VIEW_STATE     =  2;
 
+	/**
+	 * The minimal number of characters that can be searched.
+	 */
 	private static final int MIN_CHARS_SEARCH = 3;
 
 	private KindletContext context;
@@ -56,6 +68,8 @@ public class Main implements Kindlet {
 	private AddMangaPanel addMangaPanel;
 
 	private int state = INACTIVE_STATE;
+
+	// --- KDK Methods  ---
 
 	/**
 	 * @see com.amazon.kindle.kindlet.Kindlet#create(com.amazon.kindle.kindlet.KindletContext)
@@ -108,75 +122,134 @@ public class Main implements Kindlet {
 		// ignored
 	}
 
+	/**
+	 * @return the Kindlet Context
+	 */
 	public KindletContext getContext() {
 		return this.context;
 	}
 
+	// --- States ---
+
+	/**
+	 * The kindlet is always inactive the first time it is started.
+	 * 
+	 * @return if it is inactive
+	 */
 	public boolean isInactive() {
 		return this.state == INACTIVE_STATE;
 	}
 
+	/**
+	 * @return if the main panel is being displayed
+	 */
 	public boolean isMainActive() {
 		return this.state == MAIN_STATE;
 	}
 
+	/**
+	 * @return if the chapters panel is being displayed
+	 */
 	public boolean isChaptersActive() {
 		return this.state == CHAPTERS_STATE;
 	}
 
+	/**
+	 * @return if the view panel is being displayed
+	 */
 	public boolean isViewActive() {
 		return this.state == VIEW_STATE;
 	}
 
+	/**
+	 * @return if the add manga panel is being displayed
+	 */
 	public boolean isAddActive() {
 		return this.state > VIEW_STATE;
 	}
 
+	// --- Panels ---
+
+	/**
+	 * @return the chapters panel
+	 */
 	public ChaptersPanel getChaptersPanel() {
 		return this.chaptersPanel;
 	}
 
+	/**
+	 * @param chaptersPanel the chapters panel
+	 */
 	public void setChaptersPanel(ChaptersPanel chaptersPanel) {
 		this.chaptersPanel = chaptersPanel;
 	}
 
+	/**
+	 * @return the view panel
+	 */
 	public ViewPanel getViewPanel() {
 		return this.viewPanel;
 	}
 
+	/**
+	 * @param viewPanel the view panel
+	 */
 	public void setViewPanel(ViewPanel viewPanel) {
 		this.viewPanel = viewPanel;
 	}
 
+	/**
+	 * @return the add manga panel
+	 */
 	public AddMangaPanel getAddMangaPanel() {
 		return this.addMangaPanel;
 	}
 
+	/**
+	 * @param addMangaPanel the add manga panel
+	 */
 	public void setAddMangaPanel(AddMangaPanel addMangaPanel) {
 		this.addMangaPanel = addMangaPanel;
 	}
 
+	// --- Paint Methods ---
+
+	/**
+	 * Set the state as main panel and paints it.
+	 */
 	public void paintMainPanel() {
 		this.state = MAIN_STATE;
 		paintActive();
 	}
 
+	/**
+	 * Set the state as chapters panel and paints it.
+	 */
 	public void paintChaptersPanel() {
 		this.state = CHAPTERS_STATE;
 		paintActive();
 	}
 
+	/**
+	 * Set the state as view panel and paints it.
+	 */
 	public void paintViewPanel() {
 		this.state = VIEW_STATE;
 		paintActive();
 	}
 
+	/**
+	 * Set the state as add manga panel and paints it.
+	 */
 	public void paintAddMangaPanel() {
 		if (!isAddActive())
 			this.state += VIEW_STATE + 1;
 		paintActive();
 	}
 
+	/**
+	 * Paints the active panel based on the current state.
+	 */
 	public void paintActive() {
 		KPanel panel;
 		if (isViewActive())
@@ -197,6 +270,11 @@ public class Main implements Kindlet {
 		context.getRootContainer().repaint();
 	}
 
+	/**
+	 * Reloads the mangas and paints the main panel.
+	 * 
+	 * It creates a main panel if it does not exist.
+	 */
 	public void reloadMainPanel() {
 		if (this.mainPanel == null)
 			this.mainPanel = new MainPanel(this);
@@ -204,6 +282,11 @@ public class Main implements Kindlet {
 		this.mainPanel.loadMangas();
 	}
 
+	// --- Menu Actions ---
+
+	/**
+	 * Displays the search manga dialog.
+	 */
 	public void searchManga() {
 		final KindletContext context = getContext();
 
@@ -225,6 +308,9 @@ public class Main implements Kindlet {
 				});
 	}
 
+	/**
+	 * Displays the clear all mangas confirmation message.
+	 */
 	public void clearMangas() {
 		final KindletContext context = getContext();
 
@@ -244,6 +330,9 @@ public class Main implements Kindlet {
 				});
 	}
 
+	/**
+	 * Displays the clear previous searched term confirmation message.
+	 */
 	public void clearSearch() {
 		final KindletContext context = getContext();
 
@@ -256,7 +345,19 @@ public class Main implements Kindlet {
 				});
 	}
 
+	// --- Events ---
+
+	/**
+	 * Handles the main key events. Basically, the back button.
+	 * 
+	 * @author Roque Pinel
+	 *
+	 */
 	private class MainKeyEventDispatcher implements KeyEventDispatcher {
+
+		/**
+		 * @see java.awt.KeyEventDispatcher#dispatchKeyEvent(java.awt.event.KeyEvent)
+		 */
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			if (e.isConsumed())
 				return false;
@@ -301,6 +402,15 @@ public class Main implements Kindlet {
 		}
 	}
 
+	// --- Special Methods
+
+	/**
+	 * Loads the last view panel for the parameters provided
+	 * 
+	 * @param mangaId the manga id
+	 * @param chapterNumber the chapter number
+	 * @param pageNumber the page number
+	 */
 	private void loadLastViewed(String mangaId, String chapterNumber, String pageNumber) {
 		final Manga manga = new MangaStorage(getContext()).getManga(mangaId);
 
@@ -316,6 +426,9 @@ public class Main implements Kindlet {
 		}
 	}
 
+	/**
+	 * Resquests the system Garbage Collection to run.
+	 */
 	public void requestGC() {
 		System.gc();
 	}

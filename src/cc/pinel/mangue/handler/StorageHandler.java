@@ -20,6 +20,12 @@ import org.apache.log4j.Logger;
 import com.amazon.kindle.kindlet.KindletContext;
 import com.amazon.kindle.kindlet.ui.KProgress;
 
+/**
+ * It helps handling storage accesses.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public abstract class StorageHandler extends Thread {
 	private static final Logger logger = Logger.getLogger(StorageHandler.class);
 
@@ -27,16 +33,28 @@ public abstract class StorageHandler extends Thread {
 
 	private final String busyText;
 
+	/**
+	 * @param context the kindlet context
+	 */
 	public StorageHandler(KindletContext context) {
 		this.context = context;
 		this.busyText = null;
 	}
 
+	/**
+	 * @param context the kindlet context
+	 * @param busyText the busy text to be displayed
+	 */
 	public StorageHandler(KindletContext context, String busyText) {
 		this.context = context;
 		this.busyText = busyText;
 	}
 
+	/**
+	 * Should be override to for the access to be handled.
+	 * 
+	 * @throws Exception the exception thrown, if any
+	 */
 	public abstract void handleRun() throws Exception;
 
 	/**

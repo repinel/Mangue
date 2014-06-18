@@ -15,11 +15,22 @@
  */
 package cc.pinel.mangue.model;
 
+/**
+ * The manga.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class Manga {
 	private final String id;
 	private final String name;
 	private final String path;
 
+	/**
+	 * @param id the id
+	 * @param name the name
+	 * @param path the path
+	 */
 	public Manga(String id, String name, String path) {
 		this.id = id;
 		this.name = name;
@@ -47,11 +58,24 @@ public class Manga {
 		return path;
 	}
 
+	/**
+	 * Generates the chapter link based on the
+	 * manga path and the chapter number.
+	 * 
+	 * @param chapterNumber the chapter number
+	 * @return the chapter link
+	 */
 	public String getChapterLink(String chapterNumber) {
 		return "http://www.mangapanda.com" + this.path + "/" + chapterNumber;
 	}
 
-	public String getSearchChaptersLink() {
+	/**
+	 * Generates the link to all chapters based
+	 * on the manga id.
+	 * 
+	 * @return the link to all chapters
+	 */
+	public String getAllChaptersLink() {
 		return "http://www.mangapanda.com/actions/selector/?id=" + id + "&which=0";
 	}
 }

@@ -41,6 +41,12 @@ import com.amazon.kindle.kindlet.ui.KPages;
 import com.amazon.kindle.kindlet.ui.KPanel;
 import com.amazon.kindle.kindlet.ui.pages.PageProviders;
 
+/**
+ * The panel to add a new manga to the favorites list.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public class AddMangaPanel extends KPanel {
 	private static final long serialVersionUID = -2469140435669501883L;
 

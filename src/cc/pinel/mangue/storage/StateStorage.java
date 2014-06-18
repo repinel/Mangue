@@ -40,7 +40,7 @@ public class StateStorage extends AbstractStorage {
 		if (jsonMangas == null)
 			jsonMangas = new JSONArray();
 
-		JSONObject jsonManga = findObject(jsonMangas, mangaId);
+		JSONObject jsonManga = findManga(jsonMangas, mangaId);
 		if (jsonManga != null)
 			chapterNumber = jsonManga.get("chapterNumber").toString();
 
@@ -64,7 +64,7 @@ public class StateStorage extends AbstractStorage {
 			json.put("mangas", jsonMangas);
 		}
 
-		JSONObject jsonManga = findObject(jsonMangas, mangaId);
+		JSONObject jsonManga = findManga(jsonMangas, mangaId);
 		if (jsonManga == null) {
 			jsonManga = new JSONObject();
 			jsonManga.put("id", mangaId);

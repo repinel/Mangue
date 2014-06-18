@@ -22,6 +22,12 @@ import com.amazon.kindle.kindlet.net.NetworkDisabledDetails;
 import com.amazon.kindle.kindlet.ui.KOptionPane;
 import com.amazon.kindle.kindlet.ui.KProgress;
 
+/**
+ * It helps handling network accesses.
+ * 
+ * @author Roque Pinel
+ *
+ */
 public abstract class ConnectivityHandler implements com.amazon.kindle.kindlet.net.ConnectivityHandler {
 	private static final Logger logger = Logger.getLogger(ConnectivityHandler.class);
 
@@ -29,16 +35,28 @@ public abstract class ConnectivityHandler implements com.amazon.kindle.kindlet.n
 
 	private final String busyText;
 
+	/**
+	 * @param context the kindlet context
+	 */
 	public ConnectivityHandler(KindletContext context) {
 		this.context = context;
 		this.busyText = null;
 	}
 
+	/**
+	 * @param context the kindlet context
+	 * @param busyText the busy text to be displayed
+	 */
 	public ConnectivityHandler(KindletContext context, String busyText) {
 		this.context = context;
 		this.busyText = busyText;
 	}
 
+	/**
+	 * Should be override to for the access to be handled.
+	 * 
+	 * @throws Exception the exception thrown, if any
+	 */
 	public abstract void handleConnected() throws Exception;
 
 	/**

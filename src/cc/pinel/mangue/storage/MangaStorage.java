@@ -69,7 +69,7 @@ public class MangaStorage extends AbstractStorage {
 		if (jsonMangas == null)
 			return null;
 
-		JSONObject jsonManga = findObject(jsonMangas, id);
+		JSONObject jsonManga = findManga(jsonMangas, id);
 		if (jsonManga == null)
 			return null;
 
@@ -94,7 +94,7 @@ public class MangaStorage extends AbstractStorage {
 			json.put("mangas", jsonMangas);
 		}
 
-		JSONObject jsonManga = findObject(jsonMangas, manga.getId());
+		JSONObject jsonManga = findManga(jsonMangas, manga.getId());
 		if (jsonManga == null) {
 			jsonManga = new JSONObject();
 			jsonManga.put("id", manga.getId());
@@ -134,7 +134,7 @@ public class MangaStorage extends AbstractStorage {
 
 		JSONArray jsonMangas = (JSONArray) json.get("mangas");
 		if (jsonMangas != null) {
-			JSONObject jsonManga = findObject(jsonMangas, manga.getId());
+			JSONObject jsonManga = findManga(jsonMangas, manga.getId());
 			if (jsonManga != null) {
 				jsonMangas.remove(jsonManga);
 
