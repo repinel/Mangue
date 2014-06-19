@@ -4,7 +4,7 @@
 
 The Mangue is a reader for online mangas avaliable at [Manga Panda](http://www.mangapanda.com). It needs access to the internet to work.
 
-Feedbacks are welcome. The project was mainly tested on Kindle 4.
+Feedbacks are welcome. The project was mainly tested on Kindle 4, but it seems to work on Kindle 3 (although we do not use the Kindlet-1.2.jar).
 
 ## Build Instructions
 
@@ -13,9 +13,9 @@ Feedbacks are welcome. The project was mainly tested on Kindle 4.
   * Apache Ant.
 2. Create the `.kindle` directory in your user home.
   * Copy the following from your Kindle `/lib`
-    * `Kindlet-*.jar`
-    * `json_simple-*.jar`
-    * `log4j-*.jar`
+    * `Kindlet-1.3.jar`
+    * `json_simple-1.1.jar`
+    * `log4j-1.2.15.jar`
   * Copy the `developer.keystore` file from your Kindle.
 3. Create the `local.properties` file the project root.
   * Add the line `keystore.alias.prefix=test`. Replace `test` with your keystore alias prefix.
@@ -27,6 +27,8 @@ Feedbacks are welcome. The project was mainly tested on Kindle 4.
 ## Installation
 
 To install Mangue, copy the signed package `Mangue.azw2` into the your Kindle `documents` directory.
+
+The compiled package can be found under [Releases](https://github.com/repinel/Mangue/releases). Remember to look for the most recent one.
 
 ## Usage
 
