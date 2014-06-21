@@ -1,4 +1,4 @@
-![Mangue Logo](https://raw.githubusercontent.com/repinel/Mangue/master/images/mangue_logo.jpg)
+![Mangue Logo](images/mangue_logo.jpg)
 
 # Mangue - Online Manga Reader
 
@@ -62,7 +62,7 @@ Enjoy!!
 
 ## License
 
-Mangue is under the Apache 2.0 License (see the [LICENSE](https://raw.github.com/repinel/Mangue/master/doc/Apache-2.0) file).
+Mangue is under the Apache 2.0 License (see the [LICENSE](doc/Apache-2.0) file).
 
 ## Contributing
 
