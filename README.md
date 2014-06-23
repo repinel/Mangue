@@ -26,7 +26,9 @@ Feedbacks are welcome. The project was mainly tested on Kindle 4, but it seems t
 
 ## Installation
 
-To install Mangue, copy the signed package `Mangue.azw2` into the your Kindle `documents` directory.
+To install Mangue, you first have have to jailbreak you Kindle device so that the developer keystore is installed. Take a look at [this post from the Mobile Read forum](http://www.mobileread.com/forums/showthread.php?t=233932).
+
+Afterwards, copy the signed package `Mangue.azw2` into the your Kindle `documents` directory.
 
 The compiled package can be found under [Releases](https://github.com/repinel/Mangue/releases). Remember to look for the most recent one.
 
